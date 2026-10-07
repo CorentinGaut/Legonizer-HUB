@@ -1,0 +1,1024 @@
+{
+  "meta": {
+    "title": "Create your model · Legonizer"
+  },
+  "stepper": {
+    "label": "Steps",
+    "steps": {
+      "import": "Import",
+      "area": "Area",
+      "settings": "Scale & height",
+      "generate": "Generate",
+      "guide": "Build guide"
+    },
+    "stepOf": "Step {n} of {total} · {name}",
+    "menu": "All steps",
+    "state": {
+      "done": "{name}, done",
+      "current": "{name}, current step",
+      "unavailable": "{name}, not available yet",
+      "outOfDate": "{name}, out of date",
+      "warning": "{name}, needs attention"
+    },
+    "why": {
+      "area": "Import a model first.",
+      "settings": "Import a model first.",
+      "generate": "Import a model first.",
+      "guide": "Generate your model first."
+    }
+  },
+  "shell": {
+    "skipToStep": "Skip to step content",
+    "viewportLabel": "3D view",
+    "viewportPlaceholder": "Your 3D model will appear here",
+    "toolbar": {
+      "label": "View controls",
+      "resetView": "Reset view",
+      "topView": "Top view",
+      "view3d": "3D view",
+      "zoomIn": "Zoom in",
+      "zoomOut": "Zoom out",
+      "fullScreen": "Full screen",
+      "exitFullScreen": "Exit full screen",
+      "collapse": "Hide 3D view",
+      "expand": "Show 3D view",
+      "legend": "Legend"
+    },
+    "compass": "North",
+    "scaleBar": "Scale: {value}",
+    "busyInputs": "Generating… Cancel to make changes.",
+    "smallScreen": "Creating a model works best on a computer or tablet. Build guides work well on phones.",
+    "webgl": {
+      "title": "3D views are off in this browser",
+      "body": "Your browser doesn't support WebGL 2, or it is turned off. You can still create your model with the 2D views and tables.",
+      "dismiss": "Hide this message",
+      "chip": "2D views"
+    },
+    "primary": {
+      "import": "Continue to area",
+      "area": "Continue to scale & height",
+      "settings": "Generate model",
+      "generate": "Open the build guide"
+    },
+    "stepperCompactLabel": "Progress",
+    "textTwin": "Show as text",
+    "unsavedLarge": "The 3D model is too large to keep in this browser: after a reload you will need to add the files again.",
+    "actionbarLabel": "Step actions",
+    "view2d": {
+      "import": "Top view of the imported model",
+      "settings": "Top view of the buildings in the area",
+      "generate": "Top view of the brick model, shaded by height"
+    }
+  },
+  "project": {
+    "menuLabel": "Project: {name}",
+    "untitled": "Untitled",
+    "rename": "Rename",
+    "renameLabel": "Project name",
+    "save": "Save project file",
+    "open": "Open a project file",
+    "new": "New project",
+    "clear": "Clear data stored in this browser",
+    "newConfirm": {
+      "title": "Start a new project?",
+      "body": "Save a project file first if you want to come back to “{name}”.",
+      "confirm": "Start a new project",
+      "saveFirst": "Save project file first"
+    },
+    "clearConfirm": {
+      "title": "Clear all data stored in this browser?",
+      "body": "This removes your saved project, the 3D model and the build progress from this browser. Project files you saved stay on your computer.",
+      "confirm": "Clear data"
+    },
+    "resume": {
+      "message": "Welcome back. Continue “{name}” (saved {when})?",
+      "continue": "Continue",
+      "startNew": "Start a new project",
+      "noSource": "The 3D model wasn't kept because it is too large for this browser's storage. Your area, settings and brick model are safe. Add the original files to make changes."
+    },
+    "openFile": {
+      "opened": "Project opened.",
+      "guideOnly": "Opened from a project file. To change the area or settings, add the original files.",
+      "addSource": "Add the original files",
+      "olderVersion": "This project was made with version {version}; this is version {current}. Regenerating may give slightly different results.",
+      "newerVersion": "This project was made with a newer version ({version}). Reload the page to get the latest version, then try again.",
+      "hashMismatch": {
+        "title": "This isn't the same file",
+        "body": "{file} is different from the file used in this project. If you continue, the model may change.",
+        "continue": "Use this file",
+        "choose": "Choose another file"
+      }
+    },
+    "renameSave": "Rename",
+    "saved": "Project file saved."
+  },
+  "stale": {
+    "title": "Out of date",
+    "message": "You changed {changes} after generating.",
+    "change": "{name} ({from} → {to})",
+    "listSeparator": ", ",
+    "names": {
+      "model": "the 3D model",
+      "area": "the area",
+      "plates": "Plates",
+      "rotation": "Rotation",
+      "scale": "Scale",
+      "maxHeight": "Max height",
+      "preset": "the preset",
+      "option": "{name}"
+    },
+    "regenerate": "Regenerate",
+    "undo": "Undo changes",
+    "downloadsDisabled": "Regenerate first: your settings changed.",
+    "previewLabel": "Out of date",
+    "progressConfirm": {
+      "title": "This changes the instructions",
+      "body": "Plates already built stay as they are, but printed guides and shopping lists will be out of date.",
+      "confirm": "Continue",
+      "cancel": "Keep the current instructions"
+    }
+  },
+  "import": {
+    "title": "Import a 3D city model",
+    "lead": "Start with our demo, or bring your own model.",
+    "demo": {
+      "partDieu": {
+        "title": "Part-Dieu, Lyon",
+        "body": "Real 3D buildings of Lyon's business district (2018).",
+        "source": "Source: Métropole de Lyon open data.",
+        "cta": "Try with Part-Dieu"
+      },
+      "sample": {
+        "title": "Small sample",
+        "body": "A few simple blocks. Loads instantly.",
+        "cta": "Try the sample"
+      },
+      "unavailable": "This demo is not available on this copy of the site.",
+      "loading": "Loading the {name} demo…"
+    },
+    "or": "or use your own model",
+    "dropzone": {
+      "title": "Drop files, a folder or a .zip here",
+      "active": "Drop to import",
+      "chooseFiles": "Choose files",
+      "chooseFolder": "Choose a folder",
+      "label": "Import a 3D model: drop files here, or use the buttons"
+    },
+    "url": {
+      "toggle": "Use a tileset URL",
+      "label": "tileset.json address",
+      "placeholder": "https://example.org/tiles/tileset.json",
+      "help": "The server must allow other websites to read its files (CORS). Most servers don't: if loading fails, download the tileset and drop it here.",
+      "submit": "Load"
+    },
+    "privacy": "Your files stay on this computer. Nothing is uploaded.",
+    "privacyMobile": "Your files stay on this device. Nothing is uploaded.",
+    "sizeGuidance": "Works best up to about 2 million triangles (300 MB) on a typical laptop.",
+    "formats": {
+      "toggle": "Supported formats",
+      "tiles10": "3D Tiles 1.0 (.b3dm): a folder or a .zip containing tileset.json and its tiles",
+      "tiles11": "3D Tiles 1.1 with glTF content (best effort)",
+      "gltf": "glTF and GLB (.gltf, .glb)",
+      "obj": "OBJ (.obj). A .mtl file is accepted but not needed.",
+      "cityjson": "CityJSON 1.x (.json, .city.json)",
+      "citygml": "CityGML (.gml) needs converting first. See “Prepare your data”."
+    },
+    "helpLink": "How do I get a 3D model?",
+    "openProject": "Open a project file",
+    "loading": {
+      "title": "Importing {name}",
+      "stages": {
+        "reading": "Reading files",
+        "tiles": "Reading tiles: {done} of {total}",
+        "model": "Reading the model",
+        "features": "Finding buildings",
+        "preparing": "Preparing the 3D view"
+      },
+      "cancel": "Cancel",
+      "cancelled": "Import cancelled.",
+      "downloading": "Downloading tiles: {done} of {total}",
+      "indeterminate": "Working…"
+    },
+    "success": {
+      "formatTiles": "3D Tiles {version} · {count, plural, one {# tile} other {# tiles}}",
+      "formatGlb": "glTF binary (.glb)",
+      "formatGltf": "glTF (.gltf)",
+      "formatObj": "OBJ",
+      "formatCityjson": "CityJSON {version}",
+      "demoName": "{name} (demo)",
+      "buildings": "{count, plural, one {# building} other {# buildings}}",
+      "size": "{w} × {d}, {h} high",
+      "triangles": "{value} million triangles",
+      "trianglesSmall": "{count, plural, one {# triangle} other {# triangles}}",
+      "coordinates": {
+        "projected": "Projected coordinates (metres)",
+        "ecef": "Earth-centred coordinates, converted to a local frame",
+        "local": "Local coordinates (metres)",
+        "py3dtilers": "py3dtilers offsets detected and applied"
+      },
+      "unit": {
+        "label": "Unit",
+        "m": "Metres",
+        "cm": "Centimetres",
+        "mm": "Millimetres",
+        "ft": "Feet",
+        "detected": "{unit} (detected)"
+      },
+      "upAxis": {
+        "label": "Up axis",
+        "y": "Y up",
+        "z": "Z up",
+        "detected": "{axis} (detected)"
+      },
+      "lod": {
+        "label": "Level of detail",
+        "option": "LoD {lod}",
+        "highest": "LoD {lod} (highest available)"
+      },
+      "tilesLod": "Using the finest level of detail",
+      "details": {
+        "toggle": "Details",
+        "featuresGml": "Buildings identified by gml_id (CityGML)",
+        "featuresBatch": "Buildings identified by batch id",
+        "featuresMesh": "One building per mesh",
+        "featureTerm": "Experts: a “building” here is a feature.",
+        "files": "{count, plural, one {# file} other {# files}} read",
+        "bbox": "Bounding box: {min} to {max}"
+      },
+      "replace": "Replace model",
+      "announce": "Model loaded: {buildings}, {size}.",
+      "labels": {
+        "format": "Format",
+        "buildings": "Buildings",
+        "size": "Size",
+        "triangles": "Triangles",
+        "coordinates": "Coordinates",
+        "detail": "Detail",
+        "unit": "Unit",
+        "files": "Files",
+        "bbox": "Bounding box"
+      },
+      "lodOption": "LoD {lod}",
+      "unitAuto": "Automatic",
+      "reimporting": "Updating the model…",
+      "detectedUnit": "Detected: {unit}"
+    },
+    "sizeCheck": "This model is {size} wide. Is the unit right?",
+    "partial": {
+      "title": "{loaded} of {total} tiles loaded",
+      "missing": "Missing: {files}",
+      "broken": "Can't read: {files}",
+      "addMissing": "Add the missing files",
+      "continueWithout": "Continue without them"
+    },
+    "large": {
+      "message": "This model is large: {value} million triangles. Generating may be slow or fail on this computer.",
+      "link": "How to crop or simplify a model",
+      "continue": "Continue anyway"
+    },
+    "replaceDialog": {
+      "title": "Replace {current} with {next}?",
+      "body": "Your generated model will be cleared. The area is kept if it overlaps the new model.",
+      "confirm": "Replace",
+      "cancel": "Keep current model"
+    },
+    "errors": {
+      "tryAnother": "Try another file",
+      "unsupported": {
+        "title": "We can't use this file",
+        "body": "{ext} files aren't supported. Use 3D Tiles, glTF/GLB, OBJ or CityJSON."
+      },
+      "citygml": {
+        "title": "CityGML needs converting first",
+        "body": "Convert your .gml files to 3D Tiles with py3dtilers, then drop the result here.",
+        "action": "How to convert CityGML"
+      },
+      "emptyGeometry": {
+        "title": "No 3D shapes in this file",
+        "body": "We found no surfaces we can turn into bricks. The file may contain only metadata, points or lines."
+      },
+      "noTileset": {
+        "title": "No tileset.json in this .zip",
+        "body": "A 3D Tiles .zip must contain tileset.json and the tile files it lists."
+      },
+      "noTilesFound": {
+        "title": "No tiles found",
+        "body": "None of the files listed in tileset.json were found. Drop the whole folder, or a .zip of it."
+      },
+      "cityjsonVersion": {
+        "title": "This CityJSON version isn't supported",
+        "body": "This file is CityJSON {version}. Use CityJSON 1.x."
+      },
+      "cors": {
+        "title": "This server doesn't let other websites read its files",
+        "body": "Download the tileset to your computer, then drop the folder or a .zip here.",
+        "action": "Choose files instead"
+      },
+      "network": {
+        "title": "We couldn't reach this address",
+        "body": "Check the address and your connection, or download the tileset and drop it here."
+      },
+      "outOfMemory": {
+        "title": "Your browser ran out of memory",
+        "body": "This model is too large for this computer. Try a smaller part of the city, or a simplified model.",
+        "action": "How to crop or simplify a model"
+      },
+      "corrupt": {
+        "title": "This file looks damaged",
+        "body": "We couldn't read {file}."
+      },
+      "multipleModels": {
+        "title": "Please import one model at a time",
+        "body": "Drop a single tileset, or a single file (an OBJ can come with its .mtl)."
+      },
+      "invalidProject": {
+        "title": "This isn't a Legonizer project file",
+        "body": "Project files end in .legonizer.json. They are saved from the Project menu."
+      },
+      "missingFiles": {
+        "title": "Some files are missing",
+        "body": "{count, plural, one {# file listed in tileset.json is missing} other {# files listed in tileset.json are missing}}."
+      },
+      "generic": {
+        "title": "We couldn't read this model",
+        "body": "The file may be damaged or use a feature we do not support yet."
+      }
+    }
+  },
+  "area": {
+    "title": "Choose the area",
+    "lead": "Move the rectangle over the district you want to build.",
+    "defaultPlaced": "We placed a {x} × {y}-plate area in the middle of your model. Move it or draw a new one.",
+    "defaultWhole": "Your whole model fits on {x} × {y} plates, so we selected all of it.",
+    "demoSuggested": "We placed the area on the station and the towers. Move it or draw a new one.",
+    "position": {
+      "title": "Position",
+      "centreX": "Centre X (east)",
+      "centreY": "Centre Y (north)",
+      "frameModel": "Model coordinates (metres)",
+      "frameLocal": "Metres from the model centre (converted from Earth-centred coordinates)",
+      "rotation": "Rotation",
+      "rotationUnit": "degrees",
+      "rotationNormalised": "{input}° is the same as {value}°.",
+      "centreXShort": "Centre X",
+      "centreYShort": "Centre Y"
+    },
+    "size": {
+      "title": "Size",
+      "platesX": "Plates west–east",
+      "platesY": "Plates north–south",
+      "platesHelp": "Each baseplate is 32 × 32 studs (25.6 cm).",
+      "scale": "Scale",
+      "scaleUnit": "m per stud",
+      "keepGroundArea": "Keep the same ground area instead ({x} × {y} plates)",
+      "fewerX": "Fewer plates west–east",
+      "moreX": "More plates west–east",
+      "fewerY": "Fewer plates north–south",
+      "moreY": "More plates north–south",
+      "keepGroundAreaApply": "Keep the same ground area"
+    },
+    "summary": {
+      "title": "On the table",
+      "ground": "{w} × {d} m on the ground",
+      "table": "{w} × {d} cm on the table",
+      "studs": "{total} studs ({cols} × {rows})",
+      "mapScale": "Map scale 1:{n}",
+      "compact": "{x} × {y} plates · {w} × {d} cm · 1:{n}"
+    },
+    "tableFit": {
+      "diagramTitle": "The Legonizer table, 1 × 2 m, seen from above",
+      "mediaArea": "Room for projected media",
+      "fits": "Fits the Legonizer table, with room for projected media",
+      "fitsLengthwise": "Fits the Legonizer table lengthwise, with room for projected media",
+      "tooBig": "Too big for the Legonizer table ({w} × {d} cm). You can still build it.",
+      "diagramAlt": "{x} by {y} plates placed at one end of a 1 by 2 metre table. The rest of the table is free for projected media."
+    },
+    "tools": {
+      "draw": "Draw new area",
+      "drawShortcut": "D",
+      "drawHint": "Press and drag on the map. Esc to cancel.",
+      "fit": "Fit model",
+      "centre": "Centre on model",
+      "reset": "Reset area"
+    },
+    "viewport": {
+      "dimension": "{count, plural, one {# plate} other {# plates}} · {m} m",
+      "drawLabel": "{x} × {y} plates · {w} × {d} m",
+      "angleLabel": "{value}°",
+      "tallest": "Tallest: {h} m, sets the height of one brick",
+      "includedWhole": "Included whole",
+      "max16": "16 plates is the maximum per side.",
+      "legend": {
+        "includedWhole": "Included whole (touches the area)",
+        "disappears": "Disappears: lower than one brick",
+        "sampled": "Area actually sampled in legacy mode",
+        "area": "Area to convert, with its plates"
+      },
+      "rectangleName": "Area, {x} by {y} plates, centre X {cx} metres, Y {cy} metres, rotation {r} degrees. Arrow keys move it, Shift and arrows move it by one plate, square brackets rotate it.",
+      "moved": "Area moved. Centre X {cx} metres, Y {cy} metres.",
+      "resized": "Area resized: {x} by {y} plates.",
+      "rotated": "Area rotated to {r} degrees.",
+      "cancelled": "Change cancelled.",
+      "drawCancel": "Cancel drawing",
+      "plan2d": "Plan of the buildings (2D view)",
+      "undo": "Undo area change",
+      "rectangleHint": "Select the area to move it with the arrow keys."
+    },
+    "warnings": {
+      "empty": "No buildings in this area.",
+      "emptyAction": "Centre on the model",
+      "legacyRotation": "Legacy mode ignores rotation: it converts the whole dashed box, unrotated.",
+      "legacyRotationAction": "Rotate with the area instead"
+    },
+    "errors": {
+      "plates": "Enter a whole number from 1 to 16.",
+      "number": "Enter a number.",
+      "scale": "Enter a scale from 0.25 to 50 m per stud.",
+      "rotation": "Enter an angle from −180 to 180 degrees."
+    }
+  },
+  "settings": {
+    "title": "Scale and height",
+    "lead": "Decide how big and how tall your model will be.",
+    "preset": {
+      "title": "Preset",
+      "legacy": {
+        "name": "Legacy (UD-Viz 4.6.1)",
+        "description": "Same result as the UD-Viz widget. The tallest building gets the max height; the rest is stretched to match."
+      },
+      "trueScale": {
+        "name": "True scale",
+        "description": "Real proportions: one brick is about one storey at 3 m per stud."
+      },
+      "custom": {
+        "name": "Custom",
+        "description": "{count, plural, one {# option differs} other {# options differ}} from legacy."
+      },
+      "resetLegacy": "Reset to legacy",
+      "demoNote": "Demo settings: small buildings are kept.",
+      "switchToLegacy": "Switch to Legacy",
+      "legacyKeepSmall": {
+        "name": "Legacy (UD-Viz 4.6.1) with small buildings kept",
+        "description": "Same result as the UD-Viz widget, except that every building gets at least 1 brick."
+      }
+    },
+    "scale": {
+      "label": "Scale",
+      "unit": "m per stud",
+      "help": "One stud covers {s} m × {s} m of city. Map scale 1:{n}.",
+      "udviz": "In UD-Viz 4.6.1: Scales Parameters › Scale",
+      "slider": "Scale, logarithmic",
+      "sliderValue": "{s} m per stud"
+    },
+    "maxHeight": {
+      "label": "Max height",
+      "unit": "bricks",
+      "help": "The tallest building gets this many bricks.",
+      "udviz": "In UD-Viz 4.6.1: Scales Parameters › Lego Max height",
+      "readOnly": "Tallest: {bricks} bricks ({cm} cm)",
+      "readOnlyHelp": "In this height mode, heights follow the scale. Use the height cap to limit tall towers.",
+      "error": "Enter a whole number from 1 to 100.",
+      "lower": "Lower max height",
+      "raise": "Raise max height"
+    },
+    "exaggeration": {
+      "label": "Exaggeration",
+      "help": "Heights × {f} compared with true scale.",
+      "error": "Enter a number from 0.5 to 5."
+    },
+    "plates": {
+      "label": "Plates",
+      "help": "Each baseplate is 32 × 32 studs (25.6 cm).",
+      "udviz": "In UD-Viz 4.6.1: Scales Parameters › Count Lego x, y"
+    },
+    "udvizInfo": "UD-Viz name",
+    "estimates": {
+      "title": "What you'll get",
+      "updating": "Updating…",
+      "onTable": "{w} × {d} cm, up to {h} cm high",
+      "brickHeight": "1 brick = {m} m of building",
+      "flatter": "Buildings will look {r} times flatter than in reality.",
+      "real": "Buildings keep their real proportions.",
+      "taller": "Buildings will look {r} times taller than in reality.",
+      "studs": "{total} studs",
+      "mapScale": "Map scale 1:{n}"
+    },
+    "disappear": {
+      "message": "{count} of {total} buildings ({percent}%) are lower than one brick ({m} m) and will disappear.",
+      "messageAbout": "About {count} of {total} buildings ({percent}%) are lower than one brick ({m} m) and will disappear.",
+      "collapsed": "{count, plural, one {# building} other {# buildings}} will disappear.",
+      "showFixes": "Show fixes",
+      "fixes": {
+        "keepSmall": "Keep small buildings",
+        "keepSmallDesc": "Every building gets at least 1 brick.",
+        "trueScale": "Use true scale",
+        "trueScaleDesc": "Tallest becomes {bricks} bricks ({cm} cm).",
+        "maxHeight": "Set max height to {n}",
+        "maxHeightDesc": "Keeps {percent}% of buildings.",
+        "keepAsIs": "Keep as is"
+      },
+      "showThem": "Show them in the 3D view",
+      "studShare": "About {percent}% of the built-up area will be empty.",
+      "none": "Every selected building reaches at least one brick.",
+      "noBuildings": "No buildings in this area."
+    },
+    "viewport": {
+      "guides": "Brick levels every {m} m",
+      "legendDisappears": "Disappears: lower than one brick",
+      "empty": "No buildings in the area."
+    },
+    "advanced": {
+      "title": "Advanced options",
+      "allLegacy": "All at legacy values",
+      "changed": "{count} changed",
+      "legacyMarker": "Legacy",
+      "changedMarker": "Changed from legacy",
+      "resetAll": "Reset all to legacy",
+      "internalName": "Internal name: {name}",
+      "heightMode": {
+        "label": "Height",
+        "normalized": "Stretch to max height",
+        "trueScale": "True scale",
+        "exaggerated": "Exaggerated",
+        "consequence": "True scale: 1 brick = {m} m (scale × 1.2)."
+      },
+      "heightRef": {
+        "label": "Measure heights from",
+        "lowestBase": "Lowest building base",
+        "ground": "The ground",
+        "groundUnavailable": "Needs terrain or ground surfaces in your model.",
+        "consequence": "On slopes, uphill buildings stop gaining the hill's height."
+      },
+      "sampling": {
+        "label": "Sampling",
+        "corner1": "1 per stud, at the corner",
+        "centre1": "1 per stud, at the centre",
+        "super2": "2 × 2 per stud",
+        "super3": "3 × 3 per stud",
+        "super4": "4 × 4 per stud",
+        "aggregate": "Combine samples",
+        "max": "Highest",
+        "mean": "Average",
+        "median": "Median",
+        "consequence": "More samples catch thin buildings, but take longer."
+      },
+      "rounding": {
+        "label": "Rounding",
+        "trunc": "Round down",
+        "round": "Round to nearest",
+        "ceil": "Round up",
+        "keepSmall": "Keep small buildings (at least 1 brick)"
+      },
+      "cap": {
+        "label": "Height cap",
+        "none": "None",
+        "value": "Max bricks per column",
+        "consequence": "Limits tall towers to save bricks.",
+        "error": "Enter a whole number from 1 to 100, or leave empty."
+      },
+      "selection": {
+        "label": "Buildings",
+        "touching": "Whole buildings touching the area",
+        "clip": "Cut at the area's edge",
+        "consequence": "Whole buildings can reach far outside the area and set the height scale."
+      },
+      "rotation": {
+        "label": "Rotation",
+        "aabb": "Bounding box",
+        "rotate": "Rotate with the area",
+        "consequence": "Legacy converts the unrotated box around your area."
+      },
+      "acceleration": "Fast ray casting is always on. It doesn't change results.",
+      "exaggerationUnit": "×",
+      "capUnit": "bricks",
+      "capNone": "None",
+      "legacyNone": "Legacy: none"
+    },
+    "generate": "Generate model"
+  },
+  "generate": {
+    "ready": {
+      "title": "Generate",
+      "summary": "{x} × {y} plates · {scale} m per stud · {preset}",
+      "cta": "Generate model",
+      "lead": "Generate the brick model from your area and settings."
+    },
+    "running": {
+      "title": "Generating your brick model",
+      "stages": {
+        "select": "Selecting buildings",
+        "index": "Preparing fast ray casting",
+        "sample": "Measuring heights: row {done} of {total}",
+        "quantize": "Turning heights into bricks",
+        "pack": "Choosing bricks: plate {done} of {total}",
+        "done": "Done"
+      },
+      "elapsed": "{value} s",
+      "remaining": "About {value} s left",
+      "cancel": "Cancel",
+      "cancelled": "Generation cancelled.",
+      "documentTitleReady": "Model ready · Legonizer",
+      "percent": "{value}%",
+      "label": "Generating… {value}%"
+    },
+    "done": {
+      "title": "Your brick model",
+      "generatedIn": "Generated in {value} s",
+      "plates": "{x} × {y} plates · {w} × {d} cm",
+      "tallest": "Tallest: {bricks} bricks ({cm} cm)",
+      "bricks": "{bricks} bricks + {plates} baseplates",
+      "settings": "{preset} · {scale} m per stud",
+      "histogram": {
+        "title": "Heights",
+        "axisX": "Bricks",
+        "axisY": "Studs",
+        "showTable": "Show as table",
+        "caption": "Number of studs at each height, in bricks",
+        "label": "Number of studs at each height, in bricks: {values}.",
+        "hideTable": "Hide the table",
+        "height": "Height (bricks)",
+        "studs": "Studs"
+      },
+      "perPlate": {
+        "title": "Per plate",
+        "caption": "Tallest point and number of bricks on each plate",
+        "plate": "Plate",
+        "tallest": "Tallest",
+        "bricks": "Bricks"
+      },
+      "grid": {
+        "show": "View the height grid as a table",
+        "caption": "Height of every stud on plate {plate}, in bricks. Rows go north to south, columns west to east.",
+        "plateSelect": "Plate",
+        "hide": "Hide the height grid",
+        "title": "Height grid · Plate {plate}",
+        "region": "Height grid, plate {plate}",
+        "row": "Row"
+      },
+      "warnings": {
+        "title": "{count, plural, one {# warning} other {# warnings}}",
+        "disappeared": "{count, plural, one {# building disappeared} other {# buildings disappeared}}",
+        "uncovered": "{count, plural, one {# stud can't be filled} other {# studs can't be filled}} with the bricks you allowed",
+        "missingTiles": "{count, plural, one {# tile was missing} other {# tiles were missing}}",
+        "legacyRotation": "Legacy mode ignored the rotation of the area",
+        "fix": "Fix",
+        "erasedStuds": "{count, plural, one {# built-up stud got no brick} other {# built-up studs got no brick}}",
+        "flat": "The selected buildings are flat: every stud is 0."
+      },
+      "toolbar": {
+        "ghost": "Show source model",
+        "labels": "Plate labels"
+      },
+      "cta": "Open the build guide",
+      "announce": "Brick model generated: {bricks} bricks.",
+      "view2d": "Height map (2D view)",
+      "legend": {
+        "bricks": "White bricks",
+        "baseplates": "32 × 32 baseplates"
+      },
+      "keyPlates": "plates · {w} × {d} cm",
+      "keyBricks": "bricks + {plates} baseplates",
+      "keyTallest": "bricks tallest ({cm} cm)"
+    },
+    "empty": {
+      "title": "No bricks to build",
+      "body": "Nothing in this area is tall enough for one brick.",
+      "keepSmall": "Keep small buildings",
+      "trueScale": "Use true scale",
+      "moveArea": "Move the area",
+      "back": "Back to scale & height",
+      "viewport": "Empty plates: nothing reaches one brick."
+    },
+    "errors": {
+      "outOfMemory": {
+        "title": "Generation stopped: your browser ran out of memory",
+        "body": "Try fewer plates or a smaller area.",
+        "action": "Try fewer plates"
+      },
+      "worker": {
+        "title": "Generation stopped because of an error",
+        "body": "This is probably a bug. Try again; if it happens again, save a project file and report the problem."
+      },
+      "noGeometry": {
+        "title": "No buildings in this area",
+        "body": "Move the area over the model, then generate again.",
+        "action": "Move the area"
+      },
+      "cancelledHint": "The previous brick model is kept, marked out of date."
+    }
+  },
+  "guide": {
+    "summary": "{name} · {x} × {y} plates · {w} × {d} cm · {bricks} bricks + {plates} baseplates · tallest {cm} cm · {preset}",
+    "tabs": {
+      "label": "Build guide",
+      "bricks": "Get the bricks",
+      "build": "Build",
+      "table": "Set up the table",
+      "downloads": "All downloads"
+    },
+    "mobileTabs": {
+      "plates": "Plates",
+      "bricks": "Bricks",
+      "table": "Table",
+      "downloads": "Downloads"
+    },
+    "guideOnly": {
+      "message": "Opened from a project file. To change the area or settings, add the original files.",
+      "action": "Add the original files"
+    },
+    "bricks": {
+      "title": "The brick shelf",
+      "scope": {
+        "label": "Show",
+        "whole": "Whole model",
+        "plate": "Plate {plate}"
+      },
+      "rows": {
+        "oneWide": "1 stud wide",
+        "twoWide": "2 studs wide",
+        "baseplates": "Baseplates",
+        "baseplatesScale": "Drawn at ¼ scale"
+      },
+      "slot": {
+        "quantity": "×{count}",
+        "toBuy": "×{buy} to buy ({need} + {spare} spare)",
+        "useThis": "Use this brick",
+        "notUsed": "Not used",
+        "spoken": "{size}, part {id}, {count, plural, one {# brick} other {# bricks}}",
+        "noneOnPlate": "None on this plate",
+        "locked": "1 × 1 bricks fill the gaps, so they are always used.",
+        "useThisLabel": "Use {size} bricks"
+      },
+      "total": "{bricks} bricks in {kinds} sizes + {plates} baseplates",
+      "showTable": "Show as table",
+      "showShelf": "Show as shelf",
+      "table": {
+        "caption": "Bricks needed, per size and per plate",
+        "part": "Brick",
+        "size": "Size",
+        "number": "Part number",
+        "quantity": "Quantity",
+        "toBuy": "To buy",
+        "total": "Total",
+        "allPlates": "All plates"
+      },
+      "where": {
+        "title": "Where do they go?",
+        "perPlate": "{plate}: {count}",
+        "firstStep": "Show the first step that uses it",
+        "legend": "{size} bricks (highlighted from the shelf)"
+      },
+      "settings": {
+        "title": "Bricks you can use",
+        "summaryAll": "All sizes",
+        "summaryCount": "{count} of 11 sizes",
+        "quickSets": {
+          "label": "Quick choice",
+          "all": "All sizes",
+          "common": "Common sizes",
+          "squares": "Squares only"
+        },
+        "longest": "Longest brick",
+        "longestValue": "{n} studs",
+        "keepOne": "Keep at least one brick size.",
+        "oneByOneLocked": "1 × 1 bricks fill the gaps, so they're always used.",
+        "oneByOneOff": "Without 1 × 1 bricks, some single studs may stay empty.",
+        "uncovered": "{count, plural, one {# stud can't} other {# studs can't}} be filled with the bricks you allowed.",
+        "allowOneByOne": "Allow 1 × 1 bricks",
+        "announceUpdated": "Brick list updated: {bricks} bricks.",
+        "maxLengthNone": "No limit"
+      },
+      "report": {
+        "title": "About this count",
+        "body": "At least {lowerBound} bricks are needed. This plan uses {count}, {percent}% more, because bricks can't cross plate edges and they overlap the seams below so the model holds together.",
+        "method": "How the bricks are chosen"
+      },
+      "buy": {
+        "title": "Buy them",
+        "spares": {
+          "label": "Spares",
+          "none": "None",
+          "five": "+5%",
+          "ten": "+10%",
+          "help": "Extra bricks in case some get lost. Only the shopping lists change."
+        },
+        "white": "All bricks are white (BrickLink colour 1, Rebrickable colour 15).",
+        "baseplateColour": {
+          "label": "Baseplate colour",
+          "grey": "Light grey",
+          "white": "White"
+        }
+      },
+      "plateKit": "{bricks} bricks + 1 baseplate for plate {plate}",
+      "kitTitle": "Kit for plate {plate}",
+      "updating": "Updating…",
+      "viewport": "3D view of the whole model"
+    },
+    "build": {
+      "plateMap": {
+        "title": "Build board",
+        "label": "Plates. Use the arrow keys to move between plates.",
+        "status": {
+          "notStarted": "Not started",
+          "inProgress": "Layer {done} of {total}",
+          "built": "Built",
+          "empty": "Nothing to build"
+        },
+        "tileName": "Plate {plate}, {status}",
+        "team": {
+          "label": "Who builds {plate}?",
+          "placeholder": "Team name"
+        },
+        "markBuilt": "Mark plate as built",
+        "markNotBuilt": "Mark plate as not built",
+        "legend": "Built · In progress · Not started · Nothing to build",
+        "layerShort": "{done}/{total}"
+      },
+      "step": {
+        "header": "Plate {plate} · Layer {layer} of {total}",
+        "newBricks": "{count, plural, one {# new brick} other {# new bricks}}",
+        "announce": "Plate {plate}, layer {layer} of {total}: {parts}."
+      },
+      "callout": {
+        "title": "This step",
+        "item": "{count} × {size}",
+        "hint": "Select a brick to see where it goes.",
+        "showAll": "Show all bricks",
+        "empty": "No new bricks on this layer."
+      },
+      "controls": {
+        "first": "First layer",
+        "previous": "Previous",
+        "next": "Next",
+        "last": "Last layer",
+        "done": "Done, next layer",
+        "doneLast": "Done, plate finished",
+        "scrubber": "Layer {layer} of {total}"
+      },
+      "view": {
+        "top": "Top view",
+        "threeD": "3D view",
+        "turn": "Turn 90°",
+        "turnHelp": "Turn the view to match your side of the table.",
+        "below": {
+          "label": "Layers below",
+          "ghost": "Ghost",
+          "solid": "Solid",
+          "hidden": "Hidden"
+        },
+        "neighbours": "Show neighbouring plates",
+        "tableMode": "Table mode",
+        "exitTableMode": "Exit table mode",
+        "help": "Keyboard help"
+      },
+      "list": {
+        "show": "Show as list",
+        "hide": "Show 3D",
+        "diagramTitle": "Plate {plate}, layer {layer}, seen from above",
+        "rowItem": "{size} brick at column {col}, row {row}, {orientation}",
+        "orientationWE": "lying west–east",
+        "orientationNS": "lying north–south",
+        "rulersNote": "Columns 1 to 32 go west to east, rows 1 to 32 go north to south.",
+        "caption": "New bricks in layer {layer}",
+        "brick": "Brick",
+        "column": "Column",
+        "row": "Row",
+        "lying": "Lying",
+        "positionNote": "Position = the brick's north-west stud.",
+        "lyingWE": "west–east",
+        "lyingNS": "north–south",
+        "square": "—"
+      },
+      "emptyPlate": "Nothing to build on this plate. Just place the baseplate.",
+      "plateDone": "Plate {plate} done! Next: plate {next}.",
+      "plateDoneContinue": "Continue",
+      "allBuilt": "Your model is built! Next: set up the table.",
+      "allBuiltCta": "Set up the table",
+      "copyLink": "Copy link to this step",
+      "linkCopied": "Link copied.",
+      "deepLink": {
+        "invalidPlate": "Plate {plate} isn't in this model. Showing {fallback}.",
+        "invalidLayer": "Plate {plate} has {total} layers. Showing layer {fallback}.",
+        "noProject": "This link points to a project that isn't on this computer. Open its project file, or ask for a plate pass.",
+        "noResult": "Generate your model first to see its build guide."
+      },
+      "keys": {
+        "title": "Keyboard and keypad",
+        "intro": "Use the arrow keys, or a numeric keypad like the one on the Legonizer table. Keypad keys work with Num Lock on or off.",
+        "columns": {
+          "action": "Action",
+          "keyboard": "Keyboard",
+          "keypad": "Keypad"
+        },
+        "next": "Next layer",
+        "previous": "Previous layer",
+        "done": "Done, next layer",
+        "first": "First layer of the plate",
+        "last": "Last layer of the plate",
+        "nextPlate": "Next plate",
+        "previousPlate": "Previous plate",
+        "top": "Top view",
+        "threeD": "3D view",
+        "turn": "Turn the view 90°",
+        "reset": "Reset view",
+        "zoom": "Zoom in / out",
+        "below": "Layers below: ghost, solid, hidden",
+        "help": "Show this help",
+        "exit": "Leave table mode",
+        "shortcuts": {
+          "label": "Single-key shortcuts",
+          "on": "On",
+          "off": "Off",
+          "help": "Turn off if you use speech input or if keys trigger actions by mistake."
+        },
+        "hint": "←/→ or 4/6: layers · 9/3: plates · Enter: done · ?: all keys",
+        "tableModeHint": "4 previous · 6 next · Enter done · 9/3 plate · 5 turn · 8/2 view · Esc exit",
+        "toggle": "Single-key shortcuts"
+      },
+      "share": {
+        "action": "Share this plate",
+        "title": "Share plate {plate}",
+        "body": "Scan this code with a phone to open plate {plate}'s instructions there. Nothing is uploaded: the plate travels inside the link.",
+        "copy": "Copy link",
+        "tooLarge": "This plate is too detailed for a QR code. Open it on the main computer.",
+        "printPasses": "Print plate passes",
+        "qrAlt": "QR code that opens plate {plate} on a phone",
+        "passTitle": "Plate pass {plate}",
+        "position": "Column {col}, row {row}"
+      },
+      "plateMode": {
+        "title": "Plate {plate} from “{project}”",
+        "shared": "Shared from another device. Nothing was uploaded: the plate is stored in the link.",
+        "kit": "Bricks for this plate",
+        "whatIsThis": "What is this?",
+        "versionMismatch": "This link was made with version {version}. The instructions may differ slightly from the printed guide.",
+        "invalid": "This plate link is damaged or incomplete. Ask for the plate pass again.",
+        "backToGuide": "Open the Legonizer",
+        "loading": "Preparing the instructions…",
+        "done": "Plate {plate} is built. Bring it back to the table."
+      },
+      "legend": {
+        "new": "New in this step",
+        "below": "Layers below"
+      },
+      "plateDoneTitle": "Plate {plate} done!",
+      "plateDoneLast": "Plate {plate} done!",
+      "tableModeLabel": "Table mode",
+      "zoomIn": "Zoom in",
+      "zoomOut": "Zoom out",
+      "resetView": "Reset view"
+    },
+    "table": {
+      "layout": {
+        "title": "Lay out the plates",
+        "body": "A1 is the north-west corner. Keep north on the same side as on the map.",
+        "diagramAlt": "{x} by {y} plates on a 1 by 2 metre table. Plate A1 is at the north-west corner; the rest of the table is free for projected media.",
+        "checklist": {
+          "title": "Checklist",
+          "allBuilt": "All plates built ({done} of {total})",
+          "placed": "Plates placed in order, {first} to {last}",
+          "aligned": "Edges pushed together, no gaps"
+        },
+        "goBuild": "Go to Build"
+      },
+      "projection": {
+        "title": "Projection layer",
+        "grid": "Plate grid",
+        "labels": "Plate labels",
+        "howTo": {
+          "title": "How to use it",
+          "step1": "Project it onto the white model.",
+          "step2": "Zoom, move and tilt the projector until the outlines sit on the bricks.",
+          "step3": "Draw your data layers on this image, so they line up with the bricks too."
+        },
+        "note": "There is no automatic calibration yet: adjust the projector by hand.",
+        "download": "Download the projection layer",
+        "fileType": "File type"
+      },
+      "calqueAlt": "Projection layer: top view of the bricks as thin outlines on white{grid, select, yes {, with the plate grid} other {}}{labels, select, yes { and labels} other {}}."
+    },
+    "downloads": {
+      "title": "All downloads",
+      "all": "Download everything (.zip)",
+      "allPreparing": "Preparing the .zip: {done} of {total} files",
+      "groups": {
+        "building": "For building",
+        "shopping": "For shopping",
+        "projector": "For the projector",
+        "digital": "For digital tools"
+      },
+      "readme": {
+        "title": "What's in this folder",
+        "pdf": "{file}: the build guide to print.",
+        "bricklink": "{file}: wanted list to paste on BrickLink.",
+        "rebrickable": "{file}: parts list to import on Rebrickable.",
+        "projection": "{file}: projection layer for the projector.",
+        "csv": "{file}: height of every stud, in bricks (rows north to south, columns west to east, separated by semicolons).",
+        "ldraw": "{file}: 3D model for BrickLink Studio, LeoCAD and other LDraw tools.",
+        "project": "{file}: project file. Open it on the Legonizer website to get identical files.",
+        "intro": "Files made with the Legonizer {version} from “{project}” on {date}."
+      }
+    },
+    "summaryShort": "{x} × {y} plates · {bricks} bricks"
+  }
+}

@@ -1,0 +1,65 @@
+{
+  "meta": {
+    "title": "About · Legonizer"
+  },
+  "title": "About the Legonizer",
+  "intro": "The Legonizer is a research tool from the VCity team of the LIRIS lab. It turns 3D city models into brick models for augmented physical models: a table, white bricks, a projector and a screen.",
+  "privacy": {
+    "title": "Your data stays with you",
+    "body": "Everything runs in your browser. Your 3D files are never uploaded. Plate links and QR codes carry the plate inside the link itself."
+  },
+  "method": {
+    "title": "How it works",
+    "heights": "For every stud, the Legonizer measures the height of the city below it by casting a ray from above, then turns that height into a number of bricks.",
+    "legacy": "The Legacy preset reproduces the UD-Viz 4.6.1 widget exactly, including its known limits, so researchers can compare results. Other options are improvements you choose.",
+    "bricks": "The bricks are chosen layer by layer for each plate: as few bricks as possible, never crossing a plate edge, and overlapping the seams below so the model holds together."
+  },
+  "paper": {
+    "title": "The research",
+    "citation": "C. Le Bihan Gautier, J. Delanoy, G. Gesquière. Représentation de l'évolution urbaine à travers une maquette tangible de territoires. Journées Françaises de l'Informatique Graphique (JFIG), Strasbourg, October 2024. hal-04924304. Licence CC0 1.0.",
+    "link": "Read the paper on HAL"
+  },
+  "licences": {
+    "title": "Licences and credits",
+    "legonizer": "legonizer 1.1.0 (core algorithm): ISC licence.",
+    "udviz": "UD-Viz Legonizer widget 4.6.1: LGPL-2.1 licence.",
+    "paper": "Research paper and figures: CC0 1.0.",
+    "data": "Demo data: Métropole de Lyon open data."
+  },
+  "files": {
+    "title": "About the files",
+    "csv": "Height matrix (CSV): one line per row of studs, from north to south; one value per stud, from west to east, separated by semicolons; each value is a number of bricks.",
+    "ldraw": "LDraw model: 1 stud = 20 LDraw units, a brick is 24 units high, colour 15 (white).",
+    "project": "Project file: input file names and fingerprints, area, settings, app version and heights. Opening it gives identical files."
+  },
+  "trademark": {
+    "title": "Trademark",
+    "body": "LEGO® is a trademark of the LEGO Group, which does not sponsor, authorize or endorse this site. This site talks about bricks and does not use LEGO logos or trade dress."
+  },
+  "toc": {
+    "label": "On this page"
+  },
+  "credits": {
+    "title": "Credits",
+    "tiles": "3D Tiles of the demo: LIRIS / VCity, produced with py3dtilers from Métropole de Lyon data."
+  },
+  "links": {
+    "udviz": "UD-Viz on GitHub",
+    "legonizer": "legonizer on npm",
+    "py3dtilers": "py3dtilers on GitHub",
+    "py3dtiles": "py3dtiles on GitLab"
+  },
+  "software": {
+    "title": "Software and fonts used by this site",
+    "three": "three.js 0.186 (3D rendering): MIT licence.",
+    "bvh": "three-mesh-bvh (fast ray casting): MIT licence.",
+    "fflate": "fflate (zip files and compression): MIT licence.",
+    "messageformat": "intl-messageformat (translations): BSD-3-Clause licence.",
+    "pdf": "pdf-lib (printable guide): MIT licence.",
+    "qrcode": "qrcode (plate passes): MIT licence.",
+    "fonts": "Bricolage Grotesque, IBM Plex Sans and IBM Plex Mono: SIL Open Font Licence 1.1, served from this site (no request to a font service)."
+  },
+  "site": {
+    "licence": "This site's source code: LGPL-2.1 licence."
+  }
+}

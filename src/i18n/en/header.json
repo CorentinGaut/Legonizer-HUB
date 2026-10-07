@@ -1,0 +1,18 @@
+{
+  "skipToContent": "Skip to main content",
+  "homeLink": "Legonizer home",
+  "nav": {
+    "label": "Main",
+    "create": "Create",
+    "about": "About",
+    "help": "Help"
+  },
+  "language": {
+    "label": "Language",
+    "en": "English",
+    "fr": "Français"
+  },
+  "menu": "Menu",
+  "closeMenu": "Close menu",
+  "cta": "Create your model"
+}

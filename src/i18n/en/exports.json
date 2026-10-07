@@ -1,0 +1,181 @@
+{
+  "common": {
+    "preparing": "Preparing…",
+    "downloaded": "Downloaded {file}",
+    "error": "We couldn't create this file.",
+    "disabledStale": "Regenerate first: your settings changed.",
+    "withWarning": "{count, plural, one {# stud is} other {# studs are}} not covered in this file.",
+    "options": "Options",
+    "approxSize": "About {size}",
+    "fileName": "File name: {file}",
+    "cancelled": "Cancelled.",
+    "parts": "{count, plural, one {# part} other {# parts}}",
+    "underOneKb": "Under 1 kB",
+    "kb": "About {value} kB",
+    "mb": "About {value} MB"
+  },
+  "csv": {
+    "title": "Height matrix (CSV)",
+    "purpose": "The height of every stud, in bricks. Same format as the UD-Viz widget.",
+    "oneFile": "One file",
+    "perPlate": "One file per plate (.zip)",
+    "formatNote": "One line per row of studs, north first; values separated by semicolons.",
+    "perPlateZip": "legoPlates per plate (.zip)"
+  },
+  "projection": {
+    "title": "Projection layer",
+    "purpose": "A top view of the model to line up your projector and draw data layers.",
+    "jpg": "JPG, legacy (1920 px)",
+    "png": "PNG at {dpi} dpi",
+    "dpiLabel": "Resolution",
+    "pngNote": "The real size of the model is stored inside the file.",
+    "grid": "Plate grid",
+    "labels": "Plate labels",
+    "eyebrow": "For the projector",
+    "pngShort": "PNG",
+    "dpiValue": "{dpi} dpi",
+    "sizePx": "{w} × {h} px"
+  },
+  "pdf": {
+    "title": "Build guide",
+    "purpose": "Everything to build at the table: plate map, height grids, parts and layer diagrams.",
+    "paper": "Paper",
+    "a4": "A4",
+    "letter": "US Letter",
+    "sections": {
+      "label": "Sections",
+      "cover": "Cover and plate map",
+      "plates": "Plates",
+      "layers": "Layer diagrams",
+      "projection": "Projection layer",
+      "passes": "Plate passes",
+      "shopping": "Shopping list",
+      "appendix": "Technical appendix",
+      "coverName": "Cover",
+      "coverTitle": "Cover"
+    },
+    "pages": "About {count, plural, one {# page} other {# pages}}",
+    "progress": "Preparing the PDF: page {page} of {total}",
+    "download": "Download PDF",
+    "cover": {
+      "madeWith": "Made with the Legonizer {version} on {date}",
+      "settings": "{preset} · {scale} m per stud · map scale 1:{n}",
+      "accessibleVersion": "An accessible version of this guide is on the Build guide page of the website.",
+      "howToTitle": "How to use this guide",
+      "howTo1": "Buy the bricks on the shopping list.",
+      "howTo2": "Sort them into one tray per plate, using each plate's kit list.",
+      "howTo3": "Build each plate layer by layer.",
+      "howTo4": "Lay out the plates on the table, A1 at the north-west corner.",
+      "howTo5": "Project the projection layer and line it up with the bricks.",
+      "plateMap": "Plate map",
+      "mapHint": "(as laid out on the table, north up)",
+      "plateMapNote": "A1 is the north-west corner. Each plate is 32 × 32 studs (25.6 cm).",
+      "facts": {
+        "onTable": "On the table",
+        "onTableValue": "{w} × {d} cm, up to {h} cm high",
+        "onGround": "On the ground",
+        "onGroundValue": "{w} × {d} m",
+        "scale": "Scale",
+        "scaleValue": "{s} m per stud · 1:{n}",
+        "preset": "Preset",
+        "differs": "Differs from legacy",
+        "bricks": "Bricks",
+        "tallest": "Tallest",
+        "tallestValue": "{bricks, plural, one {# brick} other {# bricks}} ({cm} cm)"
+      }
+    },
+    "pageFooter": "{project} · {section}",
+    "heightGridTitle": "Height of every stud, in bricks",
+    "kitTitle": "Kit for plate {plate}",
+    "layerTitle": "Layer {layer} of {total}",
+    "projectionPageNote": "Real size: {w} × {d} cm. Not printed at real size.",
+    "heightLegend": "Bricks per stud",
+    "platePosition": "Column {col} of {cols} from the west, row {row} of {rows} from the north.",
+    "kitPerPlate": "Kit per plate",
+    "kitPerPlateNote": "(sort the bricks into one tray per plate)",
+    "tickTray": "Tick each tray when it is full.",
+    "scaleBar": "one plate = 25.6 cm on the table",
+    "baseplateScale": "⅛ scale",
+    "baseplateName": "32×32 baseplate",
+    "spare": "+{n} spare",
+    "total": "Total",
+    "continued": "continued",
+    "pageNumber": "page {page} of {pages}",
+    "heightGridNote": "· rows 1–32 north → south, columns 1–32 west → east",
+    "layersRange": "Layers {from}–{to} of {total}",
+    "newBricks": "{count, plural, =0 {no new brick} one {# new brick} other {# new bricks}}",
+    "legendNew": "New in this step",
+    "legendBelow": "Layers below",
+    "legendNote": "North up · rulers: columns west → east, rows north → south",
+    "emptyPlate": "Nothing to build on this plate. Just place the baseplate.",
+    "white": "All bricks are white (BrickLink colour 1, Rebrickable colour 15).",
+    "lowerBound": "At least {lowerBound} bricks are needed. This plan uses {count}, {percent}% more, because bricks can't cross plate edges and they overlap the seams below so the model holds together.",
+    "appendix": {
+      "title": "How this model was made",
+      "settings": "Settings",
+      "inputs": "Input and versions",
+      "files": "Files",
+      "filesBody": "{csv}: height of every stud, in bricks (rows north to south, columns west to east, separated by semicolons). The project file (.legonizer.json) opens on the Legonizer website and gives identical files.",
+      "credits": "Research: C. Le Bihan Gautier, J. Delanoy, G. Gesquière, JFIG 2024, hal-04924304. Data of the demo: Métropole de Lyon (2018), 3D Tiles: LIRIS / VCity.",
+      "legacyValue": "Legacy",
+      "changedValue": "changed",
+      "noInputs": "not recorded (opened from a project file or a plate pass)"
+    },
+    "shoppingTitle": "Shopping list",
+    "plateSummary": "{layers, plural, one {# layer} other {# layers}} · {bricks} bricks",
+    "cancel": "Cancel",
+    "preparingShort": "Preparing the PDF…"
+  },
+  "bricklink": {
+    "title": "BrickLink wanted list",
+    "purpose": "Order the bricks from BrickLink sellers.",
+    "copy": "Copy XML",
+    "copied": "Copied. Now paste it on BrickLink.",
+    "download": "Download .xml",
+    "howTo": {
+      "step1": "Copy the list.",
+      "step2": "Open BrickLink's wanted list upload page and choose “Upload BrickLink XML format”.",
+      "step3": "Paste the list and continue."
+    },
+    "link": "Open BrickLink's upload page",
+    "ldrNote": "You can also upload the LDraw file (.ldr) on BrickLink."
+  },
+  "rebrickable": {
+    "title": "Rebrickable parts list",
+    "purpose": "Add the bricks to a part list on Rebrickable.",
+    "download": "Download .csv",
+    "howTo": {
+      "step1": "Download the file.",
+      "step2": "On Rebrickable, open one of your part lists.",
+      "step3": "Import the file into it."
+    }
+  },
+  "ldraw": {
+    "title": "LDraw model",
+    "purpose": "Open the model in BrickLink Studio or LeoCAD.",
+    "single": "Single model (.ldr)",
+    "mpd": "One submodel per plate (.mpd)"
+  },
+  "project": {
+    "title": "Project file",
+    "purpose": "Open it here later to get identical files.",
+    "save": "Save project file"
+  },
+  "print": {
+    "title": "Shopping list on paper",
+    "purpose": "The shopping pages of the PDF.",
+    "action": "Print the shopping list"
+  },
+  "pass": {
+    "title": "Plate pass",
+    "layers": "{count, plural, one {# layer} other {# layers}} · {bricks} bricks",
+    "scan": "Scan to build this plate on a phone",
+    "position": "Position on the table",
+    "tooLarge": "This plate is too detailed for a QR code. Open it on the main computer.",
+    "footer": "Legonizer {version} · {date}. Nothing is uploaded: the plate travels inside the link.",
+    "cut": "cut along the dashed lines"
+  },
+  "all": {
+    "preparing": "Preparing the .zip…"
+  }
+}

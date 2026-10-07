@@ -1,0 +1,29 @@
+{
+  "generic": {
+    "title": "Something went wrong",
+    "body": "Try again. If it happens again, save a project file and report the problem."
+  },
+  "storageFull": "This browser's storage is full, so your project wasn't saved here. Save a project file to keep it.",
+  "workerStopped": "The background task stopped unexpectedly.",
+  "copyFailed": "We couldn't copy. Select the text and copy it yourself.",
+  "downloadBlocked": "Your browser blocked the download. Allow downloads for this site, then try again.",
+  "offlineUrl": "You seem to be offline. Files on your computer still work.",
+  "engine": {
+    "cancelled": "Cancelled.",
+    "internal": "Unexpected error in the background task.",
+    "invalidParams": "These settings are out of range."
+  },
+  "export": {
+    "title": "We couldn't create this file.",
+    "noResult": "Generate your model first."
+  },
+  "storage": {
+    "blocked": "This browser doesn't let the site store data, so your project won't be kept after a reload. Save a project file to keep it."
+  },
+  "clipboard": {
+    "copied": "Copied."
+  },
+  "reload": {
+    "title": "The page was updated"
+  }
+}

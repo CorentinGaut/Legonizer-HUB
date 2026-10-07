@@ -1,0 +1,12 @@
+node_modules/
+dist/
+coverage/
+fixtures/
+*.log
+.DS_Store
+/test-results/
+/playwright-report/
+
+# Part-Dieu demo: real Lyon tiles, licence not confirmed (SPEC §13.2); `npm run fixtures:demo -- --public` copies it here for local dev and e2e only
+public/data/demo/part-dieu/
+/e2e-artifacts/

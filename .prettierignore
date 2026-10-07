@@ -1,0 +1,16 @@
+node_modules
+dist
+coverage
+fixtures
+docs/reference
+docs/ux
+docs/ui
+public/data
+test/fixtures/**/*.json
+test/fixtures/**/*.csv
+package-lock.json
+*.md
+src/data
+# verbatim copies of docs/ui/tokens.css and docs/ui/components.css (update by copying)
+src/styles/tokens.css
+src/styles/components.css

@@ -1,0 +1,168 @@
+{
+  "meta": {
+    "title": "Legonizer · Turn a 3D city model into a brick model",
+    "description": "Turn a 3D city model into a model of white bricks you can build, project urban data on and discuss around. Free, in your browser, with parts list, instructions and shopping lists."
+  },
+  "hero": {
+    "regionLabel": "Animation: building a brick model of a district and projecting data on it",
+    "headline": "From a 3D city model to a brick model you can build, project on and discuss around.",
+    "lead": "Turn your 3D city data into white bricks, with the parts to buy, step-by-step instructions and a projection layer.",
+    "ctaPrimary": "Create your model",
+    "ctaDemo": "Try with Part-Dieu",
+    "posterAlt": "A white brick model of the Part-Dieu district on a table. A projector on a mast colours some buildings green, red and yellow to show what was built, demolished or modified, and projects a picture next to the model. Three people stand around the table; one holds a numeric keypad. A screen on the mast shows a timeline.",
+    "pause": "Pause animation",
+    "play": "Play animation",
+    "playReducedMotion": "Play the animation",
+    "readStory": "Read the story as text",
+    "chaptersLabel": "Chapters of the animation",
+    "chapter": "Chapter {n} of 5: {title}",
+    "webglFallback": "The animation needs 3D graphics, which are off in this browser. Here is the story in pictures and words."
+  },
+  "animation": {
+    "captions": {
+      "c1": "A table, a projector, a screen.",
+      "c2": "The Legonizer turns a 3D city model into a brick model.",
+      "c3": "Project urban data onto the white bricks.",
+      "c4": "See how the district changed, and talk about it together.",
+      "c5": "Build yours."
+    },
+    "chapterTitles": {
+      "c1": "The setting",
+      "c2": "Building",
+      "c3": "Projecting",
+      "c4": "Discussing",
+      "c5": "Your turn"
+    },
+    "transcript": {
+      "title": "The story of the animation",
+      "extra": "In the change layer, green means built, red means demolished and yellow means modified."
+    },
+    "legend": {
+      "housing": "Housing",
+      "offices": "Offices",
+      "shops": "Shops and services",
+      "public": "Public facilities",
+      "vegetation": "Green spaces",
+      "tram": "Tram lines",
+      "built": "Built",
+      "demolished": "Demolished",
+      "modified": "Modified"
+    }
+  },
+  "what": {
+    "title": "A brick model of your city, ready to build",
+    "body": "The Legonizer turns a 3D model of a city into a model made of white bricks on square baseplates of 32 × 32 studs. It gives you everything you need to build it: the list of bricks to buy, step-by-step building instructions and a projection layer for your projector.",
+    "imageModelAlt": "A district built with white bricks on grey baseplates.",
+    "imageProjectionAlt": "Coloured data projected onto a white brick model.",
+    "imageScreenAlt": "A screen showing the same district in 3D."
+  },
+  "why": {
+    "title": "Why bricks, and why project on them?",
+    "intro": "A physical model brings people around one table. A digital model can show data, change and time. An augmented model combines both: a projector shows urban data on the bricks while a screen shows the 3D city.",
+    "together": {
+      "title": "Around one table",
+      "body": "Everyone looks at the same model and can point at it. It is easier to talk about a place together."
+    },
+    "tangible": {
+      "title": "You can touch it",
+      "body": "People walk around the model, lean in and recognise their street, even if they don't read maps."
+    },
+    "white": {
+      "title": "White bricks make a screen",
+      "body": "The projector lights up the white bricks with building uses, green spaces or tram lines, right where they are."
+    },
+    "modular": {
+      "title": "Modular, reusable, playful",
+      "body": "Take it apart and build another district, or the same one at another scale. Building it together is part of the fun."
+    }
+  },
+  "how": {
+    "title": "How it works",
+    "import": {
+      "title": "1. Import a 3D city model",
+      "body": "Use our Part-Dieu demo or your own file: 3D Tiles, glTF, OBJ or CityJSON. Everything stays on your computer."
+    },
+    "area": {
+      "title": "2. Choose the area and the scale",
+      "body": "Draw the district you want and see how big it will be on the table before you start."
+    },
+    "build": {
+      "title": "3. Build it, project on it",
+      "body": "Get the parts list, step-by-step instructions, shopping lists and the projection layer."
+    },
+    "cta": "Create your model"
+  },
+  "whatYouGet": {
+    "title": "What you get",
+    "shelf": {
+      "title": "A brick shelf",
+      "body": "Every brick you need, drawn to scale, with quantities and part numbers."
+    },
+    "instructions": {
+      "title": "3D instructions",
+      "body": "Plate by plate, layer by layer. Works on a phone at the table."
+    },
+    "pdf": {
+      "title": "A printable guide",
+      "body": "A map of the plates, a height grid and a diagram for every layer."
+    },
+    "shop": {
+      "title": "Shopping lists",
+      "body": "Ready to import on BrickLink or Rebrickable."
+    },
+    "projection": {
+      "title": "A projection layer",
+      "body": "A top view of your model to line up the projector and draw your own data layers."
+    },
+    "data": {
+      "title": "Data files",
+      "body": "The height of every stud (CSV), a 3D model for LDraw tools and a project file to start again later."
+    }
+  },
+  "who": {
+    "title": "Who it's for",
+    "facilitators": {
+      "title": "Workshop facilitators and museums",
+      "body": "Build a district for a public workshop, an exhibition or a neighbourhood project centre."
+    },
+    "planners": {
+      "title": "Urban planners and researchers",
+      "body": "Make a model of a precise area at a precise scale, with settings you can reproduce."
+    },
+    "teachers": {
+      "title": "Teachers, students and makers",
+      "body": "Learn about your city by building it, starting from a ready-made demo."
+    }
+  },
+  "useCase": {
+    "title": "Use case: a workshop on Part-Dieu",
+    "intro": "Part-Dieu is Lyon's business district, organised around its railway station. Here is how a workshop group can use the Legonizer to talk about how it changed.",
+    "build": {
+      "title": "Build",
+      "body": "The group builds the district from white bricks, one baseplate per team, following the instructions."
+    },
+    "project": {
+      "title": "Project",
+      "body": "The projector shows what each building is used for, the green spaces and the tram lines, right on the bricks."
+    },
+    "compare": {
+      "title": "Compare",
+      "body": "The screen shows earlier versions of the district. The projector colours the buildings that changed: green for built, red for demolished, yellow for modified."
+    },
+    "discuss": {
+      "title": "Discuss",
+      "body": "Pictures and documents appear next to the model. A numeric keypad passes from hand to hand to switch layers and versions."
+    },
+    "cta": "Try with Part-Dieu"
+  },
+  "credits": {
+    "title": "Credits",
+    "research": "The Legonizer comes from research on augmented physical models of cities by C. Le Bihan Gautier, J. Delanoy and G. Gesquière, VCity team, LIRIS lab (CNRS, Université de Lyon).",
+    "paperLabel": "Read the paper on HAL",
+    "paperCitation": "Représentation de l'évolution urbaine à travers une maquette tangible de territoires. Journées Françaises de l'Informatique Graphique (JFIG), Strasbourg, October 2024. hal-04924304.",
+    "udviz": "It extends the Legonizer widget of UD-Viz, the VCity team's open-source framework for urban data.",
+    "udvizLink": "UD-Viz on GitHub",
+    "data": "Demo data: Métropole de Lyon open data.",
+    "illustrative": "The building uses, green spaces, tram line, changes and pictures shown in the animation are illustrative, not real data. The brick model is real: it comes from our own pipeline on the Part-Dieu demo data."
+  }
+}

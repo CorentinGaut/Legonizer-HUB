@@ -1,0 +1,65 @@
+{
+  "meta": {
+    "title": "À propos · Legonizer"
+  },
+  "title": "À propos du Legonizer",
+  "intro": "Le Legonizer est un outil de recherche de l'équipe VCity du laboratoire LIRIS. Il transforme des maquettes 3D de villes en maquettes de briques pour des maquettes physiques augmentées : une table, des briques blanches, un vidéoprojecteur et un écran.",
+  "privacy": {
+    "title": "Vos données restent chez vous",
+    "body": "Tout fonctionne dans votre navigateur. Vos fichiers 3D ne sont jamais envoyés. Les liens de plaque et les QR codes contiennent la plaque dans le lien lui-même."
+  },
+  "method": {
+    "title": "Comment ça marche",
+    "heights": "Pour chaque tenon, le Legonizer mesure la hauteur de la ville en dessous en lançant un rayon depuis le haut, puis convertit cette hauteur en nombre de briques.",
+    "legacy": "Le préréglage Legacy reproduit exactement le widget UD-Viz 4.6.1, y compris ses limites connues, pour que les chercheurs puissent comparer les résultats. Les autres options sont des améliorations que vous choisissez.",
+    "bricks": "Les briques sont choisies couche par couche pour chaque plaque : le moins de briques possible, sans jamais dépasser le bord d'une plaque, et en chevauchant les joints de la couche du dessous pour que la maquette tienne."
+  },
+  "paper": {
+    "title": "La recherche",
+    "citation": "C. Le Bihan Gautier, J. Delanoy, G. Gesquière. Représentation de l'évolution urbaine à travers une maquette tangible de territoires. Journées Françaises de l'Informatique Graphique (JFIG), Strasbourg, octobre 2024. hal-04924304. Licence CC0 1.0.",
+    "link": "Lire l'article sur HAL"
+  },
+  "licences": {
+    "title": "Licences et crédits",
+    "legonizer": "legonizer 1.1.0 (algorithme de base) : licence ISC.",
+    "udviz": "Widget Legonizer d'UD-Viz 4.6.1 : licence LGPL-2.1.",
+    "paper": "Article de recherche et figures : CC0 1.0.",
+    "data": "Données de démonstration : données ouvertes de la Métropole de Lyon."
+  },
+  "files": {
+    "title": "À propos des fichiers",
+    "csv": "Matrice des hauteurs (CSV) : une ligne par rangée de tenons, du nord au sud ; une valeur par tenon, d'ouest en est, séparées par des points-virgules ; chaque valeur est un nombre de briques.",
+    "ldraw": "Modèle LDraw : 1 tenon = 20 unités LDraw, une brique fait 24 unités de haut, couleur 15 (blanc).",
+    "project": "Fichier de projet : noms et empreintes des fichiers d'entrée, zone, réglages, version de l'application et hauteurs. L'ouvrir redonne des fichiers identiques."
+  },
+  "trademark": {
+    "title": "Marque",
+    "body": "LEGO® est une marque du groupe LEGO, qui ne parraine, n'autorise ni ne cautionne ce site. Ce site parle de briques et n'utilise ni les logos ni l'habillage commercial de LEGO."
+  },
+  "toc": {
+    "label": "Sur cette page"
+  },
+  "credits": {
+    "title": "Crédits",
+    "tiles": "3D Tiles de la démo : LIRIS / VCity, produites avec py3dtilers à partir des données de la Métropole de Lyon."
+  },
+  "links": {
+    "udviz": "UD-Viz sur GitHub",
+    "legonizer": "legonizer sur npm",
+    "py3dtilers": "py3dtilers sur GitHub",
+    "py3dtiles": "py3dtiles sur GitLab"
+  },
+  "software": {
+    "title": "Logiciels et polices utilisés par ce site",
+    "three": "three.js 0.186 (rendu 3D) : licence MIT.",
+    "bvh": "three-mesh-bvh (lancer de rayons rapide) : licence MIT.",
+    "fflate": "fflate (fichiers zip et compression) : licence MIT.",
+    "messageformat": "intl-messageformat (traductions) : licence BSD-3-Clause.",
+    "pdf": "pdf-lib (guide imprimable) : licence MIT.",
+    "qrcode": "qrcode (passes de plaque) : licence MIT.",
+    "fonts": "Bricolage Grotesque, IBM Plex Sans et IBM Plex Mono : SIL Open Font Licence 1.1, servies par ce site (aucune requête vers un service de polices)."
+  },
+  "site": {
+    "licence": "Code source de ce site : licence LGPL-2.1."
+  }
+}

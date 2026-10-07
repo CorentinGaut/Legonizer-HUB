@@ -1,0 +1,112 @@
+/*
+ * Shell additions not in docs/ui/components.css: header action slot, phone menu sheet
+ * (components.md §2 "nav and language move into the menu sheet"), footer theme switch (UI-13).
+ */
+@layer lz.components {
+  .lz-header__actions {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--lz-space-3);
+  }
+  .lz-header__actions:empty {
+    display: none;
+  }
+  .lz-lang abbr {
+    text-decoration: none;
+  }
+  .lz-menu-sheet {
+    border-top: 1px solid var(--lz-color-border);
+    background: var(--lz-color-bg);
+    padding: var(--lz-space-3) var(--lz-gutter) var(--lz-space-5);
+    box-shadow: var(--lz-shadow-2);
+  }
+  .lz-menu-sheet[hidden] {
+    display: none;
+  }
+  .lz-menu-sheet__nav {
+    display: flex;
+    flex-direction: column;
+  }
+  .lz-menu-sheet__nav a {
+    display: flex;
+    align-items: center;
+    min-height: var(--lz-target-touch);
+    padding-inline: var(--lz-space-2);
+    border-radius: var(--lz-radius-md);
+    color: var(--lz-color-text);
+    font-weight: var(--lz-weight-medium);
+    text-decoration: none;
+  }
+  .lz-menu-sheet__nav a[aria-current='page'] {
+    box-shadow: inset 3px 0 0 var(--lz-color-accent);
+  }
+  .lz-menu-sheet__nav a:hover {
+    background: var(--lz-color-surface-hover);
+  }
+  .lz-menu-sheet__row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--lz-space-3);
+    margin-top: var(--lz-space-3);
+    padding: var(--lz-space-3) var(--lz-space-2) 0;
+    border-top: 1px solid var(--lz-color-border);
+    color: var(--lz-color-text-muted);
+    font-size: var(--lz-text-sm);
+  }
+  .lz-header .lz-menu-sheet .lz-lang {
+    display: inline-flex;
+  }
+  .lz-menu-sheet .lz-lang a {
+    min-width: var(--lz-target-touch);
+    min-height: 2.25rem;
+  }
+  @media (min-width: 768px) {
+    .lz-menu-sheet {
+      display: none;
+    }
+  }
+
+  .lz-theme-switch {
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--lz-space-1);
+    margin-top: var(--lz-space-2);
+  }
+  .lz-theme-switch__label {
+    margin-right: var(--lz-space-2);
+  }
+  .lz-theme-switch__btn {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--lz-space-1);
+    min-height: 2rem;
+    padding: 0 var(--lz-space-2);
+    border: 1px solid var(--lz-color-border);
+    border-radius: var(--lz-radius-md);
+    background: transparent;
+    color: var(--lz-color-text-muted);
+    font-size: var(--lz-text-sm);
+  }
+  .lz-theme-switch__btn:hover {
+    background: var(--lz-color-surface-hover);
+    color: var(--lz-color-text);
+  }
+  .lz-theme-switch__btn[aria-pressed='true'] {
+    border-color: var(--lz-color-border-strong);
+    background: var(--lz-color-surface);
+    color: var(--lz-color-text);
+    font-weight: var(--lz-weight-semibold);
+  }
+  main:focus {
+    outline: none;
+  }
+}
+
+@layer lz.utilities {
+  /* `hidden` must win over component display rules (e.g. .lz-alert { display: flex }) */
+  [hidden] {
+    display: none !important;
+  }
+}

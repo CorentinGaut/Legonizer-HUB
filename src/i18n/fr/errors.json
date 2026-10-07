@@ -1,0 +1,29 @@
+{
+  "generic": {
+    "title": "Un problème est survenu",
+    "body": "Réessayez. Si cela se reproduit, enregistrez un fichier de projet et signalez le problème."
+  },
+  "storageFull": "Le stockage de ce navigateur est plein : votre projet n'y a pas été enregistré. Enregistrez un fichier de projet pour le garder.",
+  "workerStopped": "La tâche de fond s'est arrêtée de façon inattendue.",
+  "copyFailed": "Nous n'avons pas pu copier. Sélectionnez le texte et copiez-le vous-même.",
+  "downloadBlocked": "Votre navigateur a bloqué le téléchargement. Autorisez les téléchargements pour ce site, puis réessayez.",
+  "offlineUrl": "Vous semblez hors ligne. Les fichiers de votre ordinateur fonctionnent toujours.",
+  "engine": {
+    "cancelled": "Annulé.",
+    "internal": "Erreur inattendue dans la tâche de fond.",
+    "invalidParams": "Ces réglages sont hors limites."
+  },
+  "export": {
+    "title": "Nous n'avons pas pu créer ce fichier.",
+    "noResult": "Générez d'abord votre maquette."
+  },
+  "storage": {
+    "blocked": "Ce navigateur ne laisse pas le site stocker de données : votre projet ne sera pas conservé après un rechargement. Enregistrez un fichier de projet pour le garder."
+  },
+  "clipboard": {
+    "copied": "Copié."
+  },
+  "reload": {
+    "title": "La page a été mise à jour"
+  }
+}
