@@ -213,51 +213,23 @@ export class ImportStep implements StepView {
             </div>
           </div>`
         : '';
-    const partDieu = demos['part-dieu'];
     const sample = demos['sample'];
     return html`${err}
       <div class="lz-stack">
         ${
-          partDieu || sample
-            ? html`<div class="lz-stack lz-stack--sm">
-                  ${
-                    partDieu
-                      ? html`<div class="lz-card lz-card--tight lz-demo-card">
-                          <h2 class="lz-h4">${t('create.import.demo.partDieu.title')}</h2>
-                          <p class="lz-small lz-muted">
-                            ${t('create.import.demo.partDieu.body')}
-                            <span class="lz-xsmall">${t('create.import.demo.partDieu.source')}</span>
-                          </p>
-                          <button
-                            type="button"
-                            class="lz-btn lz-btn--primary"
-                            data-a="demo"
-                            data-demo="part-dieu"
-                            style="justify-self:start"
-                          >
-                            ${t('create.import.demo.partDieu.cta')}
-                          </button>
-                        </div>`
-                      : ''
-                  }
-                  ${
-                    sample
-                      ? html`<div class="lz-card lz-card--tight lz-demo-card lz-demo-card--compact">
-                          <div>
-                            <h2 class="lz-h4">${t('create.import.demo.sample.title')}</h2>
-                            <p class="lz-small lz-muted">${t('create.import.demo.sample.body')}</p>
-                          </div>
-                          <button
-                            type="button"
-                            class="lz-btn lz-btn--${partDieu ? 'secondary' : 'primary'} lz-btn--sm"
-                            data-a="demo"
-                            data-demo="sample"
-                          >
-                            ${t('create.import.demo.sample.cta')}
-                          </button>
-                        </div>`
-                      : ''
-                  }
+          sample
+            ? html`<div class="lz-card lz-card--tight lz-demo-card">
+                  <h2 class="lz-h4">${t('create.import.demo.sample.title')}</h2>
+                  <p class="lz-small lz-muted">${t('create.import.demo.sample.body')}</p>
+                  <button
+                    type="button"
+                    class="lz-btn lz-btn--primary"
+                    data-a="demo"
+                    data-demo="sample"
+                    style="justify-self:start"
+                  >
+                    ${t('create.import.demo.sample.cta')}
+                  </button>
                 </div>
                 <p class="lz-or">${t('create.import.or')}</p>`
             : ''
@@ -636,9 +608,7 @@ export class ImportStep implements StepView {
     const a = this.ctx.actions;
     switch (b.dataset.a) {
       case 'demo':
-        void this.confirmReplace(
-          t(`create.import.demo.${b.dataset.demo === 'part-dieu' ? 'partDieu' : 'sample'}.title`),
-        ).then((ok) => {
+        void this.confirmReplace(t(`create.import.demo.${b.dataset.demo}.title`)).then((ok) => {
           if (ok) void a.importDemo(b.dataset.demo as DemoId);
         });
         break;

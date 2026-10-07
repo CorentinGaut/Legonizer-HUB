@@ -1,6 +1,6 @@
 # Usability test plan
 
-Version 1.0 — 2026-10-06 — covers SPEC §10.2 ("a first-time user gets from the demo to all downloads in under
+Version 1.1 — 2026-10-07 (the synthetic sample replaces the Part-Dieu demo, SPEC §12) — covers SPEC §10.2 ("a first-time user gets from the demo to all downloads in under
 2 minutes, usability test scenario") and the riskiest design decisions of the create page and the build guide.
 
 ## 1. Goals
@@ -62,11 +62,11 @@ After each task: Single Ease Question (*"Overall, how easy or difficult was this
 |------|---------|
 | Goal | G1 |
 | Start state | Home page, fresh browser profile (no saved project), 1440 px window |
-| Scenario (read aloud, then hand over the card) | *"You're preparing a workshop about the Part-Dieu district in Lyon. A colleague told you this website can help. Using its Part-Dieu example, get everything on this card."* |
+| Scenario (read aloud, then hand over the card) | *"You're preparing a workshop about a district. A colleague told you this website can help. Using its sample, get everything on this card."* |
 | Card | 1. See the list of bricks to buy · 2. See the building instructions · 3. Download the printable guide (PDF) · 4. Download the shopping list for BrickLink · 5. Download the 3D model for LDraw · 6. Download the height file (CSV) |
 | Success | All 6 items done (downloads individually or with *Download everything*), without assistance, in **≤ 2:00** from the first click on the home page |
 | Pass rule for v1 (proposed) | At least 6 of 7 participants succeed within 2:00; any failure is analysed for its cause before release |
-| Observe | Entry point used (*Try with Part-Dieu* on home or the demo card on Import); whether they keep the default area; hesitation on *Scale & height*; **whether they notice the "buildings disappear" warning without prompting** (record only, do not prompt; feeds the T4 decision rule); waiting time for generation and PDF (note the system time separately); whether *Copy XML* vs *Download .xml* confuses; whether they find *All downloads* |
+| Observe | Entry point used (*Try the sample* on home or the demo card on Import); whether they keep the default area; hesitation on *Scale & height*; **whether they notice the "buildings disappear" warning without prompting** (record only, do not prompt; feeds the T4 decision rule); waiting time for generation and PDF (note the system time separately); whether *Copy XML* vs *Download .xml* confuses; whether they find *All downloads* |
 | Metrics | Time to each item; total time; assists; wrong turns; SEQ |
 | Spec | §10.2, I10, G1, O1, O3–O6, O8 |
 
@@ -88,9 +88,9 @@ After each task: Single Ease Question (*"Overall, how easy or difficult was this
 | Item | Content |
 |------|---------|
 | Goal | G3 |
-| Start state | Part-Dieu demo loaded, step 2 with the default area, scale 3 m per stud |
-| Scenario, part A | *"For your workshop you want the area around the railway station, as big as possible while still fitting on the Legonizer table with room for projected pictures. Keep the current scale."* |
-| Success A | The station is inside the area; plates = 3 × 7 or 7 × 3; the table check says it fits; ≤ 3 min |
+| Start state | Sample loaded, step 2 with the default area (3 × 3 plates), scale 4 m per stud |
+| Scenario, part A | *"For your workshop you want the area around the tall tower, as big as possible while still fitting on the Legonizer table with room for projected pictures. Keep the current scale."* |
+| Success A | The tower is inside the area; plates = 3 × 7 or 7 × 3; the table check says it fits; ≤ 3 min |
 | Scenario, part B | *"A colleague sends you exact coordinates for the centre: X = [value], Y = [value]. Put the area there."* (values prepared from the demo dataset) |
 | Success B | Centre fields equal the given values; the rectangle moved accordingly; ≤ 1 min |
 | Variant for persona B, part C | *"Rotate the area by 30 degrees. What will the model cover?"* Success: explains the dashed box (legacy samples the unrotated bounding box) or switches to *Rotate with the area* |
@@ -103,12 +103,12 @@ After each task: Single Ease Question (*"Overall, how easy or difficult was this
 | Item | Content |
 |------|---------|
 | Goal | G4 |
-| Start state | Part-Dieu generated with the Legacy preset and the default area; step 4 result showing a "buildings disappeared" warning |
-| Scenario | *"At a rehearsal, someone says: 'My building is missing, the small one near the station.' Make sure every building appears, and get an up-to-date build guide."* |
+| Start state | Sample generated with the strict Legacy preset (*Switch to Legacy*) and the default area; step 4 result showing a "buildings disappeared" warning |
+| Scenario | *"At a rehearsal, someone says: 'My building is missing, the small one near the tower.' Make sure every building appears, and get an up-to-date build guide."* |
 | Success | Applies a fix (*Keep small buildings*, *Use true scale* or a higher max height), regenerates, and reaches the build guide with no "disappeared" warning; ≤ 3 min; no assistance |
 | Probe before regenerating | *"What do you expect to change?"* |
 | Comprehension question after | *"Why were those buildings missing?"* Correct if it mentions that one brick stood for a large height (or the max height / the tallest building setting the scale) |
-| Observe | Path to the fix (*Fix* link in step 4 vs going back to step 3); reading of *"1 brick = 20 m"* and *"5.6 times flatter"*; whether they notice the stale banner and the disabled downloads; whether *Undo changes* is understood; whether *Legacy* is perceived as "the right one" or "the old one" |
+| Observe | Path to the fix (*Fix* link in step 4 vs going back to step 3); reading of *"1 brick = 9.6 m"* and *"2 times flatter"* (the sample at 4 m per stud); whether they notice the stale banner and the disabled downloads; whether *Undo changes* is understood; whether *Legacy* is perceived as "the right one" or "the old one" |
 | Variant for persona B | *"Save this project, reload the page, open the project file, and check the CSV is identical."* Success: same CSV bytes (moderator compares) |
 | Metrics | Success, time, assists, SEQ, comprehension score |
 | Spec | §7.3 live feedback, L1, G4, O9, N7, I10 |
@@ -118,7 +118,7 @@ After each task: Single Ease Question (*"Overall, how easy or difficult was this
 | Item | Content |
 |------|---------|
 | Goal | G5 |
-| Start state | Build guide of the Part-Dieu model (2 × 2 plates), *Get the bricks* tab; numeric keypad connected (run once with Num Lock on and once off across participants); a phone on the table; a baseplate and a few bricks for show |
+| Start state | Build guide of the sample (3 × 3 plates), *Get the bricks* tab; numeric keypad connected (run once with Num Lock on and once off across participants); a phone on the table; a baseplate and a few bricks for show |
 | Part A — quantities | *"How many 2×4 bricks do you need for the whole model? And for plate B1 only?"* Success: both numbers correct, ≤ 1 min |
 | Part B — keypad | *"Using only the numeric keypad, show your team layer 3 of plate B1. Then turn the view so it matches the side of the table you're standing on."* Success: B1 layer 3 reached and view turned, keypad only, ≤ 2 min |
 | Part C — hand over a plate | *"Another team only has this phone. Give them plate A2 so they can start building."* Success: the phone shows plate A2 in Plate mode (QR or link), ≤ 2 min |
@@ -170,7 +170,7 @@ result) · 4 blocker (cannot complete, or would build a wrong model).
 
 ## 9. Preparation checklist
 
-- [ ] Staging build with the bundled Part-Dieu demo and the `district-cm-zup.obj` fixture
+- [ ] Staging build (the sample demo is bundled) and the `district-cm-zup.obj` fixture
 - [ ] Prepared coordinates for T3 part B; prepared generated state for T4 and T5 (project files)
 - [ ] Fresh browser profile per participant (no saved project, downloads folder emptied)
 - [ ] Wireless numeric keypad, phone with a QR reader, baseplate and a few bricks

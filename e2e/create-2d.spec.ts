@@ -3,13 +3,13 @@
  * without WebGL 2). Numeric area + plan view, generation, 2D height map, 2D layer diagrams, exports.
  */
 import { expect, test } from '@playwright/test';
-import { generateFromArea, hasPartDieu, loadDemo, primary, saveDownload } from './create-helpers.ts';
+import { generateFromArea, loadDemo, primary, saveDownload } from './create-helpers.ts';
 
 test('the whole wizard works without WebGL 2', async ({ page }) => {
   test.setTimeout(180_000);
   const errors: string[] = [];
   page.on('pageerror', (e) => errors.push(e.message));
-  await loadDemo(page, hasPartDieu ? 'part-dieu' : 'sample', '?webgl=0');
+  await loadDemo(page, '?webgl=0');
   await expect(page.getByText('3D views are off in this browser')).toBeVisible();
   await expect(page.locator('canvas.lz-viewport__canvas')).toHaveCount(0);
   // plan view with the area rectangle, operable from the keyboard

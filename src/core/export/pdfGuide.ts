@@ -6,7 +6,7 @@
  * opener (position, 32 × 32 height grid with the number in every stud, kit, plate-pass QR) and the
  * layer diagrams four per page (layers below shaded, new bricks outlined, stud rulers, "this step")
  * → projection layer → plate passes four per page (O10) → technical appendix. Every page carries a
- * running header and the footer "Part-Dieu · Plate B2 · Layer 3 of 9 · page 12 of 46".
+ * running header and the footer "Small sample · Plate B2 · Layer 3 of 9 · page 12 of 46".
  *
  * Fonts: the 14 standard PDF fonts (Helvetica, Courier; WinAnsi encoding). Embedding IBM Plex /
  * Bricolage (UI-11) would need @pdf-lib/fontkit, not a dependency yet; text is mapped to WinAnsi

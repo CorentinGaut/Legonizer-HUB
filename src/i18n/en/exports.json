@@ -116,7 +116,7 @@
       "inputs": "Input and versions",
       "files": "Files",
       "filesBody": "{csv}: height of every stud, in bricks (rows north to south, columns west to east, separated by semicolons). The project file (.legonizer.json) opens on the Legonizer website and gives identical files.",
-      "credits": "Research: C. Le Bihan Gautier, J. Delanoy, G. Gesquière, JFIG 2024, hal-04924304. Data of the demo: Métropole de Lyon (2018), 3D Tiles: LIRIS / VCity.",
+      "credits": "Research: C. Le Bihan Gautier, J. Delanoy, G. Gesquière, JFIG 2024, hal-04924304.",
       "legacyValue": "Legacy",
       "changedValue": "changed",
       "noInputs": "not recorded (opened from a project file or a plate pass)"

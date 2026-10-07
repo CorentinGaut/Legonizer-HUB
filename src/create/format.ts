@@ -49,7 +49,7 @@ export function sizeCompact(w: number, l: number): string {
   return t('common.part.sizeCompact', { w, d: l });
 }
 
-/** File-safe project slug ("part-dieu"). */
+/** File-safe project slug ("small-sample"). */
 export function slug(name: string): string {
   return (
     name

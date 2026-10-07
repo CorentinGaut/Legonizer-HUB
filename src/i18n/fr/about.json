@@ -24,7 +24,7 @@
     "legonizer": "legonizer 1.1.0 (algorithme de base) : licence ISC.",
     "udviz": "Widget Legonizer d'UD-Viz 4.6.1 : licence LGPL-2.1.",
     "paper": "Article de recherche et figures : CC0 1.0.",
-    "data": "Données de démonstration : données ouvertes de la Métropole de Lyon."
+    "data": "Données de démonstration : un quartier d'exemple inventé, généré par le Legonizer, même licence que ce site."
   },
   "files": {
     "title": "À propos des fichiers",
@@ -41,7 +41,7 @@
   },
   "credits": {
     "title": "Crédits",
-    "tiles": "3D Tiles de la démo : LIRIS / VCity, produites avec py3dtilers à partir des données de la Métropole de Lyon."
+    "development": "Site développé pour le plaisir par Jey Puget Gil."
   },
   "links": {
     "udviz": "UD-Viz sur GitHub",

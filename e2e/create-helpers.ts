@@ -9,7 +9,7 @@ export const ROOT = resolve(import.meta.dirname, '..');
 export const OUT = join(ROOT, 'e2e-artifacts', 'create');
 mkdirSync(OUT, { recursive: true });
 
-export const hasPartDieu = existsSync(join(ROOT, 'public', 'data', 'demo', 'part-dieu', 'manifest.json'));
+/** Developer fixtures (git-ignored, absent in CI): real Lyon 3 tiles for the G1 timing only. */
 export const hasLyon = existsSync(join(ROOT, 'fixtures', 'lyon3-2018', 'tileset.json'));
 
 export function axeSource(): string | null {
@@ -100,10 +100,10 @@ export async function primary(page: Page): Promise<void> {
   await page.locator('[data-ab=primary]').click();
 }
 
-export async function loadDemo(page: Page, demo: 'part-dieu' | 'sample', query = ''): Promise<void> {
+/** Opens the create page and loads the demo (the synthetic sample, the site's only demo). */
+export async function loadDemo(page: Page, query = ''): Promise<void> {
   await page.goto(`create.html${query}`);
-  const name = demo === 'part-dieu' ? 'Try with Part-Dieu' : 'Try the sample';
-  await page.getByRole('button', { name }).click();
+  await page.getByRole('button', { name: 'Try the sample' }).click();
   await page.waitForURL(/#area/);
   await expect(page.locator('#step-title')).toHaveText('Choose the area');
 }

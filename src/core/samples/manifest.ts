@@ -1,7 +1,7 @@
 /**
  * Demo dataset manifest (SPEC I10, v1.1): each bundled demo carries a curated default area and
- * suggested settings. Part-Dieu suggests "Legacy + Keep small buildings" with a one-click switch
- * to strict Legacy (UX OI-1, OI-18).
+ * suggested settings. The synthetic sample suggests "Legacy + Keep small buildings" with a
+ * one-click switch to strict Legacy (UX OI-1, OI-18).
  */
 import type { Area, Bounds3, Params } from '../types.ts';
 
@@ -22,7 +22,7 @@ export interface DemoManifest {
     licence: string;
     licenceUrl?: string;
     attribution: string;
-    /** False until the redistribution licence is confirmed (SPEC §13.2). */
+    /** True when the data may be redistributed with the site (our own synthetic data). */
     licenceVerified: boolean;
   };
   stats: { triangles: number; features: number; tiles: number };

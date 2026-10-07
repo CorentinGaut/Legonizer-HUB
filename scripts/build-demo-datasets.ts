@@ -1,44 +1,46 @@
 #!/usr/bin/env node
 /**
- * Builds the demo datasets (SPEC I10) with their manifests:
- *  - "sample": the synthetic boxes city (our own data) → public/data/demo/sample/
- *  - "part-dieu": a subset of the real Lyon 3 (2018) tiles → fixtures/demo/part-dieu/ (git-ignored),
- *    or public/data/demo/part-dieu/ with --public once the data licence is confirmed (SPEC §13.2).
+ * Builds the demo dataset of the site (SPEC I10) with its manifest: "sample", the synthetic boxes
+ * city (our own data, src/core/samples/synthetic.ts) → public/data/demo/sample/. It is the only
+ * demo: the site ships no real-world data.
  *
- * The Part-Dieu subset keeps, tile by tile, the original float32 local positions and tile
- * transforms of every building whose box intersects the district rectangle, so legacy matrices
- * computed on the demo equal those computed on the full tileset (tested in test/parity).
+ * Curated first experience (checked with this script's log line):
+ * - default area: the whole sample (363 × 366 m) on 3 × 3 plates at 4 m per stud, which fit the
+ *   Legonizer table (A5: up to 3 × 7 plates); the generator's 4 × 4 plates at 3 m do not (102 cm);
+ * - suggested settings: Legacy + "Keep small buildings" (SPEC I10, §12), with the one-click switch
+ *   to strict Legacy: the 96 m tower sets 1 brick = 9.6 m, so strict Legacy erases every building
+ *   under 9.6 m (L1).
  *
- * Usage: node scripts/build-demo-datasets.ts [--public]   (needs `npm run fixtures:lyon` first)
+ * The archive is reproducible: same generator seed, fixed zip timestamps.
+ *
+ * Usage: node scripts/build-demo-datasets.ts
  */
 import { createHash } from 'node:crypto';
-import { existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from 'node:fs';
+import { mkdirSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { zipSync } from 'fflate';
-import { estimateHeights, generateHeightMap } from '../src/core/heightmap/index.ts';
+import { estimateHeights, fitsTable, generateHeightMap } from '../src/core/heightmap/index.ts';
 import { importCityModel } from '../src/core/import/index.ts';
 import type { FileMap } from '../src/core/import/fileMap.ts';
 import type { DemoManifest } from '../src/core/samples/manifest.ts';
-import { SYNTHETIC_CENTRE, syntheticBoxesCity, writeB3dm, writeGlb } from '../src/core/samples/synthetic.ts';
-import { LEGACY_PRESET, defaultParams, type CityMesh, type Params } from '../src/core/types.ts';
+import { SYNTHETIC_CENTRE, syntheticBoxesCity } from '../src/core/samples/synthetic.ts';
+import { defaultParams, type CityMesh, type Params } from '../src/core/types.ts';
 import { APP_VERSION } from '../src/core/version.ts';
-import { vertexIndex } from '../src/core/import/cityMesh.ts';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
-const toPublic = process.argv.includes('--public');
 
-/** Part-Dieu district rectangle (EPSG:3946), covering the home-animation area and the default area. */
-export const PART_DIEU_RECT = { minX: 1843850, minY: 5174780, maxX: 1844960, maxY: 5175441 };
-/** Curated default area: 3 × 3 plates at 3 m/stud around Tour Part-Dieu, Incity and the station forecourt. */
-export const PART_DIEU_DEFAULT = {
-  area: { cx: 1844330, cy: 5175110, rotationDeg: 0 },
+/** Curated default area of the sample: centred on the generator's grid, 3 × 3 plates at 4 m/stud. */
+export const SAMPLE_DEFAULT = {
+  area: { cx: SYNTHETIC_CENTRE[0], cy: SYNTHETIC_CENTRE[1], rotationDeg: 0 },
   platesX: 3,
   platesY: 3,
+  scale: 4,
 };
 
 function zipFiles(files: FileMap): Uint8Array {
-  return zipSync(Object.fromEntries([...files].map(([p, d]) => [p, d])), { level: 9 });
+  // fixed local timestamp (DOS time has no time zone): the same bytes on every machine
+  return zipSync(Object.fromEntries(files), { level: 9, mtime: new Date(2026, 0, 1) });
 }
 
 function write(
@@ -58,7 +60,7 @@ function write(
     sha256: createHash('sha256').update(zip).digest('hex'),
   } as DemoManifest;
   writeFileSync(join(dir, 'manifest.json'), JSON.stringify(full, null, 2) + '\n');
-  console.log(`${id}: ${(zip.length / 1e6).toFixed(2)} MB → ${join(dir, archive)}`);
+  console.log(`${id}: ${(zip.length / 1e3).toFixed(1)} kB → ${join(dir, archive)}`);
 }
 
 function stats(mesh: CityMesh, files: FileMap) {
@@ -69,157 +71,51 @@ function stats(mesh: CityMesh, files: FileMap) {
   };
 }
 
-// ------------------------------------------------------------------ sample (synthetic)
-{
-  const files = syntheticBoxesCity(1);
-  const mesh = importCityModel(files);
-  const legacy = defaultParams(4, 4);
-  write(join(root, 'public', 'data', 'demo', 'sample'), 'sample', files, {
-    formatVersion: 1,
-    id: 'sample',
-    title: 'Small synthetic sample',
-    description:
-      'A generated district of box buildings (3–60 m and one 96 m tower), 2 × 2 tiles, Lyon coordinates (EPSG:3946).',
-    format: '3dtiles',
-    crs: 'EPSG:3946',
-    source: {
-      name: 'Legonizer synthetic generator',
-      licence: 'Same licence as this site',
-      attribution: 'Generated by the Legonizer',
-      licenceVerified: true,
-    },
-    stats: stats(mesh, files),
-    bounds: mesh.bounds,
-    defaultArea: {
-      area: { cx: SYNTHETIC_CENTRE[0], cy: SYNTHETIC_CENTRE[1], rotationDeg: 0 },
-      platesX: 4,
-      platesY: 4,
-    },
-    suggested: {
-      params: legacy,
-      noteKey: 'demo.sample.note',
-      note: 'Legacy (UD-Viz 4.6.1) settings.',
-      strictLegacy: legacy,
-    },
-    generated: { app: APP_VERSION, date: new Date().toISOString().slice(0, 10) },
-  });
-}
+const files = syntheticBoxesCity(1);
+const mesh = importCityModel(files);
+const { area, platesX, platesY, scale } = SAMPLE_DEFAULT;
+const strict: Params = { ...defaultParams(platesX, platesY), scale };
+const suggested: Params = { ...strict, keepSmall: true }; // strict = the Legacy preset at 4 m/stud
 
-// ------------------------------------------------------------------ Part-Dieu (real tiles)
-const lyonDir = join(root, 'fixtures', 'lyon3-2018');
-if (!existsSync(join(lyonDir, 'tileset.json'))) {
-  console.log('part-dieu: skipped (run `npm run fixtures:lyon -- --all` first)');
-} else {
-  const src: FileMap = new Map([
-    ['tileset.json', new Uint8Array(readFileSync(join(lyonDir, 'tileset.json')))],
-  ]);
-  for (const f of readdirSync(join(lyonDir, 'tiles')))
-    src.set(`tiles/${f}`, new Uint8Array(readFileSync(join(lyonDir, 'tiles', f))));
-  const mesh = importCityModel(src);
-  const tileset = JSON.parse(new TextDecoder().decode(src.get('tileset.json')));
-  const children: unknown[] = [];
-  const out: FileMap = new Map();
-  const r = PART_DIEU_RECT;
-  mesh.parts.forEach((part) => {
-    const uri = part.name.split(':')[0]!; // "tiles/7.b3dm:mesh0#0"
-    const meta = tileset.root.children.find((c: { content: { uri: string } }) => c.content.uri === uri);
-    // world box per feature from the part (translation-only transforms in this dataset)
-    const t = part.matrix;
-    const boxes = new Map<number, number[]>();
-    const n = part.index ? part.index.length / 3 : part.positions.length / 9;
-    for (let tri = 0; tri < n; tri++) {
-      const f = part.triFeature[tri]!;
-      let b = boxes.get(f);
-      if (!b) boxes.set(f, (b = [Infinity, Infinity, -Infinity, -Infinity]));
-      for (let k = 0; k < 3; k++) {
-        const v = vertexIndex(part, tri, k);
-        const x = part.positions[3 * v]! + t[12]!,
-          y = part.positions[3 * v + 1]! + t[13]!;
-        b[0] = Math.min(b[0]!, x);
-        b[1] = Math.min(b[1]!, y);
-        b[2] = Math.max(b[2]!, x);
-        b[3] = Math.max(b[3]!, y);
-      }
-    }
-    const keep = new Map<number, number>(); // feature → new batch id
-    for (const [f, b] of boxes)
-      if (b[2]! >= r.minX && b[0]! <= r.maxX && b[3]! >= r.minY && b[1]! <= r.maxY) keep.set(f, keep.size);
-    if (!keep.size) return;
-    const pos: number[] = [];
-    const batch: number[] = [];
-    for (let tri = 0; tri < n; tri++) {
-      const nb = keep.get(part.triFeature[tri]!);
-      if (nb === undefined) continue;
-      for (let k = 0; k < 3; k++) {
-        const v = vertexIndex(part, tri, k);
-        pos.push(part.positions[3 * v]!, part.positions[3 * v + 1]!, part.positions[3 * v + 2]!);
-        batch.push(nb);
-      }
-    }
-    const gml = [...keep.keys()].map((f) => mesh.features[f]!.key);
-    const name = `tiles/${children.length}.b3dm`;
-    out.set(
-      name,
-      writeB3dm(writeGlb(Float32Array.from(pos), Float32Array.from(batch)), gml.length, {
-        id: gml.map((_, i) => i),
-        'citygml::surface_type': gml.map(() => 'Building'),
-        gml_id: gml,
-      }),
-    );
-    children.push({ ...meta, content: { uri: name } });
-  });
-  const ts = {
-    asset: {
-      version: '1.0',
-      extras: { title: 'Lyon Part-Dieu (2018) — Legonizer demo subset of LIRIS Lyon-3_2018 3D Tiles' },
-    },
-    geometricError: tileset.geometricError,
-    root: { ...tileset.root, children },
-  };
-  out.set('tileset.json', new TextEncoder().encode(JSON.stringify(ts)));
-  const demo = importCityModel(out);
-  const strict: Params = defaultParams(PART_DIEU_DEFAULT.platesX, PART_DIEU_DEFAULT.platesY);
-  const suggested: Params = { ...strict, ...LEGACY_PRESET, keepSmall: true };
-  const legacyRun = generateHeightMap(demo, PART_DIEU_DEFAULT.area, strict, { keepRaw: true });
-  const est = estimateHeights(demo, PART_DIEU_DEFAULT.area, strict);
-  const mpb = legacyRun.vertical.metresPerBrick;
-  let built = 0,
-    erased = 0;
-  legacyRun.raw!.forEach((h, c) => {
-    if (h > 0.01) {
-      built++;
-      if (legacyRun.heightMap.data[c] === 0) erased++;
-    }
-  });
-  const erasedPct = Math.round((100 * erased) / built);
-  console.log(
-    `part-dieu default area, strict legacy: ${mpb.toFixed(1)} m per brick, ${erased}/${built} built-up studs erased, ${est.featuresBelowOneBrick}/${est.features} buildings below one brick`,
-  );
-  write(join(root, toPublic ? 'public/data/demo' : 'fixtures/demo', 'part-dieu'), 'part-dieu', out, {
-    formatVersion: 1,
-    id: 'part-dieu',
-    title: 'Part-Dieu, Lyon (2018)',
-    description:
-      'Real 3D buildings of the Part-Dieu business district (Lyon 3e), CityGML LoD2 converted to 3D Tiles by py3dtilers.',
-    format: '3dtiles',
-    crs: 'EPSG:3946',
-    source: {
-      name: 'Métropole de Lyon — 3D buildings 2018, 3D Tiles by LIRIS / VCity (py3dtilers)',
-      url: 'https://dataset-dl.liris.cnrs.fr/three-d-tiles-lyon-metropolis/2018/Lyon-3_2018/',
-      licence: 'Licence Ouverte / Open Licence 2.0 (to be confirmed for this vintage)',
-      licenceUrl: 'https://www.etalab.gouv.fr/licence-ouverte-open-licence/',
-      attribution: 'Source: Métropole de Lyon (2018), 3D Tiles: LIRIS / VCity',
-      licenceVerified: false,
-    },
-    stats: stats(demo, out),
-    bounds: demo.bounds,
-    defaultArea: PART_DIEU_DEFAULT,
-    suggested: {
-      params: suggested,
-      noteKey: 'demo.partDieu.suggestedNote',
-      note: `Legacy settings with “Keep small buildings” on: here the tallest tower sets 1 brick ≈ ${Math.round(mpb)} m, so strict Legacy leaves ${erasedPct} % of the built-up studs empty (L1).`,
-      strictLegacy: strict,
-    },
-    generated: { app: APP_VERSION, date: new Date().toISOString().slice(0, 10) },
-  });
-}
+// what strict Legacy does on the default area (L1), for the note and the log
+const legacyRun = generateHeightMap(mesh, area, strict, { keepRaw: true });
+const est = estimateHeights(mesh, area, strict);
+const mpb = legacyRun.vertical.metresPerBrick;
+let built = 0,
+  erased = 0;
+legacyRun.raw!.forEach((h, c) => {
+  if (h > 0.01) {
+    built++;
+    if (legacyRun.heightMap.data[c] === 0) erased++;
+  }
+});
+const erasedPct = Math.round((100 * erased) / built);
+console.log(
+  `sample default area ${platesX} × ${platesY} plates at ${scale} m/stud (fits the table: ${fitsTable(platesX, platesY)}), strict legacy: ${mpb.toFixed(1)} m per brick, ${erased}/${built} built-up studs erased, ${est.featuresBelowOneBrick}/${est.features} buildings below one brick`,
+);
+
+write(join(root, 'public', 'data', 'demo', 'sample'), 'sample', files, {
+  formatVersion: 1,
+  id: 'sample',
+  title: 'Sample district',
+  description:
+    'An invented district of box buildings (3–60 m and one 96 m tower), 2 × 2 tiles, projected coordinates (EPSG:3946), generated by the Legonizer.',
+  format: '3dtiles',
+  crs: 'EPSG:3946',
+  source: {
+    name: 'Legonizer synthetic generator',
+    licence: 'Same licence as this site',
+    attribution: 'Generated by the Legonizer',
+    licenceVerified: true,
+  },
+  stats: stats(mesh, files),
+  bounds: mesh.bounds,
+  defaultArea: { area, platesX, platesY },
+  suggested: {
+    params: suggested,
+    noteKey: 'create.settings.preset.demoNote',
+    note: `Legacy settings with “Keep small buildings” on: here the 96 m tower sets 1 brick = ${mpb.toFixed(1)} m, so strict Legacy leaves ${erasedPct} % of the built-up studs empty (L1).`,
+    strictLegacy: strict,
+  },
+  generated: { app: APP_VERSION, date: new Date().toISOString().slice(0, 10) },
+});

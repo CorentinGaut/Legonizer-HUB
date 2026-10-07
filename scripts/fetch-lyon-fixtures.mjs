@@ -2,9 +2,10 @@
 // Downloads real Lyon 3 (2018) 3D Tiles into the git-ignored `fixtures/lyon3-2018/` folder.
 //
 // The LIRIS server sends no CORS header, so the site can never fetch these tiles at runtime:
-// they are fetched here, with curl, for tests and for building the demo dataset.
-// Licence: Métropole de Lyon open data; redistribution in `public/` is pending confirmation
-// (SPEC §13.2), so nothing in this folder is ever copied into `public/` by this script.
+// they are fetched here, with curl, as developer fixtures for the legacy parity tests and the
+// performance measurements (scripts/perf.ts, e2e/create-perf.spec.ts). Licence: Métropole de Lyon
+// open data. The site ships no real-world data (SPEC §12, 2026-10-07): nothing in this folder is
+// ever copied into `public/` or the build.
 //
 // Usage: node scripts/fetch-lyon-fixtures.mjs [--all] [tile numbers...]
 //   default tiles: 0 (documented in docs/reference/README.md) and 7 (Part-Dieu).

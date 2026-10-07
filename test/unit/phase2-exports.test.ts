@@ -188,7 +188,7 @@ describe('PDF build guide (O5) and plate passes (O10)', () => {
     const real = platePassUrl(
       'https://example.org/c.html',
       'B2',
-      encodePlatePass({ plate: 'B2', heights, title: 'Part-Dieu' }),
+      encodePlatePass({ plate: 'B2', heights, title: 'Riverside' }),
     );
     const back = decodePlatePass(parseGuideRoute(real.split('#')[1]!).payload!);
     expect(back.plate).toBe('B2');

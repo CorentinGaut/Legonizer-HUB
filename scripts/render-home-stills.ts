@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
  * Renders the home poster and stills from the real animation (SPEC H4, H10; UI-7): the same scene,
- * fixture (src/data/home/part-dieu-home.json, packed by our pipeline) and timeline as the page,
+ * fixture (src/data/home/home-district.json, packed by our pipeline) and timeline as the page,
  * so the poster is the frame the animation hands off from (t = 19 s, storyboard §5).
  *
  * Runs a Vite dev server and headless Chromium (Playwright) with SwiftShader, so the output does

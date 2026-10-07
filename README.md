@@ -20,16 +20,16 @@ npm test                          # Vitest: unit, property and parity tests
 npm run lint                      # ESLint + Prettier check
 npm run build                     # type-check + Vite multi-page build (dist/)
 npm run e2e                       # Playwright e2e on the production build (vite build + vite preview)
-npm run fixtures:lyon -- --all    # download the 16 real Lyon 3 (2018) tiles into fixtures/ (git-ignored)
-npm run fixtures:demo             # demo datasets + manifests (sample → public/, Part-Dieu → fixtures/)
-npm run fixtures:home             # home-animation heightmap → src/data/home/part-dieu-home.json
+npm run fixtures:lyon -- --all    # developer fixtures: the 16 real Lyon 3 (2018) tiles into fixtures/ (git-ignored)
+npm run fixtures:demo             # the demo (synthetic sample) + manifest → public/data/demo/sample/
+npm run fixtures:home             # home-animation heightmap (synthetic district) → src/data/home/home-district.json
 npm run stills:home               # home poster + stills rendered from the real animation → src/home/assets/
 npm run perf                      # timings for docs/perf.md
 ```
 
-Real-tile tests (parity on Lyon, demo subset) are skipped when `fixtures/` is empty. The e2e
-accessibility tests need `axe-core`: it is not a dependency yet, so they are skipped unless
-`AXE_CORE_PATH=/path/to/axe.min.js` is set (see "Dependencies").
+Real-tile tests (legacy parity on Lyon tiles, the G1 timing) are skipped when `fixtures/` is
+empty, as in CI. The e2e accessibility tests use the `axe-core` dev dependency (or
+`AXE_CORE_PATH=/path/to/axe.min.js`).
 
 ## Pages, shared shell and home animation (phase 2A)
 
@@ -58,8 +58,8 @@ e2e/                     Playwright specs; playwright.config.ts at the root
   renders `<header id="lz-header">` and `<footer id="lz-footer">`: skip link to `<main id="main">`,
   logo, Create / About / Help (help → `about.html#prepare-data`), EN | FR switch, page action
   (*Create your model*; the create page gets an empty `#lz-header-actions` slot for its project
-  menu and the full-width header), phone menu sheet, footer with citation, credit, source code,
-  licences, privacy line, theme switch (*Automatic / Light / Dark*) and the trademark
+  menu and the full-width header), phone menu sheet, footer with citation, research credit,
+  development credit, source code, licences, privacy line, theme switch (*Automatic / Light / Dark*) and the trademark
   disclaimer (N9). It re-renders on `setLocale`.
 - `src/shared/theme.ts`: `getThemeChoice`, `setThemeChoice`, `getEffectiveTheme`, `onThemeChange`
   (3D views re-read scene colours). Pages add the one-line inline script of `index.html` in
@@ -67,15 +67,23 @@ e2e/                     Playwright specs; playwright.config.ts at the root
 
 **Home animation** (SPEC §6): a 28 s loop where every
 property is a pure function of `t mod 28` (`src/home/timeline.ts`). The brick model is the H4
-fixture `src/data/home/part-dieu-home.json` packed **at build time by the real packer**
-(`virtual:lz-home-model`; the build fails if the parts differ from the fixture summary): 2,473
-bricks on 5 × 3 plates, dropped layer by layer in build order. Bricks, studs and plates are three
+fixture `src/data/home/home-district.json`: an invented district (`src/core/samples/district.ts`,
+no real-world data: courtyard blocks with gabled lots in the old quarter, a vaulted station hall
+with platform canopies, towers of 60–170 m, a park, a church, a shopping centre, a housing
+estate) written as 3D Tiles, imported and turned into heights by our own pipeline (true scale,
+6 m per stud, `npm run fixtures:home`; a test checks the fixture is what the pipeline gives
+today), then packed **at build time by the real packer** (`virtual:lz-home-model`; the build fails
+if the parts differ from the fixture summary): 1,848 bricks on 5 × 3 plates, 6,094 studs built,
+tallest 23 bricks (22 cm), dropped layer by layer in build order. Bricks, studs and plates are three
 instanced draws animated in the vertex shader (one `uTime` uniform). The projector is a pair of
 `SpotLight`s with `map` textures (crossfades) covering exactly the 2 × 1 m table (2 : 1 frustum);
 the projected layers are drawn with projector parallax so roofs get their own colour; change
 colours are the colour-blind-safe `#14B391` / `#B42330` / `#FBE04B`. Building uses, green spaces, tram lines,
-changes and media cards are illustrative, derived deterministically from the heights (the page and
-the about page say so). Scale figures are smooth one-piece volumes with relaxed poses.
+changes and media cards are illustrative, derived deterministically from the heights
+(`src/home/scene/derive.ts`: perimeter blocks split into lots at height changes, towers are
+offices, a long deep hall is a public facility, courtyards and the most open squares are green,
+trams follow the widest avenues; the page and the about page say so). Scale figures are stylized, faceless people (muted vertex-coloured clothing, one skinned mesh and
+one draw call per figure, arms posed by a two-bone IK).
 
 Loading: the poster (`<picture>`, rendered from the same scene at t = 19 s by
 `scripts/render-home-stills.ts`) paints first; after `load` + idle the page probes WebGL 2, then
@@ -130,11 +138,15 @@ src/guide/
   packing, exporters) starts on first use, three.js loads with the first 3D view, the guide modules
   with the guide, the PDF module (pdf-lib) inside the Worker on the first PDF, the QR encoder
   (`qrcode` core only) with the share dialog. Sizes in [`docs/perf.md`](docs/perf.md).
-- **e2e:** `e2e/create-*.spec.ts` (Playwright, production build). The Part-Dieu specs need
-  `npm run fixtures:demo -- --public` (copies the demo into `public/data/demo/part-dieu/`, git-ignored
-  until the data licence is confirmed); otherwise they run on the synthetic sample. The G1 spec needs
-  `npm run fixtures:lyon -- --all`; accessibility specs need `AXE_CORE_PATH` (see Dependencies).
-  Artifacts (downloads, screenshots) go to `e2e-artifacts/create/` (git-ignored).
+- **Demo (SPEC I10):** the synthetic sample is the site's only demo (*Try the sample* on the home
+  page and the import step, `create.html?demo=sample`). Its manifest opens the whole sample on
+  3 × 3 plates at 4 m per stud (fits the table) with *Legacy + Keep small buildings*, a note and a
+  one-click switch to strict Legacy: there the 96 m tower sets 1 brick = 9.6 m and strict Legacy
+  erases 22 of the 118 buildings (18 % of the built-up studs, L1).
+- **e2e:** `e2e/create-*.spec.ts` (Playwright, production build) run on the sample, including the
+  strict Legacy CSV checked byte for byte against `legonizer@1.1.0` in the browser. The G1 spec
+  needs `npm run fixtures:lyon -- --all` (skipped otherwise). Artifacts (downloads, screenshots)
+  go to `e2e-artifacts/create/` (git-ignored).
 
 ## Core engine (`src/core/`)
 
@@ -221,9 +233,10 @@ bugs included. What that requires, all verified by tests:
 The parity harness (`test/parity/legacyReference.ts`) rebuilds the iTowns object graph with the
 real three r154, replays `MockUpUtils.createMockUpObject` and the box selector verbatim, then calls
 the real `legonizer@1.1.0` (with its own three r147) for the matrix and the CSV, whose data URI is
-captured with a minimal `document` stub. It runs on 11 cases: synthetic boxes (rays on edges and
-vertices, rotated area), a synthetic slope with gabled roofs, 4 areas of the real Lyon 3 tiles
-(including a rotated one), plus a seeded random sweep over the Lyon tiles (12 areas by default;
+captured with a minimal `document` stub. It runs on 12 cases: synthetic boxes (rays on edges and
+vertices, rotated area, the demo's default area read from its manifest), a synthetic slope with
+gabled roofs, 4 areas of the real Lyon 3 tiles (developer fixtures, including a rotated one), plus
+a seeded random sweep over the Lyon tiles (12 areas by default;
 `PARITY_SWEEP_RUNS=60` checked 60/60, 33,716 non-zero cells). Result: **0 differing cells, CSV
 byte-identical**. The legacy file name uses the real plate counts (`legoPlates_<X>_<Y>.csv`, fixing
 L8). Two legacy behaviours are deliberately not reproduced: a flat selection (max z = 0) where
@@ -252,7 +265,8 @@ alternates by layer. 1×1 is always available, so an exact cover always exists. 
 **plate-local** (a plate's result depends only on its heights, the part settings and
 `PACKING_ALGORITHM_VERSION`), which the plate passes rely on.
 
-Quality: on 84 real Part-Dieu components small enough to solve exactly, the beam uses 1.0 % more
+Quality: on 84 components of the real Lyon tiles (developer fixtures) small enough to solve
+exactly, the beam uses 1.0 % more
 bricks than the optimum. Against the (weak) valid lower bound the gap is about 46 %; see
 [`docs/perf.md`](docs/perf.md). Property tests (fast-check) check exact cover, no overlap, no plate
 crossing, enabled parts only, determinism and plate-locality.
@@ -295,11 +309,10 @@ Grey 194, [colour guide](https://www.bricklink.com/catalogColors.asp)) and Rebri
   bounding volume and positions are relative to that transform. This is standard 3D Tiles. Positions
   are float32, Z-up, in a node with a Z-up → Y-up matrix that the client's Y-up → Z-up rotation
   cancels. Geometry is a non-indexed triangle soup with one contiguous `_BATCHID` run per building.
-- Licence: Métropole de Lyon publishes its 3D building products under Licence Ouverte 2.0
-  (verified for the 2009 and 2012 textured models and the 2018 roof volumes on data.gouv.fr), but
-  not yet for the 2018 buildings behind these tiles. Until then real tiles stay in `fixtures/` and
-  the Part-Dieu demo is built there; `node scripts/build-demo-datasets.ts --public` writes it to
-  `public/data/demo/` once the licence is confirmed. The synthetic sample is ours and ships in `public/`.
+- No real-world data ships with the site (SPEC §12, 2026-10-07). The demo is the synthetic sample
+  (`npm run fixtures:demo`, reproducible archive) and the home animation's district is synthetic
+  too. The real Lyon tiles (Métropole de Lyon open data, 3D Tiles by LIRIS / VCity) are developer
+  fixtures in the git-ignored `fixtures/` for the parity tests and the performance measurements.
 
 ## Dependencies
 
@@ -315,7 +328,7 @@ Grey 194, [colour guide](https://www.bricklink.com/catalogColors.asp)) and Rebri
 | dev: `@playwright/test` | e2e tests, poster/stills rendering (headless Chromium with SwiftShader) |
 | `pdf-lib` | PDF build guide (O5) in the Worker: pure JavaScript, runs in Workers and in Node tests, MIT |
 | `qrcode` (core encoder only, `qrcode/lib/core/qrcode.js`) + dev `@types/qrcode` | plate-pass QR codes (O10), drawn as SVG on screen and as vector squares in the PDF, MIT |
-| not installed (proposed dev dependency): `axe-core` | accessibility e2e tests; used from outside the repository so far, see `e2e/home-a11y.spec.ts` |
+| dev: `axe-core` | accessibility e2e tests (WCAG 2.x rules), MPL-2.0, see `e2e/home-a11y.spec.ts` and `e2e/create-a11y.spec.ts` |
 
 glTF and b3dm are parsed in-house rather than with three's `GLTFLoader`: we need only geometry,
 feature ids and the exact float32 data and matrix chain; GLTFLoader also builds materials and
@@ -324,5 +337,8 @@ textures (image decoding needs the DOM or ImageBitmap), which does not run in No
 ## Licences and credits
 
 Upstream: `legonizer` (ISC), UD-Viz (LGPL-2.1), paper by Le Bihan Gautier, Delanoy, Gesquière
-(JFIG 2024, CC0). Data: Métropole de Lyon, 3D Tiles by LIRIS / VCity. LEGO® is a trademark of the
-LEGO Group, which does not sponsor, authorize or endorse this site.
+(JFIG 2024, CC0). Demo data and the home animation's district: generated by the Legonizer. Developer
+fixtures (not shipped): Lyon 3 (2018) 3D Tiles by LIRIS / VCity from Métropole de Lyon open data.
+LEGO® is a trademark of the LEGO Group, which does not sponsor, authorize or endorse this site.
+
+Website developed for fun by Jey Puget Gil.

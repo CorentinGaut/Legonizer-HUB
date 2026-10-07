@@ -80,7 +80,7 @@ Full multi-page `vite build` (Vite 8, gzip as reported by Vite):
 |---|---|---|---|
 | Before the 3D (home) | `index` entry 9.5 kB + `shell` (shell, i18n, intl-messageformat, every EN/FR namespace) 127.4 kB + preload helper 1.4 kB | 138 kB | **46 kB** |
 | CSS | `shell` (fonts, tokens, components, shell) 86.9 kB + `index` 2.9 kB | 90 kB | 16 kB |
-| 3D chunk, after `load` + idle | `stage` (scene code + packed model, 2,473 bricks) 86.7 kB + `three.module` 556 kB (shared with the create page) | 643 kB | **168 kB** |
+| 3D chunk, after `load` + idle | `stage` (scene code + packed model: the synthetic district, 1,848 bricks; 2026-10-07) 81.5 kB + `three.module` 556 kB (shared with the create page) | 637 kB | **165 kB** |
 | Poster (LCP) | `poster-desktop` 1920 × 984 / `-1280` / `poster-mobile` 780 × 880 (WebP) | 47 / 27 / 18 kB | — |
 | Preloaded fonts | Bricolage Grotesque latin (opsz + wght) 77 kB, IBM Plex Sans 400 latin 23 kB | 100 kB | — |
 
@@ -111,14 +111,16 @@ thread; no start-up step is a long task on its own. Creating the WebGL 2 context
 costs 0.75 s on SwiftShader and 0.9 s on llvmpipe (after `load`, not before first paint).
 
 Per frame (instanced bricks, studs and plates; three shadow maps: room key 2048², two projector
-spots 2048 × 1024 that skip their pass while off):
+spots 2048 × 1024 that skip their pass while off), measured with the previous home model (2,473
+bricks); the synthetic district has 1,848 bricks and the same 15,360 studs, so brick triangles drop
+by about a quarter and the draw calls do not change:
 
 | t (s) | Scene | Draw calls (all passes) | Triangles (all passes) |
 |---|---|---|---|
 | 1, 25 | room, plates / bricks lifting | 19 | 0.43 M |
 | 5, 8 | bricks dropping | 17 | 0.43 M |
 | 12, 14 | projector on, layer crossfade / tram | 30 / 24 | 0.49 / 0.46 M |
-| 19, 21 | figures, change layer, crossfade | 50 / 61 | 0.50 / 0.54 M |
+| 19, 21 | figures, change layer, crossfade | 38 / 47 | 0.50 / 0.55 M |
 
 The main pass draws at most 24 objects (SPEC §6.2: ≤ 60 draw calls); 15,360 studs (24 triangles
 each, no shadow) are 0.37 M of the triangles. Frame rate: on SwiftShader at 1440 × 720 the guard
@@ -130,7 +132,11 @@ steps and the guard are the safety net until it is measured on real hardware.
 
 `e2e/home.spec.ts`: state and camera snapshots at t = 0, 28, 56, 84 s identical and rendered
 pixels at 0, 28, 84 s identical; three accelerated cycles (8×): 0 caption/scene mismatches,
-loop-time drift vs the monotonic clock 1.4e-14 s; three real-time cycles (85 s, `LZ_E2E_SLOW=1`):
+loop-time drift vs the monotonic clock 1.4e-14 s (1.8e-14 s on 2026-10-07). On SwiftShader a frame
+can stall for 3.7–8.5 s, longer than one accelerated cycle (3.5 s), so counting the wraps seen
+between samples failed about one run in five, on the original code as well; since 2026-10-07 the
+test counts the seams crossed from the clock (≥ 3) and requires an observed wrap between every two
+samples less than one cycle apart that straddle a seam (5/5 runs pass); three real-time cycles (85 s, `LZ_E2E_SLOW=1`):
 0 mismatches, drift 1.4e-14 s, captions change at the same scene times every cycle.
 
 # Create page (phase 2B)
@@ -161,14 +167,23 @@ import and the BVH, and close to them for generation. A mid-range laptop has not
 
 ## Demo path (SPEC §10.2), automated
 
-`Try with Part-Dieu` (38,742 triangles) → default area → *Generate* (Legacy with small buildings
-kept, 3 × 3 plates, 657 bricks) → build guide → BrickLink XML, Rebrickable CSV, one step done with
-Enter, CSV, PDF, LDraw, numbers compared across all of them. Two runs:
+Re-measured 2026-10-07 after the synthetic sample became the site's only demo (same machine,
+`npx playwright test e2e/create-demo.spec.ts -g "all downloads" --workers=1 --repeat-each=3`).
+`Try the sample` (1,416 triangles, 118 buildings) → default area (the whole sample, 3 × 3 plates
+at 4 m per stud) → *Generate* (Legacy with small buildings kept, 672 bricks) → build guide →
+BrickLink XML, Rebrickable CSV, one step done with Enter, CSV, PDF, LDraw, numbers compared across
+all of them. Three runs:
 
 | Demo loaded | Generated | Guide + all downloads | of which the PDF | Total |
 |---|---|---|---|---|
-| 0.67 s | 3.5 s | 12.6 s | — | 16.8 s |
-| 0.57 s | 1.5 s | 9.0 s | 3.0 s (US Letter, 28 pages, 2.5 MB) | 11.0 s |
+| 0.65 s | 3.6 s | 13.9 s | 5.7 s (34 pages, 3.8 MB) | 18.1 s |
+| 0.88 s | 4.6 s | 16.3 s | 6.0 s | 21.7 s |
+| 0.97 s | 3.8 s | 16.6 s | 5.8 s | 21.4 s |
+
+"Generated" runs from the demo loaded to the brick model shown, including the test's clicks
+through steps 2 and 3 and their live estimates. The previous measurement (Part-Dieu demo, real
+tiles, removed from the site) took 11.0–16.8 s. In the full parallel e2e run (8 workers sharing
+SwiftShader) the same path took 48 s.
 
 The target is 2 minutes for a first-time user; the usability test with people (`docs/usability-test-plan.md`) has
 not been run.

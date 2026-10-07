@@ -10,18 +10,15 @@ import {
   axeSource,
   expectNoAxeViolations,
   generateFromArea,
-  hasPartDieu,
   loadDemo,
   primary,
 } from './create-helpers.ts';
-
-const DEMO = hasPartDieu ? 'part-dieu' : 'sample';
 
 async function walk(page: Page, label: string) {
   await page.goto('create.html');
   await expect(page.locator('#step-title')).toHaveText('Import a 3D city model');
   await expectNoAxeViolations(page, `${label} step 1 empty`);
-  await loadDemo(page, DEMO);
+  await loadDemo(page);
   await page.waitForTimeout(800);
   await expectNoAxeViolations(page, `${label} step 2`);
   await primary(page);
@@ -35,7 +32,7 @@ async function walk(page: Page, label: string) {
   await page.getByRole('button', { name: 'View the height grid as a table' }).click();
   await expectNoAxeViolations(page, `${label} step 4 (+ height grid)`);
   await page.locator('[data-stepper-back], [data-ab=back]').first().click();
-  await page.locator('#lz-scale3').fill('4');
+  await page.locator('#lz-scale3').fill('5'); // the sample opens at 4 m per stud
   await page.locator('#lz-scale3').press('Enter');
   await expect(page.locator('.lz-stale')).toBeVisible();
   await expectNoAxeViolations(page, `${label} step 3 out of date`);
@@ -73,7 +70,7 @@ test.describe('create: axe', () => {
 
   test('dialogs: keyboard help, share plate, replace model; 2D mode', async ({ page }) => {
     test.setTimeout(180_000);
-    await loadDemo(page, DEMO, '?webgl=0');
+    await loadDemo(page, '?webgl=0');
     await expectNoAxeViolations(page, '2D step 2');
     await generateFromArea(page);
     await expectNoAxeViolations(page, '2D step 4');

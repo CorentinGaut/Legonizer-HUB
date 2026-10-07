@@ -1,6 +1,6 @@
 # Legonizer website — Product specification
 
-Version 1.2 — 2026-10-07 — Product owner: Corentin Gautier (corentin.gautier2@univ-lyon2.fr)
+Version 1.3 — 2026-10-07 — Product owner: Corentin Gautier (corentin.gautier2@univ-lyon2.fr)
 Status: approved for design and implementation. Decisions recorded in §12.
 
 Sources:
@@ -144,7 +144,7 @@ included, except the filename bug (L8).
 ```
 
 Global: header (logo, Create, About, language switch EN/FR), footer (paper citation, VCity/LIRIS credit,
-trademark disclaimer, source code link).
+development credit, trademark disclaimer, source code link).
 
 ## 6. Home page
 
@@ -153,9 +153,9 @@ trademark disclaimer, source code link).
 | ID | Requirement |
 |----|-------------|
 | H1 | Hero = full-width 3D animation of the setup (§2), playing as a seamless loop, with synced captions |
-| H2 | The animation tells a **use case**: a public workshop on the evolution of a district (default: Part-Dieu, Lyon) |
+| H2 | The animation tells a **use case**: a public workshop on the evolution of a district. The district is invented (no real place, no real-world data): urban blocks with courtyards, a railway station, a few towers, a park, streets |
 | H3 | Proportions follow §2 (table 1×2 m at 0.60 m, mast 2.30 m, projector on top, 31.5" screen at 1.30 m) |
-| H4 | The brick model in the animation is produced by **our own pipeline** (a heightmap fixture generated from the demo dataset), not a hand-made mesh |
+| H4 | The brick model in the animation is produced by **our own pipeline**, not a hand-made mesh: a deterministic synthetic district (3D Tiles written by `src/core/samples/district.ts`) goes through import → heightmap; the heightmap fixture is packed by the real packer at build time, and the build fails if the parts differ from the fixture summary |
 | H5 | Written description: what the Legonizer is, why bricks + projection (collective, tangible, white for projection), how it works in 3 steps, who it is for |
 | H6 | Primary CTA "Create your model" → `/create`, visible above the fold and after the description |
 | H7 | Credits: authors, LIRIS / VCity, paper citation with HAL link, UD-Viz link |
@@ -185,7 +185,7 @@ is exact; ≤ 60 draw calls; target 60 fps on an integrated GPU, degrade gracefu
    white bricks make the model a projection screen; bricks make it modular, cheap, reusable, and playful.
 3. How: (1) Import a 3D city model (2) Choose the area and the scale (3) Build it, project on it.
 4. Who: workshop facilitators, urban planners, researchers, teachers, museums.
-5. Use case: the Part-Dieu workshop (matches the animation).
+5. Use case: a workshop on a changing district (matches the animation; generic, no real place).
 
 ## 7. Create page
 
@@ -205,7 +205,7 @@ and can be saved/loaded as a project file.
 | I7 | Georeferencing: ECEF tilesets (coordinates ~6.4e6 m from origin) are converted to a local ENU frame at the tileset centre; projected tilesets used as is; **py3dtilers tilesets** (per-tile `transform` to EPSG:3946 origins, see README) loaded consistently; world coordinates kept in float64 except in legacy mode, which reproduces UD-Viz's float32 rounding |
 | I8 | Feature identity: use `gml_id` from the batch table when present (legacy grouping, §3.1 step 3); otherwise `_BATCHID`; otherwise one feature per mesh (fixes L7) |
 | I9 | LOD: for tilesets with several levels, use the finest content (leaves for `REPLACE`, all contents for `ADD`) |
-| I10 | **Demo datasets** bundled with the site (CORS blocks the LIRIS server): at least Part-Dieu (from Lyon 3 2018 tiles, decimated if needed, licence verified) and one small synthetic sample; one click "Try with Part-Dieu". Each demo has a manifest with a curated default area and **suggested settings**: Part-Dieu loads *Legacy + Keep small buildings*, with a visible note and a one-click switch to strict Legacy |
+| I10 | **Demo dataset** bundled with the site: one synthetic sample made by our own generator (no real-world data, so no third-party licence); one click "Try the sample" on the home page and the import step. The demo has a manifest with a curated default area and **suggested settings**: the whole sample on 3 × 3 plates at 4 m per stud (fits the table), *Legacy + Keep small buildings*, with a visible note and a one-click switch to strict Legacy (whose 1 brick = 9.6 m erases 18 % of the built-up studs, L1) |
 | I11 | Parsing in a Web Worker with progress, cancel, and clear errors (unsupported format, empty geometry, no features, too large, missing files referenced by `tileset.json`) |
 | I12 | Size guidance: works up to ~2 M triangles / 300 MB on a mid-range laptop; above, warn and suggest cropping or decimation |
 | I13 | A "Prepare your data" help page: CityGML → 3D Tiles with py3dtilers, OSM buildings → glTF, exporting from Blender/QGIS |
@@ -307,7 +307,7 @@ The CSV says *how high* each stud is; the build guide says *which bricks to buy 
 | N7 | Reproducibility: same inputs + parameters + app version → identical CSV and parts list |
 | N8 | Quality: unit tests for parsers, heightmap, packing, exporters; **parity tests** against `legonizer@1.1.0` on fixtures; property tests for packing (exact cover, no overlap, no boundary crossing); e2e smoke test of the wizard with the demo dataset |
 | N9 | Trademark: LEGO® is a trademark of the LEGO Group, which does not sponsor, authorize or endorse this site — disclaimer in the footer; body text says "bricks", never uses LEGO logos or trade dress |
-| N10 | Licences: credit upstream (legonizer ISC, UD-Viz LGPL-2.1), paper (CC0), data (Métropole de Lyon open data) on the About page |
+| N10 | Licences: credit upstream (legonizer ISC, UD-Viz LGPL-2.1) and the paper (CC0) on the About page; the demo data and the animation's district are generated by the site (no third-party data) |
 
 ## 9. Technical architecture (binding for implementation)
 
@@ -344,10 +344,11 @@ type PlacedBrick = { plate: string; layer: number; x: number; y: number; w: numb
 ## 10. Acceptance criteria (v1 done when)
 
 1. Home: animation loops seamlessly ≥ 3 cycles without drift, reduced-motion fallback works, CTA reaches `/create`.
-2. Demo path: "Try with Part-Dieu" → default area → Generate → CSV + parts list + instructions + PDF + BrickLink +
+2. Demo path: "Try the sample" → default area → Generate → CSV + parts list + instructions + PDF + BrickLink +
    LDraw downloads, in under 2 minutes for a first-time user (usability test T1 in `docs/usability-test-plan.md`).
 3. Legacy parity: on ≥ 3 fixtures (synthetic boxes, a sloped scene, a real Lyon tile) the legacy-mode matrix equals
-   `legonizer@1.1.0` output cell for cell, and the CSV is byte-identical.
+   `legonizer@1.1.0` output cell for cell, and the CSV is byte-identical. Real tiles are developer fixtures
+   (`npm run fixtures:lyon`, git-ignored, never shipped); without them those cases are skipped.
 4. Packing: property tests pass (exact cover, no overlap, no crossing, determinism); part count reported vs lower
    bound.
 5. Imports: one fixture per format (b3dm zip, b3dm folder, GLB, OBJ, CityJSON) loads and generates.
@@ -380,25 +381,26 @@ Order: UX and the core engine (dev, phase 1) in parallel → UI (from UX) → de
 | 2026-10-06 | Fonts self-hosted (@fontsource, OFL), no request to Google Fonts. Change layer keeps green/red/yellow semantics with colour-blind-safe values `#14B391` / `#B42330` / `#FBE04B` (VCity team may override). White baseplates (3811, white) by default in shop lists; preview grey unless White is chosen. The demo preset reads "Legacy (UD-Viz 4.6.1) with small buildings kept" instead of a bare "Custom" |
 | 2026-10-06 | ⌈area/8⌉ is not a lower bound once 2×6/2×8 are enabled; the engine reports its valid bound, the microcopy must not say "at least ⌈area/8⌉" |
 | 2026-10-06 | `rotation: 'aabb' \| 'rotate'` parameter + effective sampled rectangle returned; 2D mode without WebGL 2 |
+| 2026-10-07 | No real-world data on the site: the Part-Dieu demo and everything derived from the Métropole de Lyon tiles (demo, home animation model, credits) are removed, which closes the demo data licence question. The synthetic sample is the only demo (whole sample on 3 × 3 plates at 4 m/stud, Legacy + Keep small buildings); the home animation shows an invented district from a synthetic generator, run through our pipeline (H2, H4). Real Lyon tiles stay developer tooling (parity and performance tests on the git-ignored `fixtures/`, skipped when absent). Development credit for Jey Puget Gil in the footer, the About page and the README |
 
 ## 13. Open questions (non-blocking)
 
 1. **Name**: "Legonizer" contains the LEGO trademark. Keep it (research tool name) or rename the public site
    (e.g. "Brickonizer", "CityBricks")? Owner: VCity team.
-2. **Demo data licence**: confirm the Métropole de Lyon 3D buildings licence allows redistributing a tile subset.
-3. **Hosting**: GitHub Pages under VCityTeam or a lab domain?
-4. **Site licence**: LGPL-2.1 to match UD-Viz, or another?
-5. **Part numbers**: confirm the catalog in §7.5.1 and the 32×32 white baseplate reference on BrickLink.
-6. **Function layer in greyscale**: the six building-function colours stay distinct for colour-blind viewers but
+2. **Hosting**: GitHub Pages under VCityTeam or a lab domain?
+3. **Site licence**: LGPL-2.1 to match UD-Viz, or another?
+4. **Part numbers**: confirm the catalog in §7.5.1 and the 32×32 white baseplate reference on BrickLink.
+5. **Function layer in greyscale**: the six building-function colours stay distinct for colour-blind viewers but
    not in greyscale; printed or monochrome uses need labels or patterns. Owner: VCity team.
-7. **Home animation content**: projected uses, tram lines, changes and media cards are illustrative (the site says
-   so). Real changes between two Lyon dataset years and rights-cleared media would replace them. Owner: VCity team.
-8. **Older Safari**: colours use `light-dark()` (Safari ≥ 17.5). Schools with older iPads would need a build-time
+6. **Home animation content**: the district is invented and its projected uses, tram lines, changes and media
+   cards are illustrative (the site says so). A real district with real changes between two dataset years and
+   rights-cleared media would replace them, with data whose licence allows redistribution. Owner: VCity team.
+7. **Older Safari**: colours use `light-dark()` (Safari ≥ 17.5). Schools with older iPads would need a build-time
    fallback.
-9. **v1.1 candidates**: custom table size (A5 assumes 1 × 2 m); subtract bricks already owned (Rebrickable CSV) from
+8. **v1.1 candidates**: custom table size (A5 assumes 1 × 2 m); subtract bricks already owned (Rebrickable CSV) from
    the shop lists; split very large layers into 16 × 16 sub-steps; build progress in the project file; several
    models in one project (v1 imports one).
-10. **Accepted limits**: no progress sync between devices (no backend); no prices, affiliate links or store accounts.
+9. **Accepted limits**: no progress sync between devices (no backend); no prices, affiliate links or store accounts.
 
 ### Engineering follow-ups
 
@@ -408,8 +410,6 @@ Order: UX and the core engine (dev, phase 1) in parallel → UI (from UX) → de
   2×8 glyph; the viewport's 18rem minimum height with a 4:3 ratio is wider than a phone.
 - On phones, "Show as list", "Copy link" and the `.mpd` radio sit partly under the sticky bars (excluded from the
   axe `target-size` check in `e2e/create-helpers.ts`).
-- A local build made after `npm run fixtures:demo -- --public` includes the Part-Dieu demo in `dist/`; add a guard
-  while the licence (item 2) is open.
 - Data-preparation help: point to py3dtiles (py3dtilers is unmaintained since January 2025).
 - Manual checks: open the LDraw file in LeoCAD (§10.7); run the usability test (`docs/usability-test-plan.md`);
   measure frame rate and generation time on a real laptop and phone GPU.

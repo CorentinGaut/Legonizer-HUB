@@ -5,7 +5,7 @@
 import { mkdirSync } from 'node:fs';
 import { join } from 'node:path';
 import { expect, test } from '@playwright/test';
-import { OUT, hasPartDieu, loadDemo, primary } from './create-helpers.ts';
+import { OUT, loadDemo, primary } from './create-helpers.ts';
 
 const DIR = join(OUT, 'screens');
 mkdirSync(DIR, { recursive: true });
@@ -25,7 +25,7 @@ for (const [w, h] of [
     await page.goto('create.html');
     await expect(page.locator('#step-title')).toBeVisible();
     await shot('1-import');
-    await loadDemo(page, hasPartDieu ? 'part-dieu' : 'sample');
+    await loadDemo(page);
     await page.waitForTimeout(1500);
     await shot('2-area');
     await primary(page);

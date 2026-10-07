@@ -1,16 +1,19 @@
 /**
  * Vite plugin: `virtual:lz-home-model`, the brick model of the home animation (SPEC H4,
  * storyboard §1.1). At build (and dev) time it reads the heightmap fixture produced by our own
- * pipeline (src/data/home/part-dieu-home.json, `npm run fixtures:home`), packs it with the real
- * packer (src/core/packing) and exposes compact byte arrays, so the browser never runs the
- * packer (≈ 200 ms in Node, several times that on a phone) and the brick list is exactly the
- * build guide's output. The build fails if the packing no longer matches the fixture summary
+ * pipeline from a synthetic district (src/data/home/home-district.json, `npm run fixtures:home`),
+ * packs it with the real packer (src/core/packing) and exposes compact byte arrays, so the browser
+ * never runs the packer (≈ 200 ms in Node, several times that on a phone) and the brick list is
+ * exactly the build guide's output. The build fails if the packing no longer matches the fixture summary
  * (packing algorithm changed without regenerating the fixture).
  */
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import type { Plugin } from 'vite';
 import { packHeightMap } from '../../src/core/packing/pack.ts';
+
+/** Repository-relative path of the H4 fixture (written by scripts/build-home-heightmap.ts). */
+export const HOME_FIXTURE_PATH = 'src/data/home/home-district.json';
 
 const VIRTUAL_ID = 'virtual:lz-home-model';
 const RESOLVED_ID = '\0' + VIRTUAL_ID;
@@ -73,7 +76,7 @@ export function buildHomeModel(fixturePath: string): { model: HomeModelBuild; fi
 }
 
 export function homeModelPlugin(root: string): Plugin {
-  const fixturePath = resolve(root, 'src/data/home/part-dieu-home.json');
+  const fixturePath = resolve(root, HOME_FIXTURE_PATH);
   return {
     name: 'lz-home-model',
     resolveId(id) {

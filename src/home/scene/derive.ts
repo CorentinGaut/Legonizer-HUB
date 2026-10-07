@@ -262,21 +262,26 @@ export function simplify(pts: [number, number][], eps: number): [number, number]
   return [...simplify(pts.slice(0, best + 1), eps).slice(0, -1), ...simplify(pts.slice(best), eps)];
 }
 
-/** Nearest empty cell with the largest street clearance around (i, j). */
+/**
+ * Nearest empty cell with the largest street clearance around (i, j), on the street network
+ * (`street[c]` = 1): an enclosed courtyard would be a dead end for a tram line.
+ */
 function openCellNear(
   cols: number,
   rows: number,
   dist: Int32Array,
+  street: Uint8Array,
   i0: number,
   j0: number,
   r = 6,
 ): [number, number] {
   let best: [number, number] = [i0, j0],
-    bestV = -1;
+    bestV = -Infinity;
   for (let j = Math.max(0, j0 - r); j <= Math.min(rows - 1, j0 + r); j++)
     for (let i = Math.max(0, i0 - r); i <= Math.min(cols - 1, i0 + r); i++) {
-      const v = dist[j * cols + i]! * 10 - Math.hypot(i - i0, j - j0);
-      if (dist[j * cols + i]! > 0 && v > bestV) {
+      const c = j * cols + i;
+      const v = dist[c]! * 10 - Math.hypot(i - i0, j - j0);
+      if (dist[c]! > 0 && street[c] && v > bestV) {
         bestV = v;
         best = [i, j];
       }
@@ -284,16 +289,106 @@ function openCellNear(
   return best;
 }
 
-export function deriveUrbanData(cols: number, rows: number, h: ArrayLike<number>): Derived {
-  const { buildings, buildingOf } = segmentBuildings(cols, rows, h, 1);
+/**
+ * Core depth of every building: for each cell, the chessboard distance to the nearest cell outside
+ * its building (1 on the outline). A perimeter block or a slab is 2–3 studs deep (depth ≤ 2), a
+ * hall or a shopping centre much deeper.
+ */
+function coreDepth(cols: number, rows: number, of: Int32Array): Int32Array {
+  const d = new Int32Array(cols * rows);
+  const q: number[] = [];
+  for (let c = 0; c < cols * rows; c++) {
+    if (of[c]! < 0) continue;
+    const i = c % cols,
+      j = (c - i) / cols;
+    let edge = i === 0 || j === 0 || i === cols - 1 || j === rows - 1;
+    for (let dj = -1; dj <= 1 && !edge; dj++)
+      for (let di = -1; di <= 1 && !edge; di++) if (of[(j + dj) * cols + i + di] !== of[c]) edge = true;
+    if (edge) {
+      d[c] = 1;
+      q.push(c);
+    }
+  }
+  for (let k = 0; k < q.length; k++) {
+    const c = q[k]!;
+    const i = c % cols,
+      j = (c - i) / cols;
+    for (let dj = -1; dj <= 1; dj++)
+      for (let di = -1; di <= 1; di++) {
+        const ni = i + di,
+          nj = j + dj;
+        if (ni < 0 || nj < 0 || ni >= cols || nj >= rows) continue;
+        const n = nj * cols + ni;
+        if (of[n] === of[c] && d[n] === 0) {
+          d[n] = d[c]! + 1;
+          q.push(n);
+        }
+      }
+  }
+  return d;
+}
 
-  // Functions: towers are offices, the largest low footprint is the shopping centre, other large
-  // low footprints are public facilities (the station), the rest is mostly housing.
-  const lowLarge = buildings.filter((b) => b.maxH <= 4 && b.area >= 90).sort((a, b) => b.area - a.area);
+const thickness = (b: Building, depth: Int32Array) => b.cells.reduce((m, c) => Math.max(m, depth[c]!), 0);
+
+/** Longest over shortest side of the bounding box. */
+function elongation(b: Building, cols: number): number {
+  const is = b.cells.map((c) => c % cols),
+    js = b.cells.map((c) => Math.floor(c / cols));
+  const w = Math.max(...is) - Math.min(...is) + 1,
+    d = Math.max(...js) - Math.min(...js) + 1;
+  return Math.max(w, d) / Math.min(w, d);
+}
+
+/**
+ * Perimeter blocks (low and thin: the façades of a block around its courtyard) come out of the
+ * segmentation as one building; split them into lots where the height changes, as the buildings
+ * of a block are usually of different heights.
+ */
+function splitPerimeterBlocks(
+  cols: number,
+  rows: number,
+  h: ArrayLike<number>,
+  seg: { buildings: Building[]; buildingOf: Int32Array },
+): { buildings: Building[]; buildingOf: Int32Array } {
+  const depth = coreDepth(cols, rows, seg.buildingOf);
+  const ring = (b: Building) => b.maxH <= 6 && b.area >= 40 && thickness(b, depth) <= 2;
+  if (!seg.buildings.some(ring)) return seg;
+  // equal-height components: each lies inside one building of the 1-brick segmentation
+  const lots = segmentBuildings(cols, rows, h, 0);
+  const out: Building[] = [];
+  const of = new Int32Array(cols * rows).fill(-1);
+  for (const b of seg.buildings) {
+    const parts = ring(b)
+      ? [...new Set(b.cells.map((c) => lots.buildingOf[c]!))].map((k) => lots.buildings[k]!)
+      : [b];
+    for (const p of parts) {
+      const id = out.length;
+      out.push({ ...p, id, fn: 'housing', change: null });
+      for (const c of p.cells) of[c] = id;
+    }
+  }
+  return { buildings: out, buildingOf: of };
+}
+
+export function deriveUrbanData(cols: number, rows: number, h: ArrayLike<number>): Derived {
+  const { buildings, buildingOf } = splitPerimeterBlocks(cols, rows, h, segmentBuildings(cols, rows, h, 1));
+
+  // Functions: towers are offices; among the large, deep (not a ring of façades), low footprints
+  // the long ones are public facilities (a station hall), the largest other one is the shopping
+  // centre; the rest is mostly housing.
+  const depth = coreDepth(cols, rows, buildingOf);
+  const lowLarge = buildings
+    .filter((b) => b.maxH <= 4 && b.area >= 90 && thickness(b, depth) >= 3)
+    .sort((a, b) => b.area - a.area);
+  const halls = lowLarge.filter((b) => elongation(b, cols) >= 3);
+  // long one-brick strips: platform canopies, depots
+  const strips = buildings.filter((b) => b.maxH <= 1 && b.area >= 30 && elongation(b, cols) >= 8);
+  const mall = lowLarge.find((b) => !halls.includes(b));
   for (const b of buildings) {
     const r = hash01(b.id * 7 + 3);
     if (b.maxH >= 9) b.fn = 'offices';
-    else if (lowLarge[0] === b) b.fn = 'shops';
+    else if (halls.includes(b) || strips.includes(b)) b.fn = 'public';
+    else if (mall === b) b.fn = 'shops';
     else if (lowLarge.includes(b)) b.fn = r < 0.5 ? 'public' : 'industry';
     else if (b.maxH >= 6) b.fn = r < 0.55 ? 'offices' : r < 0.8 ? 'housing' : 'public';
     else
@@ -301,21 +396,26 @@ export function deriveUrbanData(cols: number, rows: number, h: ArrayLike<number>
         r < 0.62 ? 'housing' : r < 0.78 ? 'shops' : r < 0.9 ? 'public' : r < 0.96 ? 'offices' : 'industry';
   }
 
-  // Changes: the tallest tower and a few others built, some demolished, some modified.
+  // Changes: the tallest tower and a few others built, some demolished, some modified; mid-sized
+  // buildings only (a lot of a block or more, but not a whole station hall), so every change
+  // reads on the model and none hides the others.
   const ranked = [...buildings].filter((b) => b.area >= 6).sort((a, b) => b.maxH - a.maxH || b.area - a.area);
   if (ranked[0]) ranked[0].change = 'built';
-  const pool = ranked.slice(1).sort((a, b) => hash01(a.id * 13 + 1) - hash01(b.id * 13 + 1));
+  const pool = ranked
+    .slice(1)
+    .filter((b) => b.area >= 16 && b.area <= 300)
+    .sort((a, b) => hash01(a.id * 13 + 1) - hash01(b.id * 13 + 1));
   let nb = 0,
     nd = 0,
     nm = 0;
   for (const b of pool) {
-    if (nb < 4 && b.area >= 12) {
+    if (nb < 4 && b.area >= 20) {
       b.change = 'built';
       nb++;
-    } else if (nd < 4 && b.maxH <= 6 && b.area >= 10) {
+    } else if (nd < 4 && b.maxH <= 6) {
       b.change = 'demolished';
       nd++;
-    } else if (nm < 6 && b.area >= 10) {
+    } else if (nm < 6) {
       b.change = 'modified';
       nm++;
     }
@@ -350,16 +450,26 @@ export function deriveUrbanData(cols: number, rows: number, h: ArrayLike<number>
   }
 
   // Tram lines: one west→east and one south→north, each along the most open avenue of the
-  // middle band (a corridor cost keeps the line straight where the street allows it).
+  // middle band (a corridor cost keeps the line straight where the street allows it). A row's
+  // score counts its open cells, weighted by clearance so a wide avenue beats a side street;
+  // the ends are taken on the street network (empty ground reaching the edge of the map).
   const trams: [number, number][][] = [];
+  const street = new Uint8Array(cols * rows);
+  for (const blob of emptyBlobs) if (blob.touchesEdge) for (const c of blob.cells) street[c] = 1;
   const rowScore = (j: number) => {
     let n = 0;
-    for (let i = 0; i < cols; i++) if (dist[j * cols + i]! >= 2) n++;
+    for (let i = 0; i < cols; i++) {
+      const d = dist[j * cols + i]!;
+      if (d >= 2) n += Math.min(d, 4);
+    }
     return n;
   };
   const colScore = (i: number) => {
     let n = 0;
-    for (let j = 0; j < rows; j++) if (dist[j * cols + i]! >= 2) n++;
+    for (let j = 0; j < rows; j++) {
+      const d = dist[j * cols + i]!;
+      if (d >= 2) n += Math.min(d, 4);
+    }
     return n;
   };
   const best = (lo: number, hi: number, score: (k: number) => number) => {
@@ -379,8 +489,8 @@ export function deriveUrbanData(cols: number, rows: number, h: ArrayLike<number>
     cols,
     rows,
     dist,
-    openCellNear(cols, rows, dist, 0, j0, 6),
-    openCellNear(cols, rows, dist, cols - 1, j0, 6),
+    openCellNear(cols, rows, dist, street, 0, j0, 6),
+    openCellNear(cols, rows, dist, street, cols - 1, j0, 6),
     (_i, j) => 0.35 * Math.abs(j - j0),
   );
   if (ew) trams.push(simplify(ew, 1.0));
@@ -389,8 +499,8 @@ export function deriveUrbanData(cols: number, rows: number, h: ArrayLike<number>
     cols,
     rows,
     dist,
-    openCellNear(cols, rows, dist, i0, 0, 6),
-    openCellNear(cols, rows, dist, i0, rows - 1, 6),
+    openCellNear(cols, rows, dist, street, i0, 0, 6),
+    openCellNear(cols, rows, dist, street, i0, rows - 1, 6),
     (i) => 0.35 * Math.abs(i - i0),
   );
   if (sn) trams.push(simplify(sn, 1.0));

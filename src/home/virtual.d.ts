@@ -1,4 +1,4 @@
-/** Generated at build time by scripts/vite/home-model.ts from src/data/home/part-dieu-home.json. */
+/** Generated at build time by scripts/vite/home-model.ts from src/data/home/home-district.json (synthetic district). */
 declare module 'virtual:lz-home-model' {
   export const cols: number;
   export const rows: number;

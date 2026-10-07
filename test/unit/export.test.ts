@@ -164,7 +164,7 @@ describe('build guide, plate passes, project file, calque', () => {
         plate: p.plate,
         heights,
         inventory: { enabled: ['3001', '3003'], maxLength: 4 },
-        title: 'Part-Dieu',
+        title: 'Riverside',
       });
       expect(payload).toMatch(/^[A-Za-z0-9_-]+$/);
       const back = decodePlatePass(payload);

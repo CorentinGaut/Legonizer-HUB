@@ -1,5 +1,5 @@
 /**
- * Demo path (SPEC §10.2): Try with Part-Dieu → default area → Generate → build guide → CSV, parts
+ * Demo path (SPEC §10.2): Try the sample → default area → Generate → build guide → CSV, parts
  * list, instructions, PDF, BrickLink, LDraw — timed. Consistency of numbers across exports
  * (ux-spec §8.1), the legacy CSV byte for byte against legonizer@1.1.0 (SPEC §10.3), and the
  * LDraw file parsed back into the height matrix (SPEC O8; the LeoCAD open stays a manual check).
@@ -10,17 +10,10 @@ import { expect, test } from '@playwright/test';
 import { PDFDocument } from 'pdf-lib';
 import { unzipSync } from 'fflate';
 import { BRICKS } from '../src/core/packing/catalog.ts';
-import {
-  OUT,
-  ROOT,
-  generateFromArea,
-  hasPartDieu,
-  loadDemo,
-  primary,
-  saveDownload,
-} from './create-helpers.ts';
+import { OUT, ROOT, generateFromArea, loadDemo, primary, saveDownload } from './create-helpers.ts';
 
-const DEMO = hasPartDieu ? 'part-dieu' : 'sample';
+/** The site's only demo: the synthetic sample (SPEC I10). */
+const MANIFEST_DIR = join(ROOT, 'public', 'data', 'demo', 'sample');
 
 /** Height matrix (north row first) from the legacy CSV. */
 function parseCsv(text: string): number[][] {
@@ -60,7 +53,7 @@ test.describe('create: demo path', () => {
     const errors: string[] = [];
     page.on('pageerror', (e) => errors.push(e.message));
     page.on('console', (m) => m.type() === 'error' && errors.push(m.text()));
-    await loadDemo(page, DEMO);
+    await loadDemo(page);
     const tLoaded = Date.now();
     await generateFromArea(page);
     const tGenerated = Date.now();
@@ -143,16 +136,18 @@ test.describe('create: demo path', () => {
       pdfBytes: pdf.bytes.length,
       totalMs: tEnd - t0,
     };
-    console.log(`[demo path] ${DEMO}: ${JSON.stringify(timing)}`);
+    console.log(`[demo path] sample, ${total} bricks: ${JSON.stringify(timing)}`);
     test.info().annotations.push({ type: 'timing', description: JSON.stringify(timing) });
     expect(timing.totalMs).toBeLessThan(120_000);
     expect(errors).toEqual([]);
   });
 
   test('strict Legacy CSV is byte-identical to legonizer@1.1.0 (UD-Viz 4.6.1)', async ({ page }) => {
-    test.skip(!hasPartDieu, 'needs the Part-Dieu demo in public/ (npm run fixtures:demo -- --public)');
     test.setTimeout(180_000);
-    await loadDemo(page, 'part-dieu');
+    const manifest = JSON.parse(readFileSync(join(MANIFEST_DIR, 'manifest.json'), 'utf8'));
+    const { platesX, platesY } = manifest.defaultArea;
+    const { scale, maxHeight } = manifest.suggested.strictLegacy;
+    await loadDemo(page);
     await primary(page);
     await page.getByRole('button', { name: 'Switch to Legacy' }).click();
     await expect(page.getByRole('radio', { name: /Legacy \(UD-Viz 4\.6\.1\)/ }).first()).toBeChecked();
@@ -163,25 +158,22 @@ test.describe('create: demo path', () => {
     await primary(page);
     await page.getByRole('tab', { name: 'All downloads' }).click();
     const csv = await saveDownload(page, () => page.locator('[data-card=csv] [data-dl]').click());
-    expect(csv.name).toBe('legoPlates_3_3.csv');
+    expect(csv.name).toBe(`legoPlates_${platesX}_${platesY}.csv`);
     // reference: the real legonizer@1.1.0 + three r147 behind UD-Viz's box selector (test/parity)
     const { buildReferenceLayer, referenceHeightMap, referenceCsv } =
       await import('../test/parity/legacyReference.ts');
-    const manifest = JSON.parse(readFileSync(join(ROOT, 'public/data/demo/part-dieu/manifest.json'), 'utf8'));
-    const zip = unzipSync(
-      new Uint8Array(readFileSync(join(ROOT, 'public/data/demo/part-dieu', manifest.archive))),
-    );
+    const zip = unzipSync(new Uint8Array(readFileSync(join(MANIFEST_DIR, manifest.archive))));
     const layer = buildReferenceLayer(new Map(Object.entries(zip)));
     const { heightMap } = referenceHeightMap(layer, {
       cx: manifest.defaultArea.area.cx,
       cy: manifest.defaultArea.area.cy,
       rotationZ: 0,
-      platesX: 3,
-      platesY: 3,
-      scale: 3,
-      legoHeight: 10,
+      platesX,
+      platesY,
+      scale,
+      legoHeight: maxHeight,
     });
-    const ref = referenceCsv(heightMap, 'legoPlates_3_3.csv');
+    const ref = referenceCsv(heightMap, csv.name);
     expect(Buffer.from(ref.bytes).equals(csv.bytes)).toBe(true);
     console.log(
       `[parity] browser CSV ${csv.bytes.length} bytes = legonizer@1.1.0 reference (${heightMap.flat().filter(Boolean).length} non-zero studs)`,
@@ -191,7 +183,7 @@ test.describe('create: demo path', () => {
   test('plate pass opens Plate mode on a phone without the project', async ({ browser }) => {
     test.setTimeout(120_000);
     const desk = await browser.newPage();
-    await loadDemo(desk, DEMO);
+    await loadDemo(desk);
     await generateFromArea(desk);
     await primary(desk);
     await desk.getByRole('tab', { name: /Build/ }).click();

@@ -142,15 +142,9 @@
     "title": "Importer un modèle 3D de ville",
     "lead": "Commencez avec notre démo, ou apportez votre propre modèle.",
     "demo": {
-      "partDieu": {
-        "title": "Part-Dieu, Lyon",
-        "body": "Vrais bâtiments 3D du quartier d'affaires de Lyon (2018).",
-        "source": "Source : données ouvertes de la Métropole de Lyon.",
-        "cta": "Essayer avec la Part-Dieu"
-      },
       "sample": {
-        "title": "Petit exemple",
-        "body": "Quelques blocs simples. Chargement instantané.",
+        "title": "Quartier d'exemple",
+        "body": "Un petit quartier inventé de 118 bâtiments simples et une tour de 96 m, généré par le Legonizer. Chargement instantané.",
         "cta": "Essayer l'exemple"
       },
       "unavailable": "Cette démo n'est pas disponible sur cette copie du site.",
@@ -350,7 +344,7 @@
     "lead": "Placez le rectangle sur le quartier que vous voulez construire.",
     "defaultPlaced": "Nous avons placé une zone de {x} × {y} plaques au milieu de votre modèle. Déplacez-la ou dessinez-en une nouvelle.",
     "defaultWhole": "Votre modèle entier tient sur {x} × {y} plaques : nous l'avons sélectionné en entier.",
-    "demoSuggested": "Nous avons placé la zone sur la gare et les tours. Déplacez-la ou dessinez-en une nouvelle.",
+    "demoSuggested": "Nous avons placé la zone sur tout l'exemple : {x} × {y} plaques, qui tiennent sur la table. Déplacez-la ou dessinez-en une nouvelle.",
     "position": {
       "title": "Position",
       "centreX": "Centre X (est)",

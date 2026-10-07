@@ -219,7 +219,7 @@ export class AreaStep implements StepView {
     } else if (p.areaOrigin && p.areaOrigin !== 'user') {
       const msg =
         p.areaOrigin === 'demo'
-          ? t('create.area.demoSuggested')
+          ? t('create.area.demoSuggested', { x: p.params.platesX, y: p.params.platesY })
           : p.areaOrigin === 'whole'
             ? t('create.area.defaultWhole', { x: p.params.platesX, y: p.params.platesY })
             : t('create.area.defaultPlaced', { x: p.params.platesX, y: p.params.platesY });

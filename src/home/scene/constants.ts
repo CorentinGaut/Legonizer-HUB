@@ -37,7 +37,6 @@ export const COLORS = {
   bezel: '#111215',
   floor: '#2f2d2a',
   wall: '#24252a',
-  figures: ['#d9d8d4', '#e3e2de', '#cdccc8'] as const, // light greys, warmed by the room light (3d-look §6)
   keypad: '#1c1d20',
   led: '#a3abff',
   cone: '#fff4e2',

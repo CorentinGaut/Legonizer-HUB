@@ -82,7 +82,7 @@ export type ExportKind =
 export interface ExportOptions {
   /** Project name (LDraw title, PDF cover). */
   title?: string;
-  /** File-safe base name (`part-dieu`); defaults to a slug of the title. */
+  /** File-safe base name (`small-sample`); defaults to a slug of the title. */
   fileBase?: string;
   demo?: string;
   /** Shop lists: spares in percent (0, 5, 10) and the baseplate colour (UI-5: white by default). */

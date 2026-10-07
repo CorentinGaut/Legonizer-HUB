@@ -130,7 +130,7 @@ describe('3D Tiles (b3dm) import', () => {
   });
 
   it('converts an ECEF tileset to a local ENU frame (I7)', () => {
-    // a 30 m tall box placed at Lyon in ECEF through the root transform (ENU→ECEF)
+    // a 30 m tall box placed at 4.85° E, 45.76° N in ECEF through the root transform (ENU→ECEF)
     const lon = 4.85,
       lat = 45.76,
       h = 170;

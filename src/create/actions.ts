@@ -28,7 +28,8 @@ import {
 } from './state.ts';
 import { n } from './format.ts';
 
-export const DEMO_IDS = ['part-dieu', 'sample'] as const;
+/** Demo datasets bundled with the site (SPEC I10): the synthetic sample only. */
+export const DEMO_IDS = ['sample'] as const;
 export type DemoId = (typeof DEMO_IDS)[number];
 
 /** Demo manifests found on this copy of the site (a card shows only when its manifest exists). */
@@ -121,8 +122,7 @@ export class Actions {
     }
     const token = ++this.importToken;
     const ctrl = new AbortController();
-    const title =
-      id === 'part-dieu' ? t('create.import.demo.partDieu.title') : t('create.import.demo.sample.title');
+    const title = t(`create.import.demo.${id}.title`);
     this.store.setT({
       importing: {
         name: title,
@@ -157,7 +157,7 @@ export class Actions {
       const sug = m.suggested.params;
       this.store.set({
         area: { ...m.defaultArea.area },
-        areaOrigin: id === 'part-dieu' ? 'demo' : 'default',
+        areaOrigin: 'demo',
         params: { ...sug, platesX: m.defaultArea.platesX, platesY: m.defaultArea.platesY },
         demoSettings: JSON.stringify(sug) !== JSON.stringify(m.suggested.strictLegacy),
         name: this.store.p.nameEdited ? this.store.p.name : title,

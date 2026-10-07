@@ -35,7 +35,7 @@ test.describe('home hero', () => {
     );
     expect(stageStart).toBeGreaterThanOrEqual(loadedAt);
     const poster = page.locator('img.lz-hero__poster');
-    await expect(poster).toHaveAttribute('alt', /Part-Dieu district on a table/);
+    await expect(poster).toHaveAttribute('alt', /model of a city district on a table/);
     expect(await poster.evaluate((img: HTMLImageElement) => img.complete && img.naturalWidth > 0)).toBe(true);
     // the canvas is decorative; the region and the poster carry the description
     await expect(page.locator('canvas.lz-hero__canvas')).toHaveAttribute('aria-hidden', 'true');
@@ -151,24 +151,37 @@ test.describe('home hero', () => {
       let mismatches = 0;
       let samples = 0;
       let maxDrift = 0;
+      // Seams crossed, from the clock; a wrap must be observed between every two samples less than
+      // one cycle apart that straddle a seam. (Counting observed wraps alone was flaky: a
+      // SwiftShader stall longer than one 3.5 s cycle between two samples hides a wrap.)
+      let seams = 0;
       let wraps = 0;
-      let prev = first.t;
+      let missedWraps = 0;
+      let maxGapMs = 0;
+      let prev = first;
+      const unwrapped = (s: { clock: number }) => first.t + ((s.clock - first.clock) / 1000) * 8;
       const end = performance.now() + 3.4 * 3500; // 3.4 cycles at 8× (3.5 s per cycle)
       while (performance.now() < end) {
         await new Promise((r) => requestAnimationFrame(() => setTimeout(r, 0)));
         const s = d.sample();
         samples++;
         if (s.caption !== idx(s.rendered)) mismatches++;
-        const expected = (((first.t + ((s.clock - first.clock) / 1000) * 8) % 28) + 28) % 28;
+        const expected = ((unwrapped(s) % 28) + 28) % 28;
         const diff = Math.abs(expected - s.t);
         maxDrift = Math.max(maxDrift, Math.min(diff, 28 - diff));
-        if (s.t < prev) wraps++;
-        prev = s.t;
+        const crossed = Math.floor(unwrapped(s) / 28) - Math.floor(unwrapped(prev) / 28);
+        seams += crossed;
+        if (s.t < prev.t) wraps++;
+        if (crossed === 1 && unwrapped(s) - unwrapped(prev) < 28 && !(s.t < prev.t)) missedWraps++;
+        maxGapMs = Math.max(maxGapMs, s.clock - prev.clock);
+        prev = s;
       }
-      return { samples, mismatches, maxDrift, wraps };
+      return { samples, mismatches, maxDrift, seams, wraps, missedWraps, maxGapMs };
     });
     console.log('loop sync over accelerated cycles:', result);
-    expect(result.wraps).toBeGreaterThanOrEqual(3);
+    expect(result.seams).toBeGreaterThanOrEqual(3);
+    expect(result.wraps).toBeGreaterThanOrEqual(1);
+    expect(result.missedWraps).toBe(0);
     expect(result.mismatches).toBe(0);
     expect(result.maxDrift).toBeLessThan(1e-6);
   });
@@ -255,13 +268,16 @@ test.describe('home hero', () => {
 });
 
 test.describe('home page', () => {
-  test('primary CTA reaches /create, demo CTA asks for Part-Dieu (H6)', async ({ page }) => {
+  test('primary CTA reaches /create, demo CTA opens the sample (H6)', async ({ page }) => {
     await page.goto('/');
     const hero = page.locator('#hero');
-    await expect(hero.getByRole('link', { name: 'Try with Part-Dieu' })).toHaveAttribute(
+    await expect(hero.getByRole('link', { name: 'Try the sample' })).toHaveAttribute(
       'href',
-      'create.html?demo=part-dieu',
+      'create.html?demo=sample',
     );
+    await expect(
+      page.locator('.home-cta-band').getByRole('link', { name: 'Try the sample' }),
+    ).toHaveAttribute('href', 'create.html?demo=sample');
     await hero.getByRole('link', { name: 'Create your model' }).click();
     await expect(page).toHaveURL(/create\.html$/);
   });
@@ -274,7 +290,7 @@ test.describe('home page', () => {
       'How it works',
       'What you get',
       "Who it's for",
-      'Use case: a workshop on Part-Dieu',
+      'Use case: a workshop on a changing district',
       'Credits',
     ])
       await expect(page.getByRole('heading', { level: 2, name })).toBeVisible();
@@ -285,6 +301,10 @@ test.describe('home page', () => {
     await expect(page.locator('#lz-footer')).toContainText(
       'LEGO® is a trademark of the LEGO Group, which does not sponsor, authorize or endorse this site.',
     );
+    await expect(page.locator('#lz-footer')).toContainText('Website developed for fun by Jey Puget Gil.');
+    // no real-world data on the site: the demo and the animation's district are generated (the
+    // only "Lyon" left is the lab's affiliation, Université de Lyon, in the research credit)
+    await expect(page.locator('main')).not.toContainText(/Part-Dieu|Métropole/);
     await expect(page.getByRole('link', { name: 'Create your model' })).toHaveCount(4);
   });
 
@@ -301,6 +321,10 @@ test.describe('home page', () => {
       'Chapitre 1 sur 5 : Le décor',
     );
     await expect(page).toHaveTitle(/maquette de briques/);
+    await expect(page.locator('#lz-footer')).toContainText(
+      'Site développé pour le plaisir par Jey Puget Gil.',
+    );
+    await expect(page.locator('#hero').getByRole('link', { name: "Essayer l'exemple" })).toBeVisible();
     await expect(page.locator('.lz-header__inner [data-lz-locale="fr"]')).toBeFocused();
     await page.reload();
     await expect(page.locator('#hero-title')).toHaveText(/^D'une maquette 3D de ville/);
@@ -357,7 +381,12 @@ test.describe('about page', () => {
     await expect(page.locator('#licences')).toContainText('legonizer 1.1.0 (core algorithm): ISC licence.');
     await expect(page.locator('#licences')).toContainText('UD-Viz Legonizer widget 4.6.1: LGPL-2.1 licence.');
     await expect(page.locator('#licences')).toContainText('Research paper and figures: CC0 1.0.');
-    await expect(page.locator('#licences')).toContainText('Métropole de Lyon');
+    await expect(page.locator('#licences')).toContainText(
+      'Demo data: an invented sample district generated by the Legonizer, same licence as this site.',
+    );
+    await expect(page.locator('#licences')).toContainText('Website developed for fun by Jey Puget Gil.');
+    await expect(page.locator('#lz-footer')).toContainText('Website developed for fun by Jey Puget Gil.');
+    await expect(page.locator('main')).not.toContainText(/Métropole|Part-Dieu/);
     await expect(page.locator('#trademark')).toContainText('LEGO® is a trademark of the LEGO Group');
     await expect(page.locator('#research blockquote')).toHaveAttribute('lang', 'fr');
     await expect(

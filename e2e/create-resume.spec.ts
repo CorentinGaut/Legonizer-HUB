@@ -4,13 +4,11 @@
  * the build progress survives.
  */
 import { expect, test } from '@playwright/test';
-import { generateFromArea, hasPartDieu, loadDemo, primary } from './create-helpers.ts';
-
-const DEMO = hasPartDieu ? 'part-dieu' : 'sample';
+import { generateFromArea, loadDemo, primary } from './create-helpers.ts';
 
 test('reload continues the project; the resume banner offers Continue or Start new', async ({ page }) => {
   test.setTimeout(180_000);
-  await loadDemo(page, DEMO);
+  await loadDemo(page);
   await generateFromArea(page);
   const total = await page.locator('#lz-total-bricks').innerText();
   await primary(page);

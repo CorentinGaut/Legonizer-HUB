@@ -4,7 +4,7 @@
  * ../guide.
  */
 import { getLocale, onLocaleChange, t } from '../shared/i18n.ts';
-import { Actions, loadDemoManifests } from './actions.ts';
+import { Actions, DEMO_IDS, loadDemoManifests, type DemoId } from './actions.ts';
 import { $, announce, attr, debounce, html, ic, openDialog, setHtml, toast, toHtml } from './dom.ts';
 import { EngineService } from './engine.ts';
 import { timeOfDay } from './format.ts';
@@ -82,11 +82,11 @@ export class CreateApp implements Ctx {
     } else if (hasContent(saved)) {
       this.savedProject = saved;
     }
-    if (demo === 'part-dieu' || demo === 'sample') {
+    if (demo && (DEMO_IDS as readonly string[]).includes(demo)) {
       this.savedProject = null;
       history.replaceState(null, '', location.pathname + (demo ? '' : location.search) + '#import');
       this.route(true);
-      void this.actions.importDemo(demo);
+      void this.actions.importDemo(demo as DemoId);
       return;
     }
     this.route(true);

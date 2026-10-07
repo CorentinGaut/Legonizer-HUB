@@ -2,7 +2,8 @@
  * Deterministic synthetic 3D Tiles datasets, written exactly like py3dtilers output (b3dm v1,
  * glTF 2.0 non-indexed triangle soup with POSITION / NORMAL / _BATCHID float32, node matrix
  * Z-up → Y-up, positions Z-up relative to each child tile's translation `transform`, batch table
- * with `gml_id`). Used by tests (parity, importers) and as the small demo sample (SPEC I10).
+ * with `gml_id`). Used by tests (parity, importers) and as the demo sample of the site (SPEC I10);
+ * the home animation's district (district.ts) uses the same writers.
  */
 import type { FileMap } from '../import/fileMap.ts';
 
@@ -152,6 +153,48 @@ export class SoupBuilder {
       [x0, ym, zr],
       [x1, ym, zr],
     ]);
+  }
+  /**
+   * Vertical prism on a convex footprint (counter-clockwise seen from above, [x, y] pairs):
+   * floor (down), one wall per edge (out), flat roof (up).
+   */
+  prism(b: number, footprint: [number, number][], z0: number, z1: number): void {
+    const n = footprint.length;
+    for (let k = 1; k + 1 < n; k++) {
+      const [a, c, d] = [footprint[0]!, footprint[k]!, footprint[k + 1]!];
+      this.tri(b, a[0], a[1], z1, c[0], c[1], z1, d[0], d[1], z1); // roof, +z
+      this.tri(b, a[0], a[1], z0, d[0], d[1], z0, c[0], c[1], z0); // floor, −z
+    }
+    for (let k = 0; k < n; k++) {
+      const [p, q] = [footprint[k]!, footprint[(k + 1) % n]!];
+      this.quad(b, [
+        [p[0], p[1], z0],
+        [q[0], q[1], z0],
+        [q[0], q[1], z1],
+        [p[0], p[1], z1],
+      ]);
+    }
+  }
+  /**
+   * Convex cross-section in the (y, z) plane (counter-clockwise seen from +x) extruded from x0 to
+   * x1: a vaulted hall, a canopy. End caps face −x and +x, sides face out.
+   */
+  extrudeX(b: number, x0: number, x1: number, profile: [number, number][]): void {
+    const n = profile.length;
+    for (let k = 1; k + 1 < n; k++) {
+      const [a, c, d] = [profile[0]!, profile[k]!, profile[k + 1]!];
+      this.tri(b, x1, a[0], a[1], x1, c[0], c[1], x1, d[0], d[1]); // east cap, +x
+      this.tri(b, x0, a[0], a[1], x0, d[0], d[1], x0, c[0], c[1]); // west cap, −x
+    }
+    for (let k = 0; k < n; k++) {
+      const [p, q] = [profile[k]!, profile[(k + 1) % n]!];
+      this.quad(b, [
+        [x0, p[0], p[1]],
+        [x0, q[0], q[1]],
+        [x1, q[0], q[1]],
+        [x1, p[0], p[1]],
+      ]);
+    }
   }
 }
 
@@ -355,7 +398,10 @@ export function writeTileset(tiles: SyntheticTile[], title: string): FileMap {
 // ---------------------------------------------------------------------------------------------
 // Datasets
 
-/** Centre of the synthetic datasets: Lyon Part-Dieu in EPSG:3946, to exercise float32 world coordinates. */
+/**
+ * Centre of the synthetic datasets, in projected coordinates as large as real EPSG:3946 data
+ * (y ≈ 5.2e6 m), so the legacy float32 world coordinates round as they do on real tiles.
+ */
 export const SYNTHETIC_CENTRE: [number, number] = [1844400, 5175100];
 
 /**

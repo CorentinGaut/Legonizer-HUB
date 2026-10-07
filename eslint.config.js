@@ -4,7 +4,8 @@ import globals from 'globals';
 import tseslint from 'typescript-eslint';
 
 export default tseslint.config(
-  { ignores: ['dist/', 'node_modules/', 'fixtures/', 'docs/', 'coverage/'] },
+  // .claude/ holds agent worktrees (whole copies of the repository, git-ignored)
+  { ignores: ['dist/', 'node_modules/', 'fixtures/', 'docs/', 'coverage/', '.claude/'] },
   js.configs.recommended,
   ...tseslint.configs.recommended,
   {

@@ -2,13 +2,16 @@
  * SPEC §10.3 — legacy parity: our legacy mode vs the real legonizer@1.1.0 (+ the UD-Viz 4.6.1
  * pre-processing replayed with three r154), cell for cell and CSV byte for byte.
  */
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { csvBytes, csvFileName } from '../../src/core/export/csv.ts';
 import { generateHeightMap } from '../../src/core/heightmap/index.ts';
 import { importCityModel } from '../../src/core/import/index.ts';
+import type { DemoManifest } from '../../src/core/samples/manifest.ts';
 import { SYNTHETIC_CENTRE, syntheticBoxesCity, syntheticSlope } from '../../src/core/samples/synthetic.ts';
 import { defaultParams, type CityMesh, type HeightMap } from '../../src/core/types.ts';
-import { hasLyonFixtures, loadLyon } from '../helpers/fixtures.ts';
+import { ROOT, hasLyonFixtures, loadLyon } from '../helpers/fixtures.ts';
 import { buildReferenceLayer, referenceCsv, referenceHeightMap, type RefLayer } from './legacyReference.ts';
 
 interface Case {
@@ -60,6 +63,9 @@ export function runParity(mesh: CityMesh, layer: RefLayer, c: Case) {
 }
 
 const [CX, CY] = SYNTHETIC_CENTRE;
+const DEMO = JSON.parse(
+  readFileSync(join(ROOT, 'public', 'data', 'demo', 'sample', 'manifest.json'), 'utf8'),
+) as DemoManifest;
 
 describe('legacy parity — synthetic boxes city (py3dtilers-like b3dm tileset)', () => {
   const files = syntheticBoxesCity(1);
@@ -95,6 +101,17 @@ describe('legacy parity — synthetic boxes city (py3dtilers-like b3dm tileset)'
       platesY: 2,
       scale: 2,
       maxHeight: 7,
+    },
+    {
+      // the demo's curated default area in strict Legacy (the sample is the site's only demo)
+      name: `demo default area ${DEMO.defaultArea.platesX}×${DEMO.defaultArea.platesY} @${DEMO.suggested.strictLegacy.scale} m`,
+      cx: DEMO.defaultArea.area.cx,
+      cy: DEMO.defaultArea.area.cy,
+      rotationDeg: DEMO.defaultArea.area.rotationDeg,
+      platesX: DEMO.defaultArea.platesX,
+      platesY: DEMO.defaultArea.platesY,
+      scale: DEMO.suggested.strictLegacy.scale,
+      maxHeight: DEMO.suggested.strictLegacy.maxHeight,
     },
     {
       name: 'rotated area 30° (L3: AABB) 2×3 @2.5 m',

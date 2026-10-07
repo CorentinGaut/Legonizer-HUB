@@ -116,7 +116,7 @@
       "inputs": "Données et versions",
       "files": "Fichiers",
       "filesBody": "{csv} : hauteur de chaque tenon, en briques (lignes du nord au sud, colonnes d'ouest en est, séparées par des points-virgules). Le fichier de projet (.legonizer.json) s'ouvre sur le site du Legonizer et redonne des fichiers identiques.",
-      "credits": "Recherche : C. Le Bihan Gautier, J. Delanoy, G. Gesquière, JFIG 2024, hal-04924304. Données de la démo : Métropole de Lyon (2018), 3D Tiles : LIRIS / VCity.",
+      "credits": "Recherche : C. Le Bihan Gautier, J. Delanoy, G. Gesquière, JFIG 2024, hal-04924304.",
       "legacyValue": "historique",
       "changedValue": "modifié",
       "noInputs": "non enregistré (ouvert depuis un fichier de projet ou une fiche de plaque)"

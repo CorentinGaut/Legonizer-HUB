@@ -1,22 +1,33 @@
 /**
- * The home brick model (SPEC H4): packed at build time by the real packer from the pipeline
- * fixture. Checks that what the animation shows is an exact brick cover of the fixture heights.
+ * The home brick model (SPEC H4): heights of a synthetic district produced by our own pipeline,
+ * packed at build time by the real packer. Checks that the committed fixture is what the pipeline
+ * gives today and that what the animation shows is an exact brick cover of the fixture heights.
  */
+import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
-import { buildHomeModel } from '../../scripts/vite/home-model.ts';
+import { buildHomeHeightmap } from '../../scripts/home-district.ts';
+import { HOME_FIXTURE_PATH, buildHomeModel } from '../../scripts/vite/home-model.ts';
 import { deriveUrbanData } from '../../src/home/scene/derive.ts';
 
-const fixture = join(import.meta.dirname, '..', '..', 'src', 'data', 'home', 'part-dieu-home.json');
+const fixture = join(import.meta.dirname, '..', '..', HOME_FIXTURE_PATH);
 
 describe('home brick model', () => {
   const { model, fixture: f } = buildHomeModel(fixture);
 
   it('uses the 5 × 3 plate fixture produced by our pipeline (storyboard §1.1)', () => {
     expect(f.kind).toBe('legonizer-home-heightmap');
+    expect(f.source.dataset).toBe('synthetic-district');
     expect([model.platesX, model.platesY]).toEqual([5, 3]);
     expect([model.cols, model.rows]).toEqual([160, 96]);
     expect(model.maxLayer).toBeLessThanOrEqual(24);
+  });
+
+  it('is what the pipeline produces today from the synthetic district (npm run fixtures:home)', () => {
+    const saved = JSON.parse(readFileSync(fixture, 'utf8'));
+    const fresh = buildHomeHeightmap(saved.generated.date);
+    expect(fresh.heightMap.data).toEqual(saved.heightMap.data);
+    expect(JSON.parse(JSON.stringify(fresh))).toEqual(saved);
   });
 
   it('covers every stud column exactly up to its height, plate by plate', () => {
@@ -53,7 +64,10 @@ describe('home brick model', () => {
     expect(a.trams).toEqual(b.trams);
     const changes = a.buildings.filter((x) => x.change);
     expect(new Set(changes.map((x) => x.change))).toEqual(new Set(['built', 'demolished', 'modified']));
-    expect(a.trams.length).toBeGreaterThan(0);
+    expect(a.trams.length).toBe(2); // west→east and south→north, both on the street network
+    expect(new Set(a.buildings.map((x) => x.fn))).toEqual(
+      new Set(['housing', 'offices', 'shops', 'public', 'industry']),
+    );
     // green spaces only on empty ground
     for (let c = 0; c < a.green.length; c++) if (a.green[c]) expect(model.heights[c]).toBe(0);
   });

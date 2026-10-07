@@ -8,8 +8,8 @@
     "headline": "D'une maquette 3D de ville à une maquette en briques à construire, à projeter et à discuter.",
     "lead": "Transformez vos données 3D urbaines en briques blanches, avec les pièces à acheter, des instructions pas à pas et un calque de projection.",
     "ctaPrimary": "Créer votre maquette",
-    "ctaDemo": "Essayer avec la Part-Dieu",
-    "posterAlt": "Une maquette du quartier de la Part-Dieu en briques blanches sur une table. Un vidéoprojecteur sur un mât colore certains bâtiments en vert, rouge et jaune pour montrer ce qui a été construit, démoli ou modifié, et projette une image à côté de la maquette. Trois personnes se tiennent autour de la table ; l'une tient un pavé numérique. Un écran sur le mât affiche une frise chronologique.",
+    "ctaDemo": "Essayer l'exemple",
+    "posterAlt": "Une maquette d'un quartier en briques blanches sur une table : des îlots avec leurs cours, une gare et quelques tours. Un vidéoprojecteur sur un mât colore certains bâtiments en vert, rouge et jaune pour montrer ce qui a été construit, démoli ou modifié, et projette une image à côté de la maquette. Trois personnes se tiennent autour de la table ; l'une tient un pavé numérique. Un écran sur le mât affiche une frise chronologique.",
     "pause": "Mettre l'animation en pause",
     "play": "Lire l'animation",
     "playReducedMotion": "Lire l'animation",
@@ -80,7 +80,7 @@
     "title": "Comment ça marche",
     "import": {
       "title": "1. Importez une maquette 3D de ville",
-      "body": "Utilisez notre démo de la Part-Dieu ou votre propre fichier : 3D Tiles, glTF, OBJ ou CityJSON. Tout reste sur votre ordinateur."
+      "body": "Utilisez notre exemple ou votre propre fichier : 3D Tiles, glTF, OBJ ou CityJSON. Tout reste sur votre ordinateur."
     },
     "area": {
       "title": "2. Choisissez la zone et l'échelle",
@@ -135,8 +135,8 @@
     }
   },
   "useCase": {
-    "title": "Cas d'usage : un atelier sur la Part-Dieu",
-    "intro": "La Part-Dieu est le quartier d'affaires de Lyon, organisé autour de sa gare. Voici comment un groupe en atelier peut utiliser le Legonizer pour parler de son évolution.",
+    "title": "Cas d'usage : un atelier sur un quartier qui change",
+    "intro": "Prenez un quartier qui a changé au fil des ans : des tours construites près de la gare, des îlots démolis ou rénovés. Voici comment un groupe en atelier peut utiliser le Legonizer pour en parler.",
     "build": {
       "title": "Construire",
       "body": "Le groupe construit le quartier en briques blanches, une plaque de base par équipe, en suivant les instructions."
@@ -153,7 +153,7 @@
       "title": "Discuter",
       "body": "Des images et des documents apparaissent à côté de la maquette. Un pavé numérique passe de main en main pour changer de calque et de version."
     },
-    "cta": "Essayer avec la Part-Dieu"
+    "cta": "Essayer l'exemple"
   },
   "credits": {
     "title": "Crédits",
@@ -162,7 +162,7 @@
     "paperCitation": "Représentation de l'évolution urbaine à travers une maquette tangible de territoires. Journées Françaises de l'Informatique Graphique (JFIG), Strasbourg, octobre 2024. hal-04924304.",
     "udviz": "Il prolonge le widget Legonizer d'UD-Viz, le framework libre de l'équipe VCity pour les données urbaines.",
     "udvizLink": "UD-Viz sur GitHub",
-    "data": "Données de démonstration : données ouvertes de la Métropole de Lyon.",
-    "illustrative": "Les usages des bâtiments, espaces verts, ligne de tram, changements et images montrés dans l'animation sont illustratifs, pas des données réelles. La maquette en briques est réelle : elle sort de notre propre chaîne de traitement sur les données de démonstration de la Part-Dieu."
+    "data": "Données de démonstration : générées par le Legonizer, aucune donnée réelle.",
+    "illustrative": "Le quartier de l'animation est inventé, comme les usages des bâtiments, espaces verts, lignes de tram, changements et images qui y sont montrés. La maquette en briques est un vrai résultat : notre propre chaîne de traitement a transformé ce quartier en briques."
   }
 }
