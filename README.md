@@ -341,4 +341,4 @@ Upstream: `legonizer` (ISC), UD-Viz (LGPL-2.1), paper by Le Bihan Gautier, Delan
 fixtures (not shipped): Lyon 3 (2018) 3D Tiles by LIRIS / VCity from Métropole de Lyon open data.
 LEGO® is a trademark of the LEGO Group, which does not sponsor, authorize or endorse this site.
 
-Website developed for fun by Jey Puget Gil.
+Website developed for fun by [Jey Puget Gil](https://hemoreg.me).

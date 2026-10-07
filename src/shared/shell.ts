@@ -31,6 +31,8 @@ export interface ShellOptions {
 
 /** Research paper on HAL (SPEC §0, H7). */
 export const PAPER_URL = 'https://hal.science/hal-04924304';
+/** Development credit: the name ends the sentence in every locale, so it follows `footer.developedBy`. */
+export const DEVELOPER = { name: 'Jey Puget Gil', url: 'https://hemoreg.me' } as const;
 export const UDVIZ_URL = 'https://github.com/VCityTeam/UD-Viz';
 /** Source code of this site. Hosting is undecided (SPEC §13.2): override with VITE_SOURCE_URL at build time. */
 export const SOURCE_URL: string =
@@ -145,7 +147,7 @@ function renderFooter(el: HTMLElement): void {
       <p lang="fr">${escapeHtml(t('footer.citation'))}</p>
       <p class="u-mt-2"><a class="lz-link" href="${PAPER_URL}">${escapeHtml(t('footer.paperLink'))}</a></p>
       <p class="u-mt-4">${escapeHtml(t('footer.credit'))}</p>
-      <p class="u-mt-2">${escapeHtml(t('footer.development'))}</p>
+      <p class="u-mt-2">${escapeHtml(t('footer.developedBy'))} <a class="lz-link" href="${DEVELOPER.url}">${DEVELOPER.name}</a>.</p>
     </div>
     <div class="lz-footer__links">
       <a class="lz-link" href="${escapeHtml(SOURCE_URL)}">${escapeHtml(t('footer.sourceCode'))}</a>
