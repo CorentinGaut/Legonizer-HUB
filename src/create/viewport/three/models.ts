@@ -52,8 +52,8 @@ export class SourceModel {
 
   constructor(preview: MeshPreview, opts: { ghost?: boolean; transform?: Matrix4 } = {}) {
     const g = new BufferGeometry();
+    // `preview.positions` is shared with the cached preview: never transform it in place.
     g.setAttribute('position', new BufferAttribute(preview.positions, 3));
-    if (opts.transform) g.applyMatrix4(opts.transform);
     g.computeVertexNormals();
     this.triFeature = preview.triFeature;
     const flags = new Float32Array(preview.positions.length / 3);
@@ -73,6 +73,11 @@ export class SourceModel {
       : new MeshStandardMaterial({ color: '#F2F0EA', roughness: 0.8, side: DoubleSide });
     if (!opts.ghost) patchFlags(mat);
     this.mesh = new Mesh(g, mat);
+    if (opts.transform) {
+      // Placed by the object matrix (the transform may be non-uniform and skewed, so no TRS).
+      this.mesh.matrixAutoUpdate = false;
+      this.mesh.matrix.copy(opts.transform);
+    }
     this.mesh.castShadow = !opts.ghost;
     this.mesh.receiveShadow = !opts.ghost;
   }
