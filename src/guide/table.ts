@@ -1,5 +1,5 @@
 /**
- * "Set up the table" tab (SPEC O2, A6; ux-spec §7.6.5, §8.8): lay out the plates on the 1 × 2 m
+ * "Set up the table" tab (SPEC O2, A6): lay out the plates on the 1 × 2 m
  * table (A1 north-west, checklist), then the projection layer (calque) with plate grid and labels,
  * legacy JPG or PNG at a chosen resolution with the real size inside, and how to use it.
  */

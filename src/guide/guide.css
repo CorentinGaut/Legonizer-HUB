@@ -1,6 +1,6 @@
 /*
- * Build guide (step 5) and plate mode: layout from mockups/guide.html (its page block "would live
- * in the guide stylesheet"), Table mode (UI-14 sizes), 2D layer diagrams, export card extras.
+ * Build guide (step 5) and plate mode: page layout, Table mode, 2D layer diagrams, export card
+ * extras and the phone's bottom bars.
  */
 @layer lz.pages {
   .lz-guide-host {
@@ -38,17 +38,6 @@
     grid-template-columns: minmax(0, 1fr) minmax(18rem, 26rem);
     gap: var(--lz-space-6);
     align-items: start;
-  }
-  /* .lz-option > legend sets width: 100% and float, which beats .lz-visually-hidden and makes the
-     hidden legend a full-width absolute box that widens the page */
-  .lz-option > legend.lz-visually-hidden {
-    float: none;
-    width: 1px;
-  }
-  /* glyphs keep their true scale (one unit per stud): the 2×8 glyph (107 px at 12 px per unit) is
-     wider than the content box of a 7.25rem tray, so the glyph may use the tray's side padding */
-  .lz-slot__glyph {
-    margin-inline: calc(var(--lz-space-1) - var(--lz-space-3));
   }
   .bricks-grid .lz-viewport {
     aspect-ratio: 1;
@@ -290,7 +279,7 @@
     inset: var(--lz-space-3);
   }
 
-  /* Table mode: full screen on the device's screen (UI-14: 24 px text, 40 px header, glyph 16 px) */
+  /* Table mode: full screen on the device's screen (24 px text, 40 px header, 16 px glyphs) */
   .tm {
     position: fixed;
     inset: 0;
@@ -404,8 +393,6 @@
       position: relative;
       top: auto;
       aspect-ratio: 4 / 3;
-      /* the shared 18rem minimum would make a 4:3 box 384 px wide, wider than a 390 px phone */
-      min-height: 0;
     }
     .build-side {
       order: 2;
@@ -458,12 +445,24 @@
       flex: 1;
       justify-content: center;
     }
+    /* bottom bars (see create.css): the tab bar, and in the build tab the Done button that sticks
+       above it, so it stays at hand while the instructions scroll */
+    :root:has(.lz-tabbar) {
+      --lz-tabbar-cover: calc(var(--lz-tabbar-h) + 1px + env(safe-area-inset-bottom)); /* + top border */
+      --lz-dock-h: var(--lz-tabbar-cover);
+    }
+    :root:has(.lz-tabbar):has(.lz-stepctl__done) {
+      --lz-dock-h: calc(var(--lz-tabbar-cover) + var(--lz-space-4) + var(--lz-control-h-lg));
+    }
     .lz-stepctl__done {
       position: sticky;
-      bottom: 4.5rem;
+      bottom: calc(var(--lz-tabbar-cover) + var(--lz-space-4));
       z-index: 2;
     }
     /* plate mode has no tab bar under it */
+    :root:has(.lz-plate-mode .lz-stepctl__done) {
+      --lz-dock-h: calc(var(--lz-space-4) + var(--lz-control-h-lg));
+    }
     .lz-plate-mode .lz-stepctl__done {
       bottom: var(--lz-space-4);
     }

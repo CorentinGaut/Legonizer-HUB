@@ -1,8 +1,8 @@
 /**
- * "Share this plate" (SPEC O10, ux-spec §8.4, components.md §21): the plate pass on screen — plate
+ * "Share this plate" (SPEC O10): the plate pass on screen — plate
  * name, position, kit, QR code of the pass URL (the plate travels in the URL fragment, nothing is
  * uploaded), Copy link, Print plate passes (the passes section of the PDF). The QR encoder loads on
- * demand; above version 15 at ECC M (UI-8) the pass shows the no-QR variant.
+ * demand; above version 15 at ECC M (the scannability threshold of SPEC O10) the pass shows the no-QR variant.
  */
 import { t } from '../shared/i18n.ts';
 import { BRICKS } from '../core/packing/catalog.ts';

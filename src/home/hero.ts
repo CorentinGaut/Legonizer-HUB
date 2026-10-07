@@ -1,10 +1,10 @@
 /**
- * Home hero controller (SPEC H1, H8–H10; storyboard §5): poster first, the 3D chunk loads after
+ * Home hero controller (SPEC H1, H8–H10): poster first, the 3D chunk loads after
  * the page (`load` + idle), renders t = 19 s identical to the poster, crossfades in and plays.
  * Captions and chapters are HTML synced to t. Pause/play (WCAG 2.2.2), pause off-screen
  * (< 25 % visible) and in hidden tabs, resume only if the user had not paused. Reduced motion:
  * poster, the story as a list, explicit *Play the animation*. No WebGL 2: poster + story + note.
- * Frame-rate guard (storyboard §7): quality steps down, then the animation stops on the poster.
+ * Frame-rate guard (SPEC §6.2: degrade gracefully): quality steps down, then the animation stops on the poster.
  */
 import { onLocaleChange, t as tr } from '../shared/i18n.ts';
 import { icon } from '../shared/icons.ts';
@@ -177,7 +177,7 @@ export function initHero(): HeroDebug | undefined {
     t = currentTime();
     stage.renderAt(t);
     setCaption(captionIndexAt(t), true);
-    // frame-rate guard (storyboard §7): mean frame interval over 2 s windows after a 1.5 s
+    // frame-rate guard: mean frame interval over 2 s windows after a 1.5 s
     // warm-up; below ~38 fps drop one quality step; a slideshow (< 7 fps) stops on the poster
     const n = now();
     if (lastFrame && n > guardFrom) {
@@ -264,7 +264,7 @@ export function initHero(): HeroDebug | undefined {
         stage = await createStage(canvas, { labels: legendLabels(), quality: lowEnd ? 'low' : 'high' });
         resize();
         const t1 = performance.now();
-        stage.renderAt(POSTER_T); // identical to the poster (storyboard §5)
+        stage.renderAt(POSTER_T); // identical to the poster (SPEC H10)
         performance.measure('lz:stage:first-frame', { start: t1 });
         await new Promise((r) => requestAnimationFrame(() => r(null)));
         canvas.classList.add('is-visible');

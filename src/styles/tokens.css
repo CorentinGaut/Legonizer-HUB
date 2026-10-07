@@ -1,7 +1,7 @@
 /*
  * Legonizer design tokens — v1.0 — 2026-10-06
  * Source of truth for colour, type, space, radius, elevation, motion, data-viz and 3D scene colours.
- * Documented in docs/ui/design-system.md (contrast ratios, colour-blindness checks, usage rules).
+ * Contrast ratios and colour-blindness checks are noted next to the colours.
  *
  * Consumed as is by the implementation. Rules:
  *  - Components use the SEMANTIC tokens (--lz-color-*, --lz-space-*, ...), never raw hex.
@@ -11,8 +11,7 @@
  *    A subtree can force a theme: `.lz-room { color-scheme: dark; }` (used by the home hero).
  *  - light-dark() needs Chrome/Edge 123+, Firefox 120+, Safari 17.5+ (SPEC N2: latest two versions).
  *
- * Fonts (load in <head>, see design-system.md §3):
- *   https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap
+ * Fonts: self-hosted, declared in fonts.css (SPEC §12: no request to Google Fonts).
  */
 
 /* ------------------------------------------------------------------ theme switch */
@@ -161,7 +160,7 @@
   --lz-viz-area-stroke: var(--lz-color-accent);
   --lz-viz-area-fill: light-dark(rgb(55 66 196 / 0.1), rgb(163 171 255 / 0.12));
   --lz-viz-area-handle: light-dark(#ffffff, #121316);
-  --lz-viz-sampled-stroke: light-dark(#1b1c20, #eeede9); /* dashed: area actually sampled (A4, OI-25) */
+  --lz-viz-sampled-stroke: light-dark(#1b1c20, #eeede9); /* dashed: area actually sampled (SPEC A4) */
   --lz-viz-plate-grid: light-dark(rgb(55 66 196 / 0.55), rgb(163 171 255 / 0.6));
   --lz-viz-disappear: light-dark(#b3261e, #ff8a7e); /* hatch on buildings lower than one brick */
   --lz-viz-included-whole: light-dark(#a86800, #e0a93e); /* dashed outline, touches the area */
@@ -171,7 +170,7 @@
   --lz-viz-footprint: light-dark(#c9c6be, #4b4e55); /* 2D mode building footprints */
   --lz-viz-footprint-edge: light-dark(#85837b, #7c7f88);
 
-  /* 3D scene backgrounds (read by the renderer, see 3d-look.md). */
+  /* 3D scene backgrounds (read by the renderer). */
   --lz-scene-bg-top: light-dark(#eceae5, #24262c);
   --lz-scene-bg-bottom: light-dark(#d5d2cb, #141518);
   --lz-scene-ground: light-dark(#e3e1db, #1b1c20);
@@ -232,6 +231,7 @@
   --lz-header-h: 4rem;
   --lz-stepper-h: 3.5rem;
   --lz-actionbar-h: 4.5rem;
+  --lz-tabbar-h: 3.5rem; /* bottom tab bar of the build guide on phones (links, without the border) */
   --lz-panel-w: 26.5rem; /* create step panel, desktop */
   --lz-guide-side-w: 19rem; /* build board / callout column */
   /* Breakpoints (for reference; custom properties can't be used in media queries):
@@ -285,8 +285,8 @@
   --lz-duration-base: 220ms; /* panels, disclosure, tab indicator */
   --lz-duration-slow: 360ms; /* dialogs, toasts, step change */
   --lz-duration-slower: 560ms; /* camera moves in the viewport */
-  --lz-duration-reveal: 800ms; /* brick reveal after generation (max, ux-spec 6.3) */
-  --lz-duration-caption: 300ms; /* home caption crossfade (storyboard §3) */
+  --lz-duration-reveal: 800ms; /* brick reveal after generation (max) */
+  --lz-duration-caption: 300ms; /* home caption crossfade */
   --lz-duration-fade: 120ms; /* the only motion left with reduced motion */
   --lz-ease-standard: cubic-bezier(0.2, 0, 0, 1);
   --lz-ease-enter: cubic-bezier(0, 0, 0.2, 1);

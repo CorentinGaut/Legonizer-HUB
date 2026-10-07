@@ -55,7 +55,7 @@ export function partById(id: string): BrickPart | undefined {
 }
 
 export interface InventoryOptions {
-  /** Enabled part ids (default: all). The 1×1 (3005) is always enabled so an exact cover always exists (SPEC §7.5.1, UX OI-3). */
+  /** Enabled part ids (default: all). The 1×1 (3005) is always enabled so an exact cover always exists (SPEC §7.5.1). */
   enabled?: readonly string[];
   /** Longest allowed side in studs (default 8). */
   maxLength?: number;

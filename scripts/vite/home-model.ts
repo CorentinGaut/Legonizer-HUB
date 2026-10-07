@@ -1,6 +1,6 @@
 /**
- * Vite plugin: `virtual:lz-home-model`, the brick model of the home animation (SPEC H4,
- * storyboard §1.1). At build (and dev) time it reads the heightmap fixture produced by our own
+ * Vite plugin: `virtual:lz-home-model`, the brick model of the home animation (SPEC H4).
+ * At build (and dev) time it reads the heightmap fixture produced by our own
  * pipeline from a synthetic district (src/data/home/home-district.json, `npm run fixtures:home`),
  * packs it with the real packer (src/core/packing) and exposes compact byte arrays, so the browser
  * never runs the packer (≈ 200 ms in Node, several times that on a phone) and the brick list is

@@ -1,5 +1,5 @@
 /**
- * "All downloads" tab (SPEC O1–O9, ux-spec §6.6, §7.6.6, components.md §20): export cards grouped
+ * "All downloads" tab (SPEC O1–O9): export cards grouped
  * by what people do with the files, each with its file name, size, options and states (ready,
  * preparing with progress and cancel, done, error, disabled when out of date), plus Download
  * everything (.zip with a README).

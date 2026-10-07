@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 /**
- * Renders the home poster and stills from the real animation (SPEC H4, H10; UI-7): the same scene,
+ * Renders the home poster and stills from the real animation (SPEC H4, H10): the same scene,
  * fixture (src/data/home/home-district.json, packed by our pipeline) and timeline as the page,
- * so the poster is the frame the animation hands off from (t = 19 s, storyboard §5).
+ * so the poster is the frame the animation hands off from (t = 19 s).
  *
  * Runs a Vite dev server and headless Chromium (Playwright) with SwiftShader, so the output does
  * not depend on the machine's GPU. Writes WebP files to src/home/assets/.
@@ -28,7 +28,7 @@ interface Still {
 }
 
 const STILLS: Still[] = [
-  // posters: the animation's own frame at t = 19 s with the responsive framing of storyboard §2.2
+  // posters: the animation's own frame at t = 19 s with the stage's responsive framing
   { name: 'poster-desktop', t: 19, w: 1920, h: 984, layout: 'desktop', quality: 0.8 },
   { name: 'poster-desktop-1280', t: 19, w: 1280, h: 656, layout: 'desktop', quality: 0.8 },
   { name: 'poster-mobile', t: 19, w: 780, h: 880, layout: 'phone', quality: 0.8 },

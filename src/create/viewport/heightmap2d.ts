@@ -1,6 +1,6 @@
 /**
- * 2D height map of the whole model (step 4 without WebGL 2, components.md §15.6): one square per
- * stud filled with the height ramp (design-system §10), plate grid and labels, north up.
+ * 2D height map of the whole model (step 4 without WebGL 2, SPEC N2): one square per
+ * stud filled with the height ramp (the --lz-height-* tokens), plate grid and labels, north up.
  */
 import type { HeightMap } from '../../core/types.ts';
 import { plateName } from '../../core/packing/plates.ts';

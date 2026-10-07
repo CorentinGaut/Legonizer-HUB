@@ -1,7 +1,7 @@
 /**
- * Step 3 — Scale & height (SPEC §7.3, ux-spec §5.3, §6.2, §7.4, mockups/create-3-settings.html):
- * presets (Legacy default; UI-6 label for Legacy + keep small), scale with a log slider, max height,
- * plates, live estimates, the "buildings that disappear" warning with fixes (+ UI-17 stud share),
+ * Step 3 — Scale & height (SPEC §7.3):
+ * presets (Legacy default; the demo's "Legacy + keep small" named, SPEC §12), scale with a log slider, max height,
+ * plates, live estimates, the "buildings that disappear" warning with fixes (+ the share of built-up studs left empty),
  * advanced options with their legacy values marked.
  */
 import { t } from '../../shared/i18n.ts';
@@ -495,7 +495,7 @@ export class SettingsStep implements StepView {
     </details>`;
   }
 
-  /** "What you'll get" + the disappearing buildings warning (§6.2.3, §6.2.4). */
+  /** "What you'll get" + the disappearing buildings warning (SPEC §7.3). */
   private renderEstimates() {
     const box = $('#lz-estimates', this.panel);
     if (!box) return;

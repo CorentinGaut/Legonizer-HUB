@@ -62,17 +62,17 @@ import type {
 } from './protocol.ts';
 
 export const LARGE_MODEL_TRIANGLES = 2_000_000;
-/** Above this many studs the estimate skips the sampled stud share (UI-17) to stay fast. */
+/** Above this many studs the estimate skips the sampled share of built-up studs left empty to stay fast. */
 export const ESTIMATE_SAMPLED_MAX_STUDS = 66_000;
 /**
- * Shop colours of the light bluish grey baseplate (UI-5 option), checked 2026-10-07: BrickLink
+ * Shop colours of the light bluish grey baseplate (an option; white is the default, SPEC §12), checked 2026-10-07: BrickLink
  * colour guide (https://www.bricklink.com/catalogColors.asp) lists "Light Bluish Gray" as ID 86
  * (LEGO Medium Stone Grey 194); Rebrickable colors.csv
  * (https://cdn.rebrickable.com/media/downloads/colors.csv.gz) has `71,Light Bluish Gray,A0A5A9`.
  */
 export const COLOR_LBG = { bricklink: 86, rebrickable: 71 } as const;
 
-/** "True scale" preset of the settings step (ux-spec §6.2.1). */
+/** "True scale" preset of the settings step (SPEC §7.3). */
 export function trueScaleParams(p: Params, groundAvailable: boolean): Params {
   return {
     ...p,
@@ -94,7 +94,7 @@ function dominantIdSource(mesh: CityMesh): IdSource | 'mixed' {
   return 'mixed';
 }
 
-/** Shop quantities with spares (rounded up per part, ux-spec §6.5; baseplates have no spares). */
+/** Shop quantities with spares (rounded up per part; baseplates have no spares). */
 export function withSpares(packing: Pick<PackingResult, 'counts' | 'baseplates'>, pct: number) {
   if (!pct) return packing;
   const counts: Record<string, number> = {};
@@ -184,7 +184,7 @@ export class Engine {
     const mesh = this.requireMesh();
     const est: HeightEstimate = estimateHeights(mesh, area, params);
     const summary = this.summary();
-    // fixes of the "buildings that disappear" warning (ux-spec §6.2.4)
+    // fixes of the "buildings that disappear" warning (SPEC §7.3)
     const ts = estimateHeights(mesh, area, trueScaleParams(params, summary.groundAvailable));
     let maxHeightFix: EstimateResult['fixes']['maxHeight'] = null;
     if (params.heightMode === 'normalized' && est.features > 0 && est.featuresBelowOneBrick > 0) {
@@ -206,7 +206,7 @@ export class Engine {
         }
       }
     }
-    // UI-17: share of the built-up studs that get no brick, sampled with one ray per stud
+    // share of the built-up studs that get no brick (SPEC §7.3), sampled with one ray per stud
     let sampled: EstimateResult['sampled'] = null;
     if (est.studs <= ESTIMATE_SAMPLED_MAX_STUDS && est.features > 0) {
       const single: Params = params.sampling.startsWith('supersample')
@@ -472,7 +472,7 @@ export class Engine {
         return [{ name: `${base}-build-guide${suffix}-${paper}.pdf`, mime: 'application/pdf', data: pdf }];
       }
       case 'all': {
-        // Download everything (.zip): README + every export (ux-spec §6.6.1)
+        // Download everything (.zip): README + every export
         const out: Record<string, Uint8Array> = {};
         const add = (files: ExportFile[]) => {
           for (const f of files)

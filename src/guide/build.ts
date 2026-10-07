@@ -1,9 +1,9 @@
 /**
- * "Build" tab (SPEC O4, ux-spec §6.4, §7.6.2–7.6.4, §8.3–8.5, components.md §18–19): the build
+ * "Build" tab (SPEC O4): the build
  * board (plate map with progress), one step = one layer of one plate, layers below ghosted, new
  * bricks highlighted and outlined, "this step" callout, step controls, keyboard and numeric keypad
  * (NumLock on or off), list twin (2D diagram + positions), deep links, Table mode and keyboard help.
- * `BuildView` is shared with Plate mode (plate passes, OI-4).
+ * `BuildView` is shared with Plate mode (plate passes, SPEC O10).
  */
 import { t } from '../shared/i18n.ts';
 import { BRICKS } from '../core/packing/catalog.ts';
@@ -48,7 +48,7 @@ export interface BuildHost {
   setBelow(b: Below): void;
   webgl: boolean;
   plateMode: boolean;
-  /** Writes the step into the URL (replaceState for layers, §4.1). */
+  /** Writes the step into the URL (replaceState for layers). */
   onStep(plate: string, layer: number, push: boolean): void;
   share?(plate: string): void;
   goTable?(): void;
@@ -129,7 +129,7 @@ export class BuildView {
     return this.host.data()?.label(plate) ?? plate;
   }
 
-  /** Chooses the plate and layer from a deep link, else the first unbuilt layer (§6.4.3). */
+  /** Chooses the plate and layer from a deep link, else the first unbuilt layer (SPEC O4 deep links). */
   private pickStep(plate?: string, layer?: number, toastInvalid = true) {
     const plates = this.plates();
     if (!plates.length) return;
@@ -892,7 +892,7 @@ export class BuildView {
   };
   private onInput = () => {};
 
-  /** Keyboard and numeric keypad (§6.4.2); single keys only inside the Build region, not in fields. */
+  /** Keyboard and numeric keypad (SPEC O4); single keys only inside the Build region, not in fields. */
   private onKey = (e: KeyboardEvent) => {
     const target = e.target as HTMLElement;
     if (
@@ -980,7 +980,7 @@ export class BuildView {
     $<HTMLElement>(`.lz-plate-tile[data-plate="${q.plate}"]`, this.el)?.focus();
   }
 
-  // ------------------------------------------------------------------ keyboard help (§6.4.2)
+  // ------------------------------------------------------------------ keyboard help
 
   private async keyboardHelp() {
     const rows: [string, string, string][] = [
@@ -1058,7 +1058,7 @@ export class BuildView {
     void r;
   }
 
-  // ------------------------------------------------------------------ Table mode (§6.4.2, UI-14)
+  // ------------------------------------------------------------------ Table mode (projector or big screen)
 
   private async enterTableMode() {
     if (this.tm) return;

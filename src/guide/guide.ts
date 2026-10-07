@@ -1,7 +1,7 @@
 /**
- * Step 5 — Build guide (SPEC §7.5, ux-spec §5.5, §7.6, §8, mockups/guide.html): summary strip and
+ * Step 5 — Build guide (SPEC §7.5): summary strip and
  * four tabs that follow what people do with their hands — Get the bricks · Build · Set up the table
- * · All downloads. Every tab reads the same packing result, so the numbers agree everywhere (§8.1).
+ * · All downloads. Every tab reads the same packing result, so the numbers agree everywhere.
  */
 import { t } from '../shared/i18n.ts';
 import type { PackingResult } from '../core/packing/pack.ts';
@@ -243,7 +243,7 @@ export class GuideView {
     if (el.closest('[data-g=add-source]')) this.ctx.go('import', { focus: true });
   };
 
-  /** ARIA tabs: arrows move, Home/End, activation follows focus (components.md §14). */
+  /** ARIA tabs: arrows move, Home/End, activation follows focus. */
   private onTabKey = (e: KeyboardEvent) => {
     const i = TABS.indexOf(this.current);
     let j = -1;

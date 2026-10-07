@@ -174,7 +174,7 @@
       "tiles11": "3D Tiles 1.1 with glTF content (best effort)",
       "gltf": "glTF and GLB (.gltf, .glb)",
       "obj": "OBJ (.obj). A .mtl file is accepted but not needed.",
-      "cityjson": "CityJSON 1.x (.json, .city.json)",
+      "cityjson": "CityJSON 1.x or 2.0 (.json, .city.json)",
       "citygml": "CityGML (.gml) needs converting first. See “Prepare your data”."
     },
     "helpLink": "How do I get a 3D model?",
@@ -284,7 +284,7 @@
       },
       "citygml": {
         "title": "CityGML needs converting first",
-        "body": "Convert your .gml files to 3D Tiles with py3dtilers, then drop the result here.",
+        "body": "Convert your .gml files to CityJSON with citygml-tools, then drop the .json file here.",
         "action": "How to convert CityGML"
       },
       "emptyGeometry": {
@@ -301,7 +301,7 @@
       },
       "cityjsonVersion": {
         "title": "This CityJSON version isn't supported",
-        "body": "This file is CityJSON {version}. Use CityJSON 1.x."
+        "body": "This file is CityJSON {version}. Use CityJSON 1.x or 2.0."
       },
       "cors": {
         "title": "This server doesn't let other websites read its files",

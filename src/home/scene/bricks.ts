@@ -1,5 +1,5 @@
 /**
- * Baseplates, bricks and studs of the home model as three instanced draws (3d-look.md §4):
+ * Baseplates, bricks and studs of the home model as three instanced draws:
  * bricks are the packed bricks of the fixture (not stud columns), studs sit on the exposed column
  * tops and the empty plate cells only. All motion is in the shader (animMaterial.ts).
  */

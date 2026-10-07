@@ -1,7 +1,7 @@
 /**
  * Demo path (SPEC §10.2): Try the sample → default area → Generate → build guide → CSV, parts
- * list, instructions, PDF, BrickLink, LDraw — timed. Consistency of numbers across exports
- * (ux-spec §8.1), the legacy CSV byte for byte against legonizer@1.1.0 (SPEC §10.3), and the
+ * list, instructions, PDF, BrickLink, LDraw — timed. Consistency of numbers across exports,
+ * the legacy CSV byte for byte against legonizer@1.1.0 (SPEC §10.3), and the
  * LDraw file parsed back into the height matrix (SPEC O8; the LeoCAD open stays a manual check).
  */
 import { readFileSync } from 'node:fs';

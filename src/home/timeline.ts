@@ -1,14 +1,14 @@
 /**
- * Home animation timeline (docs/ux/storyboard.md, docs/ui/3d-look.md §11).
+ * Home animation timeline (SPEC §6.2).
  *
- * Every animated property is a pure function of `t = clock mod LOOP` (storyboard §1): no physics,
+ * Every animated property is a pure function of `t = clock mod LOOP` (SPEC §6.2): no physics,
  * no accumulated dt, so the loop is exact and any frame can be rendered on its own (poster, tests).
  * This module has no three.js dependency; it is shared by the hero controller (captions, chapters)
  * and the lazily loaded 3D scene.
  */
 
 export const LOOP = 28.0;
-/** Poster frame (storyboard §5): change layer, media card, figures, timeline on the screen. */
+/** Poster frame (SPEC H10): change layer, media card, figures, timeline on the screen. */
 export const POSTER_T = 19.0;
 
 export type CaptionId = 'c1' | 'c2' | 'c3' | 'c4' | 'c5';
@@ -19,7 +19,7 @@ export const CAPTIONS: readonly { id: CaptionId; start: number; end: number }[] 
   { id: 'c4', start: 16, end: 23 },
   { id: 'c5', start: 23, end: 28 },
 ];
-/** Chapter starts (storyboard §5: 0, 3, 11, 16, 23 s). */
+/** Chapter starts (0, 3, 11, 16, 23 s). */
 export const CHAPTER_STARTS = CAPTIONS.map((c) => c.start);
 
 /** Wrap any time into [0, LOOP). */
@@ -55,7 +55,7 @@ export const easeOutQuint = (x: number): number => 1 - Math.pow(1 - clamp01(x), 
 // ------------------------------------------------------------------------------------- camera
 
 export interface CameraPose {
-  /** Look-at point in the table frame (storyboard §1.2), metres. */
+  /** Look-at point in the table frame, metres. */
   target: [number, number, number];
   /** Degrees from the front (−y), positive toward +x. */
   az: number;
@@ -65,12 +65,12 @@ export interface CameraPose {
   dist: number;
 }
 
-/** Storyboard §2.1 keyframes and their times; the path is closed (K0 again at 28 s ≡ 0 s). */
+/** Camera keyframes and their times; the path is closed (K0 again at 28 s ≡ 0 s). */
 export const CAMERA_KEYS: readonly { t: number; pose: CameraPose }[] = [
   { t: 0, pose: { target: [0, 0, 0.55], az: -25, el: 18, dist: 4.6 } }, // K0
   { t: 4, pose: { target: [-0.2, 0, 0.1], az: -15, el: 30, dist: 3.0 } }, // K1
   { t: 13.5, pose: { target: [-0.2, 0, 0.0], az: -5, el: 48, dist: 2.8 } }, // K2
-  // K3/K3b: elevation and distance of the look-dev poster frame (3d-look §10: 27°, 4.3 m), a little
+  // K3/K3b: elevation and distance of the designed poster frame (27°, 4.3 m), a little
   // further so the three figures stay out of the desktop text-safe zone
   { t: 17.5, pose: { target: [0.1, 0, 0.5], az: 15, el: 26, dist: 4.8 } }, // K3
   { t: 23, pose: { target: [0.1, 0, 0.5], az: 20, el: 26, dist: 4.8 } }, // K3b
@@ -116,7 +116,7 @@ export function cameraAt(t: number): CameraPose {
 
 // ------------------------------------------------------------------------------------- build
 
-/** Brick build (storyboard 1b): 4.0–10.5 s, layer by layer, west→east wave inside a layer. */
+/** Brick build (SPEC §6.2, scene 1): 4.0–10.5 s, layer by layer, west→east wave inside a layer. */
 export const BUILD = {
   start: 4.0,
   span: 6.0,
@@ -138,7 +138,7 @@ export function brickDropStart(layer: number, xFrac: number, maxLayer: number): 
   return BUILD.start + (layer - 1) * L + BUILD.waveShare * L * clamp01(xFrac);
 }
 
-/** When a brick starts lifting off (storyboard 4b): top layer first, east→west, 2.4 s in total. */
+/** When a brick starts lifting off (end of the loop, SPEC §6.2): top layer first, east→west, 2.4 s in total. */
 export function brickLiftStart(layer: number, xFrac: number, maxLayer: number): number {
   const steps = Math.max(1, maxLayer) - 1 + BUILD.waveShare;
   const Lr = (BUILD.liftSpan - BUILD.liftDur) / steps;
@@ -265,7 +265,7 @@ export function figuresAt(t: number): FiguresState {
   };
 }
 
-/** Room lights (3d-look.md §5.2): interpolate the off and on states with the projector power. */
+/** Room lights: interpolate the off and on states with the projector power. */
 export function roomLightsAt(t: number): { hemi: number; key: number; glow: number } {
   const p = projectorPower(t);
   return { hemi: 1.1 + (0.9 - 1.1) * p, key: 2.4 + (1.9 - 2.4) * p, glow: 0.6 * screenPower(t) };

@@ -1,10 +1,10 @@
 /**
- * Plan view (top, north up) with the area rectangle tool — ux-spec §6.1, components.md §15.9.
- * Background: a height raster of the model computed in the Worker (works without WebGL, OI-15),
- * shaded by height (#FBFAF6 low → #A19D95 ≥ 100 m, 3d-look §5.1) with a light hillshade.
+ * Plan view (top, north up) with the area rectangle tool (SPEC A1, A2).
+ * Background: a height raster of the model computed in the Worker (works without WebGL, SPEC N2),
+ * shaded by height (#FBFAF6 low → #A19D95 ≥ 100 m) with a light hillshade.
  * Overlay (SVG): the area with its plate grid and labels A1…, handles (resize by whole plates,
- * rotate), north tick, dimension labels, the sampled box of legacy mode (dashed, OI-25), buildings
- * included whole (L2) and the tallest building marker. Pointer, touch and keyboard (§6.1.2–6.1.3).
+ * rotate), north tick, dimension labels, the sampled box of legacy mode (dashed, SPEC A4), buildings
+ * included whole (L2) and the tallest building marker. Pointer, touch and keyboard.
  */
 import type { PlanRaster, PlanRasterRequest } from '../../core/heightmap/planRaster.ts';
 import type { Area, Bounds3 } from '../../core/types.ts';
@@ -120,7 +120,7 @@ export class PlanView {
     return [(sx - this.W / 2) / this.ppm + this.cx, this.cy - (sy - this.H / 2) / this.ppm];
   }
 
-  /** Safe rectangle (UI-9): leave room for the toolbar (top) and the legend (bottom). */
+  /** Safe rectangle: leave room for the toolbar (top) and the legend (bottom). */
   private fitBox(minX: number, minY: number, maxX: number, maxY: number, margin: number) {
     const top = 64,
       bottom = 64,
@@ -141,7 +141,7 @@ export class PlanView {
     if (render) this.viewChanged();
   }
 
-  /** Frames the area with a 20 % margin (ux-spec §5.2). */
+  /** Frames the area with a 20 % margin. */
   fitArea(): void {
     if (!this.geom) return this.fitModel();
     const c = corners(this.geom);
@@ -584,7 +584,7 @@ export class PlanView {
     this.opts.onChange?.(g0, 'cancel', 'move');
   }
 
-  // ------------------------------------------------------------------ keyboard (§6.1.3)
+  // ------------------------------------------------------------------ keyboard
 
   private onKey(e: KeyboardEvent) {
     const onRect = (e.target as Element).closest?.('.lz-area');

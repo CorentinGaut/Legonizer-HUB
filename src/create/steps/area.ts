@@ -1,5 +1,5 @@
 /**
- * Step 2 — Area (SPEC A1–A7, ux-spec §5.2, §6.1, §7.3, mockups/create-2-area.html). The panel's
+ * Step 2 — Area (SPEC A1–A7). The panel's
  * numeric inputs and the plan view's rectangle are one value (two-way binding, A2).
  */
 import { t } from '../../shared/i18n.ts';
@@ -249,7 +249,7 @@ export class AreaStep implements StepView {
       );
     }
     setHtml($('#lz-area-notices', this.panel)!, html`${notices}`);
-    // keep-ground hint (one time, OI-2)
+    // keep-ground hint (one time, SPEC A7)
     const kg = $('#lz-keep-ground', this.panel)!;
     setHtml(
       kg,
@@ -331,7 +331,7 @@ export class AreaStep implements StepView {
     }
   }
 
-  /** Scale change keeps plates and centre; one-time hint offers to keep the ground area (OI-2). */
+  /** Scale change keeps plates and centre; one-time hint offers to keep the ground area (SPEC A7). */
   private scaleChanged(from: number, to: number) {
     const st = this.ctx.store;
     const p = st.p;

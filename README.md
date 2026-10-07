@@ -136,7 +136,8 @@ src/guide/
   progress locally. Nothing is uploaded.
 - **Lazy loading (N5):** the page entry is the wizard UI only; the Worker chunk (importers, BVH,
   packing, exporters) starts on first use, three.js loads with the first 3D view, the guide modules
-  with the guide, the PDF module (pdf-lib) inside the Worker on the first PDF, the QR encoder
+  with the guide, the PDF module (pdf-lib), then fontkit and the font files, inside the Worker on
+  the first PDF, the QR encoder
   (`qrcode` core only) with the share dialog. Sizes in [`docs/perf.md`](docs/perf.md).
 - **Demo (SPEC I10):** the synthetic sample is the site's only demo (*Try the sample* on the home
   page and the import step, `create.html?demo=sample`). Its manifest opens the whole sample on
@@ -147,6 +148,13 @@ src/guide/
   strict Legacy CSV checked byte for byte against `legonizer@1.1.0` in the browser. The G1 spec
   needs `npm run fixtures:lyon -- --all` (skipped otherwise). Artifacts (downloads, screenshots)
   go to `e2e-artifacts/create/` (git-ignored).
+- **Bottom bars on phones (WCAG 2.4.11, 2.5.8):** the wizard's action bar, the guide's tab bar and
+  the Done button that sticks above it stay in the flow (the end of the content is never under
+  them) and set `--lz-dock-h`, which becomes the page's `scroll-padding-bottom` (WCAG technique
+  C43): keyboard focus, `scrollIntoView` and find-in-page bring a control clear of them. The axe
+  runs enforce every rule, `target-size` included: a control the test left under a bar is checked
+  again where keyboard focus brings it. A Tab walk at 390 px checks that no focused control is ever
+  under a bar.
 
 ## Core engine (`src/core/`)
 
@@ -172,7 +180,8 @@ src/core/
     estimate.ts area.ts   live feedback (L1 erasure, size, map scale, table fit), default area
   packing/              height matrix → bricks (catalog, beam search, verification, plate names)
   export/               csv, bricklink, rebrickable, ldraw, project, platePass, guide, calque + jpeg +
-                        strokeFont + glyphs (projection layer), pdfPlan + pdfGuide (PDF, pdf-lib)
+                        strokeFont + glyphs (projection layer), pdfPlan + pdfGuide + pdfFonts
+                        (PDF, pdf-lib, site fonts embedded with fontkit)
   samples/              synthetic py3dtilers-like datasets, demo manifest type
   worker/               Worker entry, message protocol, engine host, promise client
   util/                 threeCompat (exact three r147/r154 numerics), errors, progress, yielding steps
@@ -295,9 +304,25 @@ identical (different JPEG encoder and rasterizer). The PNG variant carries a pHY
 **PDF guide (O5).** `src/core/export/pdfGuide.ts`, pdf-lib in the Worker, A4 or US Letter: cover
 with the plate map, shopping list (the shelf on paper, kit per plate), per plate an opener (32 × 32
 height grid, kit, plate-pass QR) and its layer diagrams four per page, the projection layer, plate
-passes four per page, a technical appendix; every page has a running header and footer. It uses the 14 standard PDF fonts (Helvetica,
-Courier) with text mapped to WinAnsi: embedding IBM Plex / Bricolage needs
-`@pdf-lib/fontkit`, which is not a dependency.
+passes four per page, a technical appendix; every page has a running header and footer.
+
+**PDF fonts.** The guide uses the site's typography (`src/core/export/pdfFonts.ts`): IBM Plex Sans
+400/600 for text and labels, IBM Plex Mono 400/600 for numbers and part codes, Bricolage Grotesque
+for titles at the site's heading weight (720) with two optical sizes (opsz 36 from 16 pt, opsz 14
+below), embedded as TrueType subsets (CIDFontType2 + ToUnicode: the text stays searchable). The
+files are the same `@fontsource` `.woff2` files the CSS serves (same hashed assets), fetched by the
+Worker only for the subsets the guide's text needs: latin always, latin-ext, Vietnamese, Cyrillic
+(Plex), Greek (Plex Sans) on demand; titles fall back to Plex Sans 600 for the scripts Bricolage
+lacks. `@pdf-lib/fontkit` 1.1.1 cannot embed these files itself (checked in its source and by
+test, 2026-10-07): subsetting a WOFF2 throws (TTFSubset copies `glyf` through `loca`, absent from
+WOFF2's transformed table), a whole WOFF/WOFF2 goes unconverted into `FontFile2` (unreadable), and
+a variation instance of a WOFF2 crashes or ignores `gvar`. So fontkit parses the files (brotli,
+cmap, GSUB, HVAR, gvar) and lays the text out, and `pdfFonts.ts` merges the subset files into one
+PDF font per face, applies Bricolage's variation to the points, flattens composites and writes the
+TrueType subset itself (no hinting), registered through `doc.registerFontkit`. Characters no file
+covers never fail: a typographic replacement (→ "->", ≤ "<=" …), else the base letter (NFD, plus Ł
+→ L and similar), else U+FFFD (�), so emoji and CJK print as �. If the latin files cannot be
+loaded (offline), the guide falls back to the 14 standard fonts with WinAnsi text.
 
 **Grey baseplates (option).** Light Bluish Gray is BrickLink colour 86 (LEGO Medium Stone
 Grey 194, [colour guide](https://www.bricklink.com/catalogColors.asp)) and Rebrickable colour 71
@@ -314,6 +339,22 @@ Grey 194, [colour guide](https://www.bricklink.com/catalogColors.asp)) and Rebri
   too. The real Lyon tiles (Métropole de Lyon open data, 3D Tiles by LIRIS / VCity) are developer
   fixtures in the git-ignored `fixtures/` for the parity tests and the performance measurements.
 
+### Data preparation: CityGML
+
+The site reads 3D Tiles, glTF/GLB, OBJ and CityJSON 1.x / 2.0, not CityGML. The help (about page
+`#prepare-data`, the import step's CityGML message) sends CityGML users to **citygml-tools**
+`to-cityjson`, then to the Import step: one command, no database. Checked 2026-10-07:
+
+| Tool | Status | Verdict | Source |
+|---|---|---|---|
+| [citygml-tools](https://github.com/citygml4j/citygml-tools) (citygml4j, Apache-2.0) | maintained: 2.5.0 released 2026-04-19, last push 2026-05-31; Java 17+ or the Docker image [`citygml4j/citygml-tools`](https://hub.docker.com/r/citygml4j/citygml-tools) | **recommended.** `to-cityjson` reads CityGML 1.0 / 2.0 / 3.0 and writes CityJSON 2.0 by default (`--cityjson-version 1.1` or `1.0` on request) next to the input; `subset --bbox minx,miny,maxx,maxy` crops first (writes `<name>__subset.gml`). Run end to end with 2.5.0: the OGC CityGML 2.0 sample `Building_and_garage_LOD2-EPSG25832.gml` and the CityGML 3.0 `Opera-Lyon_CityGML3.0_LOD2` sample ([CityGML-3.0Encodings](https://github.com/opengeospatial/CityGML-3.0Encodings)) converted, and `importCityModel` read both outputs without warnings and generated heights and bricks | README; `ToCityJSONCommand.java`, `CityJSONOutputOptions.java` (default `2.0`), `SubsetCommand.java` |
+| [py3dtilers](https://github.com/Oslandia/py3dtilers) (was VCityTeam/py3dtilers, now redirects to Oslandia) | discontinued: README "Discontinued development … starting on January 2025 … please migrate to py3dtiles"; not archived, Oslandia keeps the repository; last release v1.2.0 (2023-01-26), last commit 2025-08-01 (that notice) | no longer recommended; its CityTiler also needed the CityGML loaded into a 3DCityDB database first | README, GitHub API (commits, releases) |
+| [py3dtiles](https://gitlab.com/py3dtiles/py3dtiles) | maintained: v12.1.1 (2026-03-20) | does **not** read CityGML or CityJSON: point clouds (las/laz, xyz, ply), WKB geometries from files or PostGIS (`export`) and, since v12, IFC | README.rst, CHANGELOG.md, docs/cli.rst |
+| [pg2b3dm](https://github.com/Geodan/pg2b3dm) (Geodan) | maintained (push 2026-10-01) | PostGIS → 3D Tiles: needs CityGML in a database first (e.g. 3DCityDB); an expert path, not tried with the importer | README |
+| [Tyler](https://github.com/3DGI/tyler) (3DGI) | maintained (v1.0.0-alpha1, 2026-07-27) | CityJSON → 3D Tiles 1.1 with `EXT_meshopt_compression` glTF, which the importer rejects (`src/core/import/gltf.ts`); the site reads the CityJSON itself | README |
+
+SPEC I13 and the 2026-10-06 decision in SPEC §12 still name py3dtilers for this path.
+
 ## Dependencies
 
 | Package | Why |
@@ -324,7 +365,8 @@ Grey 194, [colour guide](https://www.bricklink.com/catalogColors.asp)) and Rebri
 | dev: `typescript`, `vite`, `vitest`, `fast-check`, `eslint` + `typescript-eslint` + `eslint-config-prettier`, `prettier`, `@types/*`, `globals` | build, tests, lint |
 | dev: `legonizer@1.1.0` (+ its nested three r147), `three-r154` (alias of three 0.154) | parity reference: the exact code and three versions UD-Viz 4.6.1 ran |
 | `intl-messageformat` | ICU plurals and locale number formatting for EN/FR (SPEC N6); the messages in `src/i18n/` are written in ICU |
-| `@fontsource-variable/bricolage-grotesque`, `@fontsource/ibm-plex-sans`, `@fontsource/ibm-plex-mono` | self-hosted fonts (no request to Google Fonts), OFL-1.1; only latin + latin-ext declared |
+| `@fontsource-variable/bricolage-grotesque`, `@fontsource/ibm-plex-sans`, `@fontsource/ibm-plex-mono` | self-hosted fonts (no request to Google Fonts), OFL-1.1 (IBM Plex: © IBM Corp. with Reserved Font Name "Plex", [LICENSE.txt](https://github.com/IBM/plex/blob/master/LICENSE.txt); Bricolage Grotesque: © The Bricolage Grotesque Project Authors); the CSS declares latin + latin-ext; the PDF guide also loads the Vietnamese, Cyrillic and Greek files on demand. The files are served unmodified; the PDF embeds subsets, which the OFL allows ([OFL FAQ 1.12](https://openfontlicense.org/ofl-faq/)) |
+| `@pdf-lib/fontkit` | parses the font files for the PDF guide (WOFF2 + brotli, cmap, GSUB, HVAR/gvar variations) and lays out its text, MIT. A prebuilt 713 kB bundle (331 kB gzip), loaded as its own chunk in the Worker on the first PDF only; see "PDF fonts" above for what it cannot do with these files |
 | dev: `@playwright/test` | e2e tests, poster/stills rendering (headless Chromium with SwiftShader) |
 | `pdf-lib` | PDF build guide (O5) in the Worker: pure JavaScript, runs in Workers and in Node tests, MIT |
 | `qrcode` (core encoder only, `qrcode/lib/core/qrcode.js`) + dev `@types/qrcode` | plate-pass QR codes (O10), drawn as SVG on screen and as vector squares in the PDF, MIT |

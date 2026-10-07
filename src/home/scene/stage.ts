@@ -53,7 +53,7 @@ export interface StageSnapshot {
   layers: [string, string];
 }
 
-/** Quality steps (storyboard §7): shadows 2048 → 1024 → off, then DPR 1, then a static screen. */
+/** Quality steps (SPEC §6.2: degrade gracefully): shadows 2048 → 1024 → off, then DPR 1, then a static screen. */
 const STEPS = ['full', 'shadows-1024', 'no-shadows', 'dpr-1', 'static-screen'] as const;
 export type QualityStep = (typeof STEPS)[number];
 
@@ -64,7 +64,7 @@ const yieldToMain = (): Promise<void> =>
     else setTimeout(resolve, 0);
   });
 
-/** Desktop text-safe zone (storyboard §2.2, 3d-look §10): the subject sits in the right ~65 %. */
+/** Desktop text-safe zone: the subject sits in the right ~65 %. */
 const SAFE_OFFSET = 1.45;
 
 export class Stage {
@@ -131,7 +131,7 @@ export class Stage {
       alpha: false,
     });
     renderer.outputColorSpace = THREE.SRGBColorSpace;
-    renderer.toneMapping = THREE.NeutralToneMapping; // keeps projected hues true (3d-look §2)
+    renderer.toneMapping = THREE.NeutralToneMapping; // keeps projected hues true
     renderer.toneMappingExposure = 1.05;
     renderer.shadowMap.enabled = true;
     renderer.shadowMap.type = THREE.PCFShadowMap;
@@ -241,7 +241,7 @@ export class Stage {
     return STEPS[this.step]!;
   }
 
-  /** Camera pose at t with the responsive framing of storyboard §2.2. */
+  /** Camera pose at t with the responsive framing. */
   private poseOverride: CameraPose | null = null;
 
   private placeCamera(t: number): CameraPose {
@@ -250,7 +250,7 @@ export class Stage {
     let dist = p.dist;
     const target = [...p.target] as [number, number, number];
     if (this.layout === 'phone' && !this.poseOverride) {
-      // narrow canvas: pull back until each keyframe's subject box fits (storyboard §2.2)
+      // narrow canvas: pull back until each keyframe's subject box fits
       dist *= Math.min(2.2, Math.max(1, Math.pow(1.75 / aspect, 0.6)));
       target[2] += 0.12;
     }

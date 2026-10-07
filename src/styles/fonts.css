@@ -1,5 +1,5 @@
 /*
- * Self-hosted fonts (SPEC §12 UI-1: no request to Google Fonts). Files come from @fontsource
+ * Self-hosted fonts (SPEC §12: no request to Google Fonts). Files come from @fontsource
  * (OFL-1.1): Bricolage Grotesque (variable, opsz 12-96 + wght 200-800), IBM Plex Sans
  * (400, 500, 600, 700, italic 400), IBM Plex Mono (400, 500, 600). Only the latin and latin-ext
  * subsets are declared; unicode-range makes the browser fetch latin-ext only when a page uses it.

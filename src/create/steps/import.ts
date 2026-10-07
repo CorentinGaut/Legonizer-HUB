@@ -1,5 +1,5 @@
 /**
- * Step 1 — Import (SPEC I1–I13, ux-spec §5.1, §7.2, mockups/create-1-import.html).
+ * Step 1 — Import (SPEC I1–I13).
  */
 import { t } from '../../shared/i18n.ts';
 import type { WireFile } from '../../core/worker/protocol.ts';
@@ -696,7 +696,7 @@ export class ImportStep implements StepView {
     await this.ctx.actions.importFiles(wire, label);
   }
 
-  /** Replace confirm (ux-spec §5.1) when a model or a result exists. */
+  /** Asks before replacing the model when a model or a result exists. */
   private async confirmReplace(next: string): Promise<boolean> {
     const p = this.ctx.store.p;
     if (!p.summary && !p.result) return true;
@@ -714,7 +714,7 @@ export class ImportStep implements StepView {
     return r === 'ok';
   }
 
-  // drag and drop: the zone grows to the whole panel during a drag (components.md §9)
+  // drag and drop: the zone grows to the whole panel during a drag
   private onDragEnter = (e: DragEvent) => {
     if (!e.dataTransfer?.types.includes('Files')) return;
     e.preventDefault();

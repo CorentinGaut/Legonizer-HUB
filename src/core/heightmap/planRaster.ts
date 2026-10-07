@@ -1,6 +1,6 @@
 /**
  * Top-down height raster of the model (z-buffer of every triangle, highest surface wins), used by
- * the 2D plan view when WebGL 2 is not available (UX OI-15, components.md §15.6) and for fast
+ * the 2D plan view when WebGL 2 is not available (SPEC N2) and for fast
  * overviews. Cells nobody covers are NaN. Triangles smaller than a cell still mark the cell of
  * their centroid so thin buildings do not vanish.
  */

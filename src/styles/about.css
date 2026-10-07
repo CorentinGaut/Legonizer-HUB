@@ -66,6 +66,16 @@
     padding-left: 1.2rem;
     margin: 0;
   }
+  .about__code {
+    margin: 0;
+    padding: var(--lz-space-2) var(--lz-space-3);
+    border-radius: var(--lz-radius-sm);
+    background: var(--lz-color-surface-sunken);
+    font-size: var(--lz-text-sm);
+    /* wraps instead of scrolling: a scrolling block would need to be focusable */
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+  }
   .about__links {
     display: flex;
     flex-wrap: wrap;

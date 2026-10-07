@@ -1,7 +1,7 @@
 /**
  * Demo dataset manifest (SPEC I10, v1.1): each bundled demo carries a curated default area and
  * suggested settings. The synthetic sample suggests "Legacy + Keep small buildings" with a
- * one-click switch to strict Legacy (UX OI-1, OI-18).
+ * one-click switch to strict Legacy.
  */
 import type { Area, Bounds3, Params } from '../types.ts';
 

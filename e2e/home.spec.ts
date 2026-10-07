@@ -1,6 +1,6 @@
 /**
- * Home page (SPEC H1–H10, §10.1; storyboard §4–5). Headless Chromium renders WebGL with
- * SwiftShader, which the page treats as "cannot hold the frame rate" (no autoplay, storyboard §7);
+ * Home page (SPEC H1–H10, §10.1). Headless Chromium renders WebGL with
+ * SwiftShader, which the page treats as "cannot hold the frame rate" (no autoplay);
  * `?lz-autoplay=force` starts the animation anyway for the tests that need it playing.
  */
 import { expect, type Page, test } from '@playwright/test';
@@ -336,7 +336,7 @@ test.describe('home page', () => {
     await expect(page.locator('#hero-title')).toHaveText(/^From a 3D city model/);
   });
 
-  test('theme switch in the footer (design-system §13, UI-13)', async ({ page }) => {
+  test('theme switch in the footer', async ({ page }) => {
     await page.goto('/');
     const dark = page.getByRole('button', { name: 'Dark' });
     await dark.click();
@@ -361,7 +361,7 @@ test.describe('home page', () => {
     await page.keyboard.press('Escape');
     await expect(sheet).toBeHidden();
     await expect(page.getByRole('button', { name: 'Menu' })).toBeFocused();
-    // hero CTA above the fold at 390 × 844 (ux-spec §7.1.2)
+    // hero CTA above the fold at 390 × 844 (SPEC H6)
     const cta = page.locator('#hero').getByRole('link', { name: 'Create your model' });
     const box = await cta.boundingBox();
     expect(box!.y + box!.height).toBeLessThanOrEqual(844);

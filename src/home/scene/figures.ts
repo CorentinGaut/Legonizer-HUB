@@ -1,5 +1,5 @@
 /**
- * Scale figures of the home animation (storyboard 3a–3c, SPEC N9): stylized, faceless people in
+ * Scale figures of the home animation (SPEC §6.2 scene 3, N9): stylized, faceless people in
  * the manner of architectural-visualisation entourage, so they read as people at a glance without
  * evoking toy figures. Real proportions (adults ≈ 7.4 heads tall, the child ≈ 5.7), a neck,
  * sloping shoulders, a waist, mitten hands, simple hair volumes and clothing blocks in a muted

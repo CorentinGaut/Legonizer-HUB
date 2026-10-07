@@ -1,7 +1,7 @@
 /**
- * Brick glyphs (docs/ui/components.md §16): one isometric line-art glyph per catalog part, drawn at
+ * Brick glyphs (SPEC O3: drawn to scale): one isometric line-art glyph per catalog part, drawn at
  * the same stud size everywhere (shelf, step callout, plate pass, PDF), plus the plan (top-view)
- * glyph. TypeScript port of the UI reference generator `docs/ui/brick-glyphs/generate-glyphs.mjs`,
+ * glyph. TypeScript port of the design's reference generator (its output: test/fixtures/brick-glyphs.json),
  * so the web page and the PDF draw the very same geometry.
  *
  * Geometry in stud pitches (1 pitch = 8 mm): brick height 1.2, stud radius 0.3, stud height 0.2,
@@ -48,7 +48,7 @@ export const GLYPH_CSS_FILL: Record<GlyphFill, string> = {
   none: 'none',
 };
 
-/** Print colours (light theme, design-system §2.5). */
+/** Print colours (light theme of src/styles/tokens.css). */
 export const GLYPH_PRINT_FILL: Record<GlyphFill, [number, number, number] | null> = {
   top: [0xff, 0xff, 0xff],
   left: [0xe7, 0xe5, 0xdf],

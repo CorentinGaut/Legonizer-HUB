@@ -50,7 +50,7 @@
             <p class="lz-prose" data-i18n="about.method.bricks"></p>
           </section>
 
-          <!-- Prepare your data [I13] (ux-spec §4.1 /about#prepare-data) -->
+          <!-- Prepare your data (SPEC I13) -->
           <section class="about__section" id="prepare-data" aria-labelledby="prepare-title">
             <h2 id="prepare-title" class="lz-h2" data-i18n="help.prepareData.title"></h2>
             <p class="lz-prose" data-i18n="help.prepareData.intro"></p>
@@ -58,17 +58,23 @@
               <div class="lz-card about__card">
                 <h3 class="lz-h4" data-i18n="help.prepareData.citygml.title"></h3>
                 <p class="lz-small" data-i18n="help.prepareData.citygml.body"></p>
+                <!-- commands are code, not UI text: the same in every language -->
+                <pre class="about__code"><code>citygml-tools to-cityjson city.gml</code></pre>
+                <p class="lz-small" data-i18n="help.prepareData.citygml.crop"></p>
+                <pre
+                  class="about__code"
+                ><code>citygml-tools subset --bbox minX,minY,maxX,maxY city.gml</code></pre>
                 <p class="lz-small lz-muted" data-i18n="help.prepareData.citygml.note"></p>
                 <p class="lz-small about__links">
                   <a
                     class="lz-link"
-                    href="https://github.com/VCityTeam/py3dtilers"
-                    data-i18n="about.links.py3dtilers"
+                    href="https://github.com/citygml4j/citygml-tools"
+                    data-i18n="about.links.citygmlTools"
                   ></a>
                   <a
                     class="lz-link"
-                    href="https://gitlab.com/py3dtiles/py3dtiles"
-                    data-i18n="about.links.py3dtiles"
+                    href="https://hub.docker.com/r/citygml4j/citygml-tools"
+                    data-i18n="about.links.citygmlToolsDocker"
                   ></a>
                 </p>
               </div>

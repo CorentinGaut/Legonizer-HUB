@@ -46,8 +46,8 @@
   "links": {
     "udviz": "UD-Viz sur GitHub",
     "legonizer": "legonizer sur npm",
-    "py3dtilers": "py3dtilers sur GitHub",
-    "py3dtiles": "py3dtiles sur GitLab"
+    "citygmlTools": "citygml-tools sur GitHub",
+    "citygmlToolsDocker": "Image Docker de citygml-tools"
   },
   "software": {
     "title": "Logiciels et polices utilisés par ce site",

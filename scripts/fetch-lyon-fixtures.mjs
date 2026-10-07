@@ -8,7 +8,7 @@
 // ever copied into `public/` or the build.
 //
 // Usage: node scripts/fetch-lyon-fixtures.mjs [--all] [tile numbers...]
-//   default tiles: 0 (documented in docs/reference/README.md) and 7 (Part-Dieu).
+//   default tiles: 0 and 7 (Part-Dieu).
 import { execFileSync } from 'node:child_process';
 import { existsSync, mkdirSync, statSync } from 'node:fs';
 import { dirname, join } from 'node:path';

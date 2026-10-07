@@ -5,12 +5,18 @@
 import { expect, test, type Locator, type Page } from '@playwright/test';
 import { generateFromArea, loadDemo } from './create-helpers.ts';
 
+/**
+ * The 3D picture only: the viewport's toolbar and legend float over the canvas, and under load the
+ * toolbar's switch knob is not always rasterized to the same pixels.
+ */
+const SHOT = { style: '.lz-vp-toolbar, .lz-vp-bottom { visibility: hidden !important; }' };
+
 /** Screenshot of `target` once two consecutive captures are identical (the view has rendered). */
 async function stableShot(page: Page, target: Locator): Promise<Buffer> {
-  let prev = await target.screenshot();
+  let prev = await target.screenshot(SHOT);
   for (let i = 0; i < 30; i++) {
     await page.waitForTimeout(150);
-    const cur = await target.screenshot();
+    const cur = await target.screenshot(SHOT);
     if (cur.equals(prev)) return cur;
     prev = cur;
   }

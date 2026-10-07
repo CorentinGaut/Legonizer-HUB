@@ -1,5 +1,5 @@
 /**
- * Wizard state (ux-spec §5): the persisted project (saved in IndexedDB, restored on reload) plus
+ * Wizard state (SPEC §7): the persisted project (saved in IndexedDB, restored on reload) plus
  * transient UI state. A tiny observable store; steps subscribe and patch their own DOM.
  */
 import type { HeightmapResult } from '../core/heightmap/index.ts';
@@ -65,9 +65,9 @@ export interface ProjectState {
   spares: 0 | 5 | 10;
   baseplateColour: 'white' | 'grey';
   result: ResultState | null;
-  /** Opened from a project file without its source (ux-spec §5.0 GuideOnly). */
+  /** Opened from a project file without its source files (SPEC O9): the build guide only. */
   guideOnly: boolean;
-  /** Demo suggested settings applied (OI-1 note). */
+  /** Demo suggested settings applied (SPEC I10: shows the note and the switch to strict Legacy). */
   demoSettings: boolean;
   progress: BuildProgress;
   checklist: { placed: boolean; aligned: boolean };
@@ -235,7 +235,7 @@ export class Store {
   }
 }
 
-// ------------------------------------------------------------------ presets (ux-spec §6.2.1)
+// ------------------------------------------------------------------ presets (SPEC §7.3)
 
 export type OptionKey =
   'heightMode' | 'heightRef' | 'sampling' | 'rounding' | 'keepSmall' | 'cap' | 'selection' | 'rotation';
@@ -304,7 +304,7 @@ export function presetOf(p: Params, groundAvailable: boolean): PresetId {
   return 'custom';
 }
 
-// ------------------------------------------------------------------ stale result (G4, ux-spec §5.0)
+// ------------------------------------------------------------------ stale result (SPEC G4)
 
 export interface StaleChange {
   key: 'model' | 'area' | 'plates' | 'rotation' | 'scale' | 'maxHeight' | 'preset' | OptionKey;
@@ -343,7 +343,7 @@ export function isStale(p: ProjectState): boolean {
   return staleChanges(p).length > 0;
 }
 
-/** Steps reachable now (ux-spec §4.3). */
+/** Steps reachable now. */
 export function stepAvailable(p: ProjectState, s: StepId): boolean {
   switch (s) {
     case 'import':

@@ -4,8 +4,9 @@
     "intro": "The Legonizer reads 3D Tiles, glTF/GLB, OBJ and CityJSON. Here is how to get one of them from the data you have.",
     "citygml": {
       "title": "From CityGML",
-      "body": "Convert CityGML to 3D Tiles with py3dtilers (the VCity team's open-source tool), then drop the output folder, or a .zip of it, on the Import step.",
-      "note": "py3dtilers is no longer maintained (January 2025); its authors recommend py3dtiles, the community project it was built on."
+      "body": "Convert your CityGML files to CityJSON with citygml-tools, a free, maintained tool that reads CityGML 1.0, 2.0 and 3.0 (it needs Java 17 or later, or Docker). This command writes city.json next to city.gml; drop city.json on the Import step:",
+      "crop": "A whole city is too big for a browser: cut out your district first, giving its corners in the coordinates of your file, then convert city__subset.gml:",
+      "note": "py3dtilers, which this page suggested before, was discontinued in January 2025, and py3dtiles, which its authors point to, does not read CityGML."
     },
     "osm": {
       "title": "From OpenStreetMap buildings",
@@ -17,7 +18,7 @@
     },
     "qgis": {
       "title": "From QGIS",
-      "body": "Export your 3D scene to OBJ, or prepare your buildings and convert them to 3D Tiles. Keep the model in a projected coordinate system in metres."
+      "body": "Export your 3D scene to OBJ (3D map view, Export menu, Export 3D Scene). Keep the model in a projected coordinate system in metres."
     },
     "size": {
       "title": "Keep it light",

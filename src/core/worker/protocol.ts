@@ -55,7 +55,7 @@ export interface EstimateResult extends HeightEstimate {
     /** Smallest max height (≤ 100) keeping ≥ 95 % of the buildings, normalized mode only. */
     maxHeight: { value: number; keepShare: number } | null;
   };
-  /** Built-up studs and those left empty, sampled one ray per stud (UI-17); null when too large. */
+  /** Built-up studs and those left empty, sampled one ray per stud; null when too large. */
   sampled: { builtStuds: number; erasedStuds: number } | null;
   /** Tallest selected building: centre, top (world z) and height above the reference (L2 marker). */
   tallestInfo: { feature: number; x: number; y: number; top: number; height: number } | null;
@@ -85,7 +85,7 @@ export interface ExportOptions {
   /** File-safe base name (`small-sample`); defaults to a slug of the title. */
   fileBase?: string;
   demo?: string;
-  /** Shop lists: spares in percent (0, 5, 10) and the baseplate colour (UI-5: white by default). */
+  /** Shop lists: spares in percent (0, 5, 10) and the baseplate colour (white by default, SPEC §12). */
   spares?: number;
   baseplateColour?: 'white' | 'grey';
   /** Projection layer. */

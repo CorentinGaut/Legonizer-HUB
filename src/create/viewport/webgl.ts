@@ -1,4 +1,4 @@
-/** WebGL 2 detection (SPEC N2, UX OI-15). `?webgl=0` forces the 2D mode (tests, support). */
+/** WebGL 2 detection (SPEC N2). `?webgl=0` forces the 2D mode (tests, support). */
 let cached: boolean | null = null;
 
 export function hasWebGL2(): boolean {

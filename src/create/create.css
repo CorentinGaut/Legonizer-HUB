@@ -1,7 +1,7 @@
 /*
- * Create page (steps 1–4): layout pieces of the mockups' page <style> blocks that are not in
- * docs/ui/components.css, plus the plan view, the project menu and small fixes.
- * Layer `lz.pages` so component and utility layers keep their order (components.css §cascade).
+ * Create page (steps 1–4): page layout, the plan view, the project menu and the bottom bars.
+ * Layer `lz.pages` so component and utility layers keep their order (the @layer statement at the
+ * top of src/styles/components.css).
  */
 @layer lz.pages {
   /* ------------------------------------------------------------------ shell */
@@ -62,6 +62,31 @@
     .lz-scalebar {
       max-width: 30vw;
     }
+  }
+  /* ------------------------------------------------------------------ bottom bars (WCAG 2.4.11)
+     --lz-dock-h is the height the sticky bars cover at the bottom of the viewport: the action bar
+     here, the guide's tab bar and Done button in guide.css. The bars are sticky in the flow, so the
+     end of the content is never under them; toasts sit above them. When keyboard focus,
+     scrollIntoView or a #fragment brings a control into view, its scroll-margin keeps the dock's
+     height free below it (as the page's scroll-padding would, WCAG technique C43). Not
+     scroll-padding: it would also apply to the bars' own controls, which never leave the bottom
+     of the screen, so focusing one would scroll the page by half a screen. */
+  :root:has(.lz-actionbar:not([hidden])) {
+    --lz-dock-h: var(--lz-actionbar-h);
+  }
+  * {
+    scroll-margin-bottom: calc(var(--lz-dock-h, 0px) + var(--lz-space-4));
+  }
+  .lz-actionbar,
+  .lz-actionbar *,
+  .lz-tabbar,
+  .lz-tabbar *,
+  .lz-stepctl__done,
+  .lz-stepctl__done * {
+    scroll-margin-bottom: 0;
+  }
+  .lz-toast-region {
+    bottom: calc(var(--lz-dock-h, 0px) + var(--lz-space-4));
   }
   .lz-actionbar__spacer {
     width: 6rem;
@@ -235,7 +260,7 @@
   }
 
   /* ------------------------------------------------------------------ step 2: inputs fit the 424 px panel
-     (fixes the clipped "Centre Y (north)" field of mockups/create-2-area.html at 1440 px) */
+     (the "Centre Y (north)" field would be clipped at 1440 px) */
   .lz-coords {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -543,9 +568,5 @@
     font-weight: 700;
     font-size: 7px;
     fill: var(--lz-color-text);
-  }
-  /* the shared 11px is in viewBox units (224 wide): the caption would overflow the figure */
-  .lz-tablefit:not(.lz-tablefit--large) text {
-    font-size: 7px;
   }
 }

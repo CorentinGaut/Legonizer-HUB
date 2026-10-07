@@ -1,5 +1,5 @@
 /**
- * Theme handling (design-system §13, UI-13). The theme follows `prefers-color-scheme`; the user can
+ * Theme handling. The theme follows `prefers-color-scheme`; the user can
  * force Light or Dark from the footer. The choice sets `<html data-theme>` (tokens.css switches
  * `color-scheme`, every token uses `light-dark()`) and is stored in localStorage `lz-theme`.
  *
@@ -32,7 +32,7 @@ export function getThemeChoice(): ThemeChoice {
   return readChoice();
 }
 
-/** The theme in effect for the page chrome (the home hero is always dark, UI-15). */
+/** The theme in effect for the page chrome (the home hero is always dark). */
 export function getEffectiveTheme(): Theme {
   const c = readChoice();
   if (c !== 'auto') return c;

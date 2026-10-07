@@ -1,5 +1,5 @@
 /**
- * Build-guide routes (ux-spec §4.1, §6.4.3):
+ * Build-guide routes (SPEC §5 /create#guide, O4 deep links, O10 plate passes):
  *   #guide · #guide/bricks[/<plate>] · #guide/build[/<plate>/<layer>] · #guide/table · #guide/downloads
  *   plate passes: #guide/build/<plate>/<layer>&d=<payload>
  */

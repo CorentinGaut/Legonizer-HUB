@@ -1,9 +1,9 @@
 /**
- * The viewport of steps 1–4 (ux-spec §4.4, components.md §15): always visible next to the step panel.
+ * The viewport of steps 1–4 (SPEC §7): always visible next to the step panel.
  * 1 source model (3D, auto-framed, bounding box sizes) · 2 plan view with the area tool (2D raster
  * + SVG, also in 3D) · 3 buildings in the area with brick-level guides and the buildings that
  * disappear · 4 brick preview (bricks with studs, plate labels, source ghost). Without WebGL 2 the
- * plan view and a 2D height map replace the 3D views (OI-15).
+ * plan view and a 2D height map replace the 3D views (SPEC N2).
  */
 import type { Object3D } from 'three';
 import type * as ThreeModule from './three/index.ts';
@@ -84,7 +84,7 @@ export class Stage {
   private label(): string {
     const m = this.mode;
     if (m === 'area') return t('a11y.viewport.area');
-    // 2D mode (OI-15): the same places show top views, not 3D views
+    // 2D mode (SPEC N2): the same places show top views, not 3D views
     const flat = !this.webgl;
     if (m === 'settings') return flat ? t('create.shell.view2d.settings') : t('a11y.viewport.settings');
     if (m === 'bricks') return flat ? t('create.shell.view2d.generate') : t('a11y.viewport.generate');
@@ -736,7 +736,7 @@ export class Stage {
     this.updateHud();
   }
 
-  /** Scale bar and compass (components.md §15.4). */
+  /** Scale bar and compass. */
   private updateHud() {
     const sb = $('#lz-scalebar', this.vp);
     const compass = $('#lz-compass', this.vp);
@@ -848,7 +848,7 @@ export class Stage {
     return false;
   }
 
-  /** "Show them in the 3D view" (ux-spec §6.2.4). */
+  /** "Show them in the 3D view": the buildings that disappear (SPEC §7.3). */
   setShowFlags(on: boolean): void {
     this.showFlags = on;
     if (this.view && this.mode === 'settings') void this.fill(this.modeToken);

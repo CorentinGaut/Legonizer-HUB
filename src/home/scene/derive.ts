@@ -1,6 +1,6 @@
 /**
  * Illustrative urban data for the home animation, derived deterministically from the brick
- * model's heights (storyboard §6: building functions, green spaces, tram lines and changes are
+ * model's heights (SPEC H2, §13: building functions, green spaces, tram lines and changes are
  * illustrative unless the VCity team provides real ones; the About page and the credits say so).
  * Pure functions, no three.js: unit-tested in Node.
  */

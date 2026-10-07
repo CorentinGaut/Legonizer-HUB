@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Home animation fixture (SPEC H4, docs/ux/storyboard.md §1.1): the heightmap of a synthetic
+ * Home animation fixture (SPEC H4): the heightmap of a synthetic
  * district (src/core/samples/district.ts, no real-world data) produced by our own pipeline
  * (3D Tiles import → heightmap → packing), saved to src/data/home/home-district.json.
  *

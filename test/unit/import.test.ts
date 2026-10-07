@@ -390,6 +390,17 @@ describe('CityJSON import', () => {
     expect(at(10, 10)).toBe(0); // courtyard
   });
 
+  it('reads CityJSON 2.0, the default output of citygml-tools to-cityjson, like 1.1', () => {
+    // CityJSON 2.0 keeps the 1.1 structure for what the importer reads (transform, CityObjects,
+    // geometry boundaries, semantics); the help recommends citygml-tools for CityGML.
+    const v11 = importCityModel([{ path: 'district.city.json', data: json(doc) }]);
+    const v20 = importCityModel([{ path: 'district.city.json', data: json({ ...doc, version: '2.0' }) }]);
+    expect(v20.warnings).toEqual([]);
+    expect(v20.features.map((f) => f.key)).toEqual(v11.features.map((f) => f.key));
+    expect(v20.stats.triangles).toBe(v11.stats.triangles);
+    expect(v20.bounds).toEqual(v11.bounds);
+  });
+
   it('detects formats and rejects unknown files', () => {
     expect(detectFormat(new Map([['a/b/x.city.json', json(doc)]])).kind).toBe('cityjson');
     expect(() => detectFormat(new Map([['readme.txt', enc.encode('hello')]]))).toThrow(

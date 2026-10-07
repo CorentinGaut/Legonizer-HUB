@@ -1,7 +1,6 @@
 /*
- * Legonizer components — reference CSS for docs/ui/components.md (v1.0, 2026-10-06).
- * Requires tokens.css. Vanilla CSS, cascade layers, no framework. Class prefix: lz-.
- * The implementation may port it as is; mockups in docs/ui/mockups/ use it directly.
+ * Legonizer components (v1.0, 2026-10-06). Requires tokens.css. Vanilla CSS, cascade layers, no
+ * framework. Class prefix: lz-.
  */
 @layer lz.reset, lz.base, lz.layout, lz.components, lz.pages, lz.utilities;
 
@@ -236,17 +235,6 @@
   .lz-num {
     font-variant-numeric: tabular-nums;
   }
-  .lz-visually-hidden {
-    position: absolute !important;
-    width: 1px;
-    height: 1px;
-    padding: 0;
-    margin: -1px;
-    overflow: hidden;
-    clip: rect(0 0 0 0);
-    white-space: nowrap;
-    border: 0;
-  }
   .lz-skip-link {
     position: absolute;
     left: var(--lz-space-4);
@@ -287,6 +275,7 @@
   .lz-logo__mark {
     width: auto;
     height: 30px;
+    flex-shrink: 0; /* a crowded header (long project name) would squeeze it to nothing */
     --lz-logo-top: var(--lz-brick-top);
   }
   .lz-logo__mark .l { fill: var(--lz-brick-left); }
@@ -1922,7 +1911,7 @@
     align-items: center;
     justify-content: center;
     gap: 2px;
-    min-height: 3.5rem;
+    min-height: var(--lz-tabbar-h);
     color: var(--lz-color-text-muted);
     font-size: var(--lz-text-xs);
     font-weight: var(--lz-weight-semibold);
@@ -1940,6 +1929,10 @@
     position: relative;
     isolation: isolate;
     min-height: 18rem;
+    /* A definite width: a viewport given an aspect-ratio (a grid item aligns to start, its width
+       then comes from the ratio) would carry the min-height through the ratio, 18rem at 4:3 being
+       24rem, wider than a phone. With the width set, the ratio only sizes the height. */
+    width: 100%;
     overflow: hidden;
     border-radius: var(--lz-radius-lg);
     background: linear-gradient(180deg, var(--lz-scene-bg-top), var(--lz-scene-bg-bottom));
@@ -2151,7 +2144,7 @@
     line-height: 1.1;
   }
   @media (max-width: 767px) {
-    /* phones: compact viewport chrome (components.md 15.8) */
+    /* phones: compact viewport chrome */
     .lz-vp-toolbar { top: var(--lz-space-2); left: var(--lz-space-2); right: var(--lz-space-2); gap: var(--lz-space-1); }
     .lz-vp-toolbar kbd { display: none; }
     .lz-vp-group .lz-switch { font-size: var(--lz-text-xs); }
@@ -2229,8 +2222,12 @@
     gap: var(--lz-space-2);
   }
   .lz-shelf__slots {
+    /* even trays, each wide enough for the widest glyph at the current scale: the 2×8 glyph is
+       8.91 stud units wide (brickIsoGlyph(2, 8) in src/core/export/glyphs.ts), plus the slot's
+       padding and border */
+    --lz-tray-min: calc(8.91 * var(--lz-glyph-unit) + 2 * var(--lz-space-3) + 2px);
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(7.25rem, 1fr)); /* even trays; glyphs keep their true scale inside */
+    grid-template-columns: repeat(auto-fill, minmax(var(--lz-tray-min), 1fr));
     align-items: stretch;
     gap: var(--lz-space-2);
     list-style: none;
@@ -2259,7 +2256,8 @@
     display: flex;
     align-items: flex-end;
     justify-content: center;
-    min-height: calc(6.4 * var(--lz-glyph-unit) + 8px); /* tallest 2-wide glyph */
+    /* the tallest glyph (2×8, 6.45 units high) + the padding and the shelf line (border-box) */
+    min-height: calc(6.45 * var(--lz-glyph-unit) + var(--lz-space-2) + 2px);
     padding-bottom: var(--lz-space-2);
     margin-bottom: var(--lz-space-1);
     border-bottom: 2px solid var(--lz-color-border); /* the shelf line */
@@ -2328,6 +2326,9 @@
   .lz-slot__lock .lz-icon {
     --lz-icon-size: 0.875rem;
     margin-top: 1px;
+  }
+  .lz-slot--baseplate {
+    grid-column: span 2; /* the 32 × 32 glyph, even at ¼ scale, is wider than one tray */
   }
   .lz-slot--baseplate .lz-slot__glyph {
     min-height: 0;
@@ -2794,7 +2795,7 @@
   .lz-tablefit text {
     fill: var(--lz-color-text);
     font-family: var(--lz-font-sans);
-    font-size: 11px;
+    font-size: 7px; /* viewBox units (224 wide): the longest caption, EN or FR, stays inside */
   }
   .lz-tablefit .muted {
     fill: var(--lz-color-text-muted);
@@ -3315,6 +3316,19 @@
 
 /* ============================================================================ utilities */
 @layer lz.utilities {
+  /* In the last layer so it beats component rules on the same element, e.g. `.lz-option > legend`
+     (float, width: 100%), which would otherwise turn a hidden legend into a full-width box. */
+  .lz-visually-hidden {
+    position: absolute !important;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+    border: 0;
+  }
   .u-hidden {
     display: none !important;
   }

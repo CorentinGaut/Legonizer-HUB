@@ -79,7 +79,7 @@ Full multi-page `vite build` (Vite 8, gzip as reported by Vite):
 | Loaded | Files | Raw | gzip |
 |---|---|---|---|
 | Before the 3D (home) | `index` entry 9.5 kB + `shell` (shell, i18n, intl-messageformat, every EN/FR namespace) 127.4 kB + preload helper 1.4 kB | 138 kB | **46 kB** |
-| CSS | `shell` (fonts, tokens, components, shell) 86.9 kB + `index` 2.9 kB | 90 kB | 16 kB |
+| CSS | `shell` (fonts, tokens, components, shell) 87.1 kB + `index` 2.9 kB | 90 kB | 16 kB |
 | 3D chunk, after `load` + idle | `stage` (scene code + packed model: the synthetic district, 1,848 bricks; 2026-10-07) 81.5 kB + `three.module` 556 kB (shared with the create page) | 637 kB | **165 kB** |
 | Poster (LCP) | `poster-desktop` 1920 × 984 / `-1280` / `poster-mobile` 780 × 880 (WebP) | 47 / 27 / 18 kB | — |
 | Preloaded fonts | Bricolage Grotesque latin (opsz + wght) 77 kB, IBM Plex Sans 400 latin 23 kB | 100 kB | — |
@@ -195,13 +195,42 @@ Same `vite build`, gzip -9:
 | Loaded | Files | Raw | gzip |
 |---|---|---|---|
 | Create page, at load | `create` entry 161.4 kB + `shell` 173.1 kB (shared, includes every EN/FR catalogue) + 8 small shared chunks (dom, state, format, catalog, plates, types, preload helper, runtime) 14.3 kB | 348.9 kB | **103.8 kB** |
-| CSS | `shell` 86.9 kB + `create` 16.1 kB | 103.0 kB | 19.2 kB |
+| CSS | `shell` 87.1 kB + `create` 16.6 kB (2026-10-07, after the shelf, viewport and bottom-bar fixes) | 103.7 kB | 19.3 kB |
 | Engine Worker, first use | `engine.worker` (importers, BVH, heightmap, packing, exporters, calque, fflate, the parts of three it needs) | 275.1 kB | 89.2 kB |
-| PDF, inside the Worker, first PDF | `pdfGuide` (pdf-lib + standard font metrics + guide layout) | 500.1 kB | 201.4 kB |
+| PDF, inside the Worker, first PDF (2026-10-07, site fonts) | `pdfGuide` (pdf-lib + guide layout + `pdfFonts`) 514.9 kB + `fontkit.es` (@pdf-lib/fontkit, its own chunk) 712.8 kB; then the font files (below) | 1,227.7 kB | **537.1 kB** (206.6 + 330.5) |
+| PDF fonts, first PDF | latin `.woff2` of Plex Sans 400/600, Plex Mono 400/600, Bricolage (opsz) — the same hashed files as the CSS, so the page's cache may already hold them; latin-ext / Vietnamese / Cyrillic / Greek files only when the text needs them | 154.1 kB (already compressed) | — |
 | First 3D view | `three.module` 556.0 kB (shared with the home page) + `three` (our view code) 36.6 kB | 592.6 kB | 146.3 kB |
 | Build guide | `guide` 6.9 + `bricks` 21.0 + `build` 37.1 + `table` 8.5 + `downloads` 19.9 + `glyphs` 3.4 kB | 96.8 kB | 28.3 kB |
 | Share dialog | `share` 4.8 + `qrcode` (core encoder only) 19.6 + `platePass` 10.8 kB | 35.2 kB | 14.8 kB |
 | Plate mode (phone) | `plateMode` 3.8 kB + build guide modules as needed | — | — |
 
 Three.js, the BVH, the importers and pdf-lib never load on the main thread before they are needed;
-the Worker starts on the first engine request (import or demo).
+the Worker starts on the first engine request (import or demo). Before the site fonts (standard PDF
+fonts), the PDF chunk was `pdfGuide` alone: 500.1 kB, 201.4 kB gzip; fontkit adds 330.5 kB gzip to
+the first PDF (a prebuilt bundle: brotli and its dictionary, Unicode data, shapers; it cannot be
+tree-shaken).
+
+## PDF build guide with the site fonts (2026-10-07)
+
+`node scripts/perf-pdf.ts --runs 4` renders the demo's guide in Node the way the Worker does (the
+synthetic sample, 3 × 3 plates, 672 bricks, 34 A4 pages, EN). Before = the same script against the
+previous `pdfGuide.ts` (standard fonts) from a clean copy of the repository, runs interleaved in
+the same session, machine load average about 3:
+
+| | First guide | Next guides | File |
+|---|---|---|---|
+| Standard fonts (before) | 3.47 / 3.61 s | 3.06–3.44 s | 3,715,268 bytes |
+| Site fonts (after) | 3.76 / 4.09 s | 3.34–3.50 s | 3,757,567 bytes (+1.1 %) |
+
+About +0.15 s per guide (+4 %), +0.3–0.5 s for the first one in the Worker's life (fontkit's module
+evaluation, then loading and parsing the five latin files: 63 ms, 1 ms once cached; first text
+layout 70 ms; latin-ext + Cyrillic files when needed: +42 ms). A rerun at load average 32 (the other
+e2e suites running) gave the same picture: next guides 3.19–3.32 s before, 3.32–3.54 s after. The
+six embedded subsets weigh 19.4 kB in the demo PDF plus 2.5 kB of ToUnicode maps; the rest of the
++42 kB is the two-byte glyph codes in the content streams. With a Latin-extended title and the FR
+messages: 3,776,222 bytes (3,730,381 before, which printed "?ódz").
+
+Demo path in the browser (same protocol as above, `--repeat-each=3`, US Letter, run on HEAD plus
+this change while other suites shared the CPU, load average 2–12): PDF 4.5 / 5.0 / 4.9 s,
+3,799,518 bytes, against 5.9 / 4.3 / 4.1 s and 3,757,249 bytes for HEAD in the same session — within
+the noise of a shared machine.

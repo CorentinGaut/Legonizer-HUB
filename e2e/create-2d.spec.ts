@@ -1,5 +1,5 @@
 /**
- * 2D mode without WebGL 2 (SPEC N2, UX OI-15): `?webgl=0` forces it (same code path as a browser
+ * 2D mode without WebGL 2 (SPEC N2): `?webgl=0` forces it (same code path as a browser
  * without WebGL 2). Numeric area + plan view, generation, 2D height map, 2D layer diagrams, exports.
  */
 import { expect, test } from '@playwright/test';

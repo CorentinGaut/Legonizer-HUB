@@ -1,5 +1,5 @@
 /**
- * CityJSON 1.0 / 1.1 / 1.2 importer (SPEC I5), including CityJSONSeq (.jsonl) and geometry templates.
+ * CityJSON 1.0 / 1.1 / 2.0 importer (SPEC I5), including CityJSONSeq (.jsonl) and geometry templates.
  * Spec: https://www.cityjson.org/specs/2.0.1/ (1.x structure identical for what we read):
  * - `transform` {scale, translate}: real = v × scale + translate (optional in 1.0, mandatory since 1.1)
  * - geometry boundaries: MultiSurface/CompositeSurface [surface], Solid [shell], Multi/CompositeSolid [solid];

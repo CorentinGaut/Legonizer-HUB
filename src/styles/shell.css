@@ -1,6 +1,6 @@
 /*
- * Shell additions not in docs/ui/components.css: header action slot, phone menu sheet
- * (components.md §2 "nav and language move into the menu sheet"), footer theme switch (UI-13).
+ * Shell additions to components.css: header action slot, phone menu sheet (navigation and language
+ * move into it), footer theme switch.
  */
 @layer lz.components {
   .lz-header__actions {

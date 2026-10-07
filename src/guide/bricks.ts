@@ -1,7 +1,7 @@
 /**
- * "Get the bricks" tab (SPEC O3, O6, O7, §7.5.1 settings; ux-spec §6.5, §7.6.1, §8.2, §8.7):
+ * "Get the bricks" tab (SPEC O3, O6, O7, §7.5.1 settings):
  * the brick shelf (to scale, whole model or one plate's kit), part settings with automatic
- * re-packing (1×1 locked, OI-3), the honest packing report (valid lower bound, UI-16), the shop
+ * re-packing (1×1 locked, SPEC §7.5.1), the honest packing report (valid lower bound, SPEC §12), the shop
  * handoff (BrickLink XML copy/download, Rebrickable CSV, paper list), spares and baseplate colour.
  */
 import { t } from '../shared/i18n.ts';

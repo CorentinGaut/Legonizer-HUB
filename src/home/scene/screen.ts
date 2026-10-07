@@ -1,5 +1,5 @@
 /**
- * The 31.5" screen's content (3d-look.md §8, storyboard §6): the 3D digital twin of the same area
+ * The 31.5" screen's content (SPEC §2): the 3D digital twin of the same area
  * (matte massing on a dark ground, changed buildings tinted from 17 s) rendered into a texture,
  * with the circular focus timeline (paper Fig. 4) on the left third from 16 s.
  */

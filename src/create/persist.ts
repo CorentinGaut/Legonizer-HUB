@@ -1,5 +1,5 @@
 /**
- * Persistence in this browser (ux-spec §4.3: "every change is saved to IndexedDB within 1 s"):
+ * Persistence in this browser (SPEC §7: the state survives a reload; every change is saved within 1 s):
  * the project state and, when they fit, the input files so a reload can re-import the model.
  * Demos are not stored (they are fetched again from the site).
  */

@@ -1,5 +1,5 @@
 /**
- * Icon sprite (docs/ui/icons.svg, 68 symbols drawn for this project) inlined once per page, and a
+ * Icon sprite (./icons.svg, 68 symbols drawn for this project) inlined once per page, and a
  * helper that returns the `<svg><use></svg>` markup. Icons are decorative (`aria-hidden`); give the
  * surrounding control an accessible name.
  */

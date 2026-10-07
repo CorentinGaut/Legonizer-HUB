@@ -1,7 +1,7 @@
 /**
- * 2D layer diagram (components.md §19, §22; the PDF draws the same): top view, north up, layers
+ * 2D layer diagram (SPEC O5; the PDF draws the same): top view, north up, layers
  * below shaded, new bricks outlined with their studs, stud rulers (columns 1–32 west → east, rows
- * 1–32 north → south). The text twin of the 3D step view (N3) and the Build view in 2D mode (OI-15).
+ * 1–32 north → south). The text twin of the 3D step view (N3) and the Build view in 2D mode (SPEC N2).
  */
 import type { PlacedBrick } from '../core/types.ts';
 import { BRICKS } from '../core/packing/catalog.ts';

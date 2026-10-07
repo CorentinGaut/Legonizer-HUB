@@ -1,10 +1,10 @@
 /**
- * Projected layers (3d-look.md §7, storyboard §2): canvas textures for the projector SpotLight's
+ * Projected layers (SPEC §2, §6.2): canvas textures for the projector SpotLight's
  * `map`. The map covers the table plane z = 0 seen from the lens; buildings are drawn where the
  * projector actually hits them (roofs and the walls facing the lens are displaced away from the
  * lens nadir by L / (L − z)), tallest last, so the colours land on the right bricks in 3D.
  * Everything outside the table is black (no light on the floor or on people); "no data" is
- * plain white light. Colours: design-system §2.3 (UI-3 change colours).
+ * plain white light. Colours: the --lz-proj-* tokens (change colours: SPEC §12).
  */
 import * as THREE from 'three';
 import type { Derived } from './derive.ts';
@@ -244,7 +244,7 @@ export class ProjectionLayers {
   }
 
   private drawTrams(x: Ctx, progress: number): void {
-    // ink core with a white casing (design-system §2.3: shape-coded transport line)
+    // ink core with a white casing (shape-coded transport line, --lz-proj-transport*)
     x.strokeStyle = COLORS.transportCasing;
     this.tramPath(x, progress, 0.01);
     x.strokeStyle = COLORS.transport;

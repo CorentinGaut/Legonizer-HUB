@@ -1,5 +1,5 @@
 /**
- * Site shell shared by every page (SPEC §5, ux-spec §4.2, components.md §2–3): skip link, header
+ * Site shell shared by every page (SPEC §5): skip link, header
  * (logo, Create / About / Help, language switch, page action, phone menu) and footer (citation,
  * credit, source code, licences, privacy line, theme switch, trademark disclaimer N9).
  *
@@ -34,7 +34,7 @@ export const PAPER_URL = 'https://hal.science/hal-04924304';
 /** Development credit: the name ends the sentence in every locale, so it follows `footer.developedBy`. */
 export const DEVELOPER = { name: 'Jey Puget Gil', url: 'https://hemoreg.me' } as const;
 export const UDVIZ_URL = 'https://github.com/VCityTeam/UD-Viz';
-/** Source code of this site. Hosting is undecided (SPEC §13.2): override with VITE_SOURCE_URL at build time. */
+/** Source code of this site; another repository can be set with VITE_SOURCE_URL at build time. */
 export const SOURCE_URL: string =
   (import.meta.env?.VITE_SOURCE_URL as string | undefined) || 'https://github.com/VCityTeam/Legonizer';
 

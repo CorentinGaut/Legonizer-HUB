@@ -1,5 +1,5 @@
 /**
- * Plate mode (SPEC O10, UX OI-4, ux-spec §5.5, §7.6.3): a phone scans a plate pass and opens
+ * Plate mode (SPEC O10): a phone scans a plate pass and opens
  * `create.html#guide/build/B2/1&d=<payload>`. The heights, part settings and versions travel in the
  * URL fragment (never sent to a server); the plate is packed in the Worker (packing is plate-local
  * and deterministic) and shown in the Build view, with the plate's kit. Progress stays on the phone.

@@ -1,6 +1,6 @@
 /**
- * Printable build guide (SPEC O5, ux-spec §8.6, docs/ui/print.css + mockups/pdf-page.html), generated
- * in the engine Worker with pdf-lib (MIT, pure JavaScript: runs in Workers and in Node tests).
+ * Printable build guide (SPEC O5), generated in the engine Worker with pdf-lib (MIT, pure
+ * JavaScript: runs in Workers and in Node tests).
  *
  * Pages: cover with the plate map → shopping list (the shelf on paper, kit per plate) → per plate an
  * opener (position, 32 × 32 height grid with the number in every stud, kit, plate-pass QR) and the
@@ -8,15 +8,18 @@
  * → projection layer → plate passes four per page (O10) → technical appendix. Every page carries a
  * running header and the footer "Small sample · Plate B2 · Layer 3 of 9 · page 12 of 46".
  *
- * Fonts: the 14 standard PDF fonts (Helvetica, Courier; WinAnsi encoding). Embedding IBM Plex /
- * Bricolage (UI-11) would need @pdf-lib/fontkit, not a dependency yet; text is mapped to WinAnsi
- * (`pdfSafe`). Everything printed derives from the packing result and the heights (no algorithmic
- * decision here), so the PDF says the same numbers as the shelf, BrickLink list and 3D steps.
+ * Fonts: the site's (pdfFonts.ts): IBM Plex Sans for text, IBM Plex Mono for numbers and part
+ * codes, Bricolage Grotesque for titles, embedded as subsets; any Unicode text prints (Latin,
+ * Latin-extended, Vietnamese, Cyrillic, Greek; replacements for the rest). Everything printed
+ * derives from the packing result and the heights (no algorithmic decision here), so the PDF says
+ * the same numbers as the shelf, BrickLink list and 3D steps.
  */
 import {
   PDFDocument,
-  StandardFonts,
+  popGraphicsState,
+  pushGraphicsState,
   rgb,
+  setCharacterSpacing,
   type PDFFont,
   type PDFImage,
   type PDFPage,
@@ -36,6 +39,7 @@ import { physicalCalqueLayout, rasterizeCalque } from './calque.ts';
 import { plateHeights } from './guide.ts';
 import { encodePlatePass, platePassUrl, qrVersionFor } from './platePass.ts';
 import { GLYPH_EDGE, GLYPH_PRINT_FILL, baseplateGlyph, brickIsoGlyph, type Glyph } from './glyphs.ts';
+import { embedPdfFonts, winAnsiSafe, type FontLoader } from './pdfFonts.ts';
 import {
   ALL_SECTIONS,
   KIT_ROWS_FIRST_PAGE,
@@ -67,7 +71,7 @@ export interface PdfGuideInput {
   differences: string[];
   /** Plate pass URL base (`…/create.html`); passes have no QR without it. */
   passBaseUrl?: string;
-  /** QR threshold: largest QR version still printed (UI-8: 15 at ECC M = 412 bytes). */
+  /** QR threshold: largest QR version still printed (15 at ECC M = 412 bytes, see platePass.ts). */
   maxQrVersion?: number;
   inputs?: { path: string; size: number; sha256: string }[];
   /** CRS name for the appendix (e.g. EPSG:3946). */
@@ -75,6 +79,8 @@ export interface PdfGuideInput {
   spares?: number;
   signal?: AbortSignal;
   progress?: ProgressFn;
+  /** Font file loader (tests); default: fetch() in the Worker, the file system in Node. */
+  fontLoader?: FontLoader;
 }
 
 const MM = 72 / 25.4;
@@ -105,62 +111,45 @@ function hex(h: string): RGB {
   return rgb(((n >> 16) & 255) / 255, ((n >> 8) & 255) / 255, (n & 255) / 255);
 }
 
-/** Height ramp step (design-system §10): bricks when the tallest column is ≤ 10, else 10 classes. */
+/** Height ramp step (same classes as the on-screen grid): bricks when the tallest column is ≤ 10, else 10 classes. */
 export function rampStep(v: number, max: number): number {
   if (v <= 0) return 0;
   return max <= 10 ? Math.min(10, v) : Math.min(10, Math.ceil((v / max) * 10));
-}
-
-const REPLACE: Record<string, string> = {
-  '→': '->',
-  '←': '<-',
-  '↑': '^',
-  '↓': 'v',
-  '⅛': '1/8',
-  '✓': 'v',
-  '−': '-',
-  '‑': '-',
-  '‐': '-',
-  ' ': ' ',
-  ' ': ' ',
-  '≤': '<=',
-  '≥': '>=',
-  '­': '',
-};
-
-/** Maps text to what the standard fonts can encode (WinAnsi). */
-export function pdfSafe(font: PDFFont, s: string, cache: Map<PDFFont, Set<number>>): string {
-  let set = cache.get(font);
-  if (!set) cache.set(font, (set = new Set(font.getCharacterSet())));
-  let out = '';
-  for (const ch of s) {
-    const cp = ch.codePointAt(0)!;
-    if (set.has(cp)) out += ch;
-    else if (REPLACE[ch] !== undefined) out += REPLACE[ch];
-    else if (ch === '\n' || ch === '\t') out += ' ';
-    else
-      out += ch
-        .normalize('NFD')
-        .replace(/[̀-ͯ]/g, '')
-        .replace(/[^\x20-\x7e]/g, '?');
-  }
-  return out;
 }
 
 interface Ctx {
   doc: PDFDocument;
   W: number;
   H: number;
+  /** IBM Plex Sans 400: text. */
   sans: PDFFont;
+  /** IBM Plex Sans 600: labels, table heads, eyebrows. */
   bold: PDFFont;
+  /** IBM Plex Mono 400 / 600: numbers, part codes. */
   mono: PDFFont;
   monoBold: PDFFont;
-  cache: Map<PDFFont, Set<number>>;
+  /** Bricolage Grotesque 720: large titles (16–40 pt) and small headings (9–13 pt). */
+  display: PDFFont;
+  heading: PDFFont;
+  /** Text as the font prints it (one line; WinAnsi when the standard fonts stand in). */
+  safe: (font: PDFFont, s: string) => string;
   m: (key: string, params?: Record<string, unknown>) => string;
   num: (n: number, digits?: number) => string;
 }
 
 type Align = 'left' | 'right' | 'center';
+
+/** Letter-spacing (em) of the site's styles: eyebrows, h1–h4, display titles. */
+const TRACK_EYEBROW = 0.08,
+  TRACK_HEADING = -0.012,
+  TRACK_DISPLAY = -0.022;
+
+/** Width (pt) of a line of text, with letter-spacing in em. */
+function measure(c: Ctx, font: PDFFont, s: string, size: number, tracking = 0): number {
+  const str = c.safe(font, s);
+  const n = [...str].length;
+  return font.widthOfTextAtSize(str, size) + (n > 1 ? tracking * size * (n - 1) : 0);
+}
 
 function text(
   c: Ctx,
@@ -169,26 +158,76 @@ function text(
   xMm: number,
   baselineMm: number,
   size: number,
-  opts: { font?: PDFFont; color?: RGB; align?: Align; maxWidthMm?: number } = {},
+  opts: { font?: PDFFont; color?: RGB; align?: Align; maxWidthMm?: number; tracking?: number } = {},
 ): number {
   const font = opts.font ?? c.sans;
-  let str = pdfSafe(font, s, c.cache);
-  let width = font.widthOfTextAtSize(str, size);
+  const tracking = opts.tracking ?? 0;
+  let str = c.safe(font, s);
+  let width = measure(c, font, str, size, tracking);
   if (opts.maxWidthMm && width > opts.maxWidthMm * MM) {
-    while (str.length > 1 && font.widthOfTextAtSize(str + '...', size) > opts.maxWidthMm * MM)
-      str = str.slice(0, -1);
-    str += '...';
-    width = font.widthOfTextAtSize(str, size);
+    const chars = [...str];
+    const ell = c.safe(font, '…');
+    while (chars.length > 1 && measure(c, font, chars.join('') + ell, size, tracking) > opts.maxWidthMm * MM)
+      chars.pop();
+    str = chars.join('').trimEnd() + ell;
+    width = measure(c, font, str, size, tracking);
   }
   let x = xMm * MM;
   if (opts.align === 'right') x -= width;
   else if (opts.align === 'center') x -= width / 2;
-  page.drawText(str, { x, y: c.H - baselineMm * MM, size, font, color: opts.color ?? INK });
+  const draw = { x, y: c.H - baselineMm * MM, size, font, color: opts.color ?? INK };
+  if (tracking) {
+    page.pushOperators(pushGraphicsState(), setCharacterSpacing(tracking * size));
+    page.drawText(str, draw);
+    page.pushOperators(popGraphicsState());
+  } else page.drawText(str, draw);
   return width / MM;
 }
 
+/** Small uppercase label (`.lz-eyebrow`): Plex Sans 600, letter-spaced. */
+function eyebrow(
+  c: Ctx,
+  page: PDFPage,
+  s: string,
+  xMm: number,
+  baselineMm: number,
+  size = 7,
+  maxWidthMm?: number,
+) {
+  return text(c, page, s.toUpperCase(), xMm, baselineMm, size, {
+    font: c.bold,
+    color: MUTED,
+    tracking: TRACK_EYEBROW,
+    ...(maxWidthMm ? { maxWidthMm } : {}),
+  });
+}
+
+/** Title in Bricolage Grotesque: the display cut from 16 pt, the heading cut below. */
+function title(
+  c: Ctx,
+  page: PDFPage,
+  s: string,
+  xMm: number,
+  baselineMm: number,
+  size: number,
+  opts: { color?: RGB; align?: Align; maxWidthMm?: number } = {},
+): number {
+  const big = size >= 16;
+  return text(c, page, s, xMm, baselineMm, size, {
+    ...opts,
+    font: big ? c.display : c.heading,
+    tracking: big ? TRACK_DISPLAY : TRACK_HEADING,
+  });
+}
+
+/** Width (mm) of a title, see `title`. */
+function titleWidth(c: Ctx, s: string, size: number): number {
+  const big = size >= 16;
+  return measure(c, big ? c.display : c.heading, s, size, big ? TRACK_DISPLAY : TRACK_HEADING) / MM;
+}
+
 function wrap(c: Ctx, s: string, font: PDFFont, size: number, widthMm: number): string[] {
-  const words = pdfSafe(font, s, c.cache).split(/ +/);
+  const words = c.safe(font, s).split(/ +/);
   const lines: string[] = [];
   let cur = '';
   for (const w of words) {
@@ -365,16 +404,14 @@ function callout(
   for (const it of items) {
     const qs = String(it.q);
     const rest = ` × ${partSize(it.id)}`;
-    const w =
-      (c.monoBold.widthOfTextAtSize(qs, size) +
-        c.mono.widthOfTextAtSize(pdfSafe(c.mono, rest, c.cache), size)) /
-      MM;
+    const qw = measure(c, c.monoBold, qs, size) / MM;
+    const w = qw + measure(c, c.mono, rest, size) / MM;
     if (cx + w > x + width && cx > x) {
       cx = x;
       y += (size * 1.4) / MM;
     }
     text(c, page, qs, cx, y, size, { font: c.monoBold });
-    text(c, page, rest, cx + c.monoBold.widthOfTextAtSize(qs, size) / MM, y, size, { font: c.mono });
+    text(c, page, rest, cx + qw, y, size, { font: c.mono });
     cx += w + gap;
   }
   return y + (size * 0.5) / MM;
@@ -415,8 +452,7 @@ function plateMap(
     rect(c, page, tx, ty, cell, cell, { fill: on ? INK : WHITE, stroke: INK, width: Math.min(1, cell / 10) });
     if (o.names !== false && cell >= 6) {
       const size = Math.min(13, cell * 1.1);
-      text(c, page, p.name, tx + cell / 2, ty + cell / 2 + (size * 0.35) / MM, size, {
-        font: c.bold,
+      title(c, page, p.name, tx + cell / 2, ty + cell / 2 + (size * 0.35) / MM, size, {
         color: on ? WHITE : INK,
         align: 'center',
       });
@@ -458,15 +494,42 @@ export async function renderPdfGuide(input: PdfGuideInput): Promise<Uint8Array> 
     if (!f) nf.set(digits, (f = new Intl.NumberFormat(input.locale, { maximumFractionDigits: digits })));
     return f.format(n);
   };
+  const dateText = new Intl.DateTimeFormat(input.locale, {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+  }).format(date);
+  const dateShort = new Intl.DateTimeFormat(input.locale, {
+    day: 'numeric',
+    month: 'short',
+    year: 'numeric',
+  }).format(date);
+  // Everything the guide can print, so that the fonts load the subsets it needs (pdfFonts.ts).
+  const printable = [
+    input.title,
+    input.presetName,
+    ...input.differences,
+    ...Object.values(input.messages),
+    input.crs ?? '',
+    ...(input.inputs ?? []).map((f) => f.path),
+    dateText,
+    dateShort,
+    num(-1234567.891, 3),
+    'Legonizer ×·…',
+  ];
+  const { fonts, standard } = await embedPdfFonts(
+    doc,
+    [...printable, ...printable.map((t) => t.toUpperCase())],
+    input.fontLoader,
+  );
+  const winAnsi = new Map<PDFFont, Set<number>>();
+  const oneLine = (s: string) => s.replace(/[\t\n\r\f\v\u2028\u2029]/g, ' ');
   const c: Ctx = {
     doc,
     W: wMm * MM,
     H: hMm * MM,
-    sans: await doc.embedFont(StandardFonts.Helvetica),
-    bold: await doc.embedFont(StandardFonts.HelveticaBold),
-    mono: await doc.embedFont(StandardFonts.Courier),
-    monoBold: await doc.embedFont(StandardFonts.CourierBold),
-    cache: new Map(),
+    ...fonts,
+    safe: standard ? (font, s) => winAnsiSafe(font, oneLine(s), winAnsi) : (_font, s) => oneLine(s),
     m,
     num,
   };
@@ -490,16 +553,6 @@ export async function renderPdfGuide(input: PdfGuideInput): Promise<Uint8Array> 
   const CW = X1 - X0;
   const bodyTop = TOP + 9;
   const kinds = BRICKS.filter((b) => (packing.counts[b.id] ?? 0) > 0).length;
-  const dateText = new Intl.DateTimeFormat(input.locale, {
-    day: 'numeric',
-    month: 'long',
-    year: 'numeric',
-  }).format(date);
-  const dateShort = new Intl.DateTimeFormat(input.locale, {
-    day: 'numeric',
-    month: 'short',
-    year: 'numeric',
-  }).format(date);
   const sizeW = (platesX * STUDS_PER_PLATE * 8) / 10,
     sizeD = (platesY * STUDS_PER_PLATE * 8) / 10;
   const tallestCm = (maxH * 9.6) / 10;
@@ -618,8 +671,7 @@ export async function renderPdfGuide(input: PdfGuideInput): Promise<Uint8Array> 
     const pl = plan[i]!;
     const page = doc.addPage([c.W, c.H]);
     // running header
-    text(c, page, i === 0 && sections.cover ? 'Legonizer' : projectName, X0, TOP + 3, 9, {
-      font: c.bold,
+    title(c, page, i === 0 && sections.cover ? 'Legonizer' : projectName, X0, TOP + 3, 9, {
       maxWidthMm: CW / 2,
     });
     text(c, page, pl.head, X1, TOP + 3, 7.5, { color: MUTED, align: 'right', maxWidthMm: CW / 2 });
@@ -646,9 +698,9 @@ export async function renderPdfGuide(input: PdfGuideInput): Promise<Uint8Array> 
   // ================================================================= sections
   function drawCover(page: PDFPage) {
     let y = bodyTop + 4;
-    text(c, page, m('exports.pdf.title').toUpperCase(), X0, y, 7, { font: c.bold, color: MUTED });
+    eyebrow(c, page, m('exports.pdf.title'), X0, y);
     y += 13;
-    text(c, page, projectName, X0, y, 30, { font: c.bold, maxWidthMm: CW });
+    title(c, page, projectName, X0, y, 30, { maxWidthMm: CW });
     y += 7;
     text(
       c,
@@ -668,12 +720,12 @@ export async function renderPdfGuide(input: PdfGuideInput): Promise<Uint8Array> 
     );
     y += 10;
     // plate map + facts
-    text(c, page, m('exports.pdf.cover.plateMap'), X0, y, 10.5, { font: c.bold });
+    title(c, page, m('exports.pdf.cover.plateMap'), X0, y, 10.5);
     text(
       c,
       page,
       m('exports.pdf.cover.mapHint'),
-      X0 + 2 + c.bold.widthOfTextAtSize(pdfSafe(c.bold, m('exports.pdf.cover.plateMap'), c.cache), 10.5) / MM,
+      X0 + 2 + titleWidth(c, m('exports.pdf.cover.plateMap'), 10.5),
       y,
       8,
       {
@@ -741,7 +793,7 @@ export async function renderPdfGuide(input: PdfGuideInput): Promise<Uint8Array> 
     const steps = [1, 2, 3, 4, 5].map((k) => m(`exports.pdf.cover.howTo${k}`));
     const boxH = 12 + steps.length * 6;
     rect(c, page, X0, y, CW, boxH, { fill: FILL });
-    text(c, page, m('exports.pdf.cover.howToTitle'), X0 + 4, y + 7, 10.5, { font: c.bold });
+    title(c, page, m('exports.pdf.cover.howToTitle'), X0 + 4, y + 7, 10.5);
     steps.forEach((s, k) => {
       text(c, page, `${k + 1}.`, X0 + 5, y + 14 + k * 6, 9.5, { font: c.monoBold });
       text(c, page, s, X0 + 11, y + 14 + k * 6, 9.5, { maxWidthMm: CW - 16 });
@@ -762,9 +814,9 @@ export async function renderPdfGuide(input: PdfGuideInput): Promise<Uint8Array> 
 
   function drawShopping(page: PDFPage) {
     let y = bodyTop + 4;
-    text(c, page, m('exports.pdf.sections.shopping').toUpperCase(), X0, y, 7, { font: c.bold, color: MUTED });
+    eyebrow(c, page, m('exports.pdf.sections.shopping'), X0, y);
     y += 8;
-    text(
+    title(
       c,
       page,
       m('create.guide.bricks.total', {
@@ -775,10 +827,7 @@ export async function renderPdfGuide(input: PdfGuideInput): Promise<Uint8Array> 
       X0,
       y,
       16,
-      {
-        font: c.bold,
-        maxWidthMm: CW * 0.62,
-      },
+      { maxWidthMm: CW * 0.62 },
     );
     const noteBottom = para(c, page, m('exports.pdf.white'), X0 + CW * 0.64, y - 7, CW * 0.36, 7.5, {
       color: MUTED,
@@ -792,7 +841,7 @@ export async function renderPdfGuide(input: PdfGuideInput): Promise<Uint8Array> 
       label: string,
       items: { glyph: Glyph; unit: number; qty: number; size: string; part: string; note?: string }[],
     ) => {
-      text(c, page, label.toUpperCase(), X0, y + 2, 7, { font: c.bold, color: MUTED });
+      eyebrow(c, page, label, X0, y + 2);
       y += 4;
       const slotW = (CW - 5 * 2) / 6;
       const slotH = 34;
@@ -841,12 +890,12 @@ export async function renderPdfGuide(input: PdfGuideInput): Promise<Uint8Array> 
         note: `${BASEPLATE.id} · ${m('exports.pdf.baseplateScale')}`,
       },
     ]);
-    text(c, page, m('exports.pdf.kitPerPlate'), X0, y + 3, 10.5, { font: c.bold });
+    title(c, page, m('exports.pdf.kitPerPlate'), X0, y + 3, 10.5);
     text(
       c,
       page,
       m('exports.pdf.kitPerPlateNote'),
-      X0 + 2 + c.bold.widthOfTextAtSize(pdfSafe(c.bold, m('exports.pdf.kitPerPlate'), c.cache), 10.5) / MM,
+      X0 + 2 + titleWidth(c, m('exports.pdf.kitPerPlate'), 10.5),
       y + 3,
       8,
       {
@@ -877,9 +926,7 @@ export async function renderPdfGuide(input: PdfGuideInput): Promise<Uint8Array> 
   function kitTable(page: PDFPage, top: number, from: number, to: number, continued: boolean): number {
     let y = top;
     if (continued) {
-      text(c, page, `${m('exports.pdf.kitPerPlate')} (${m('exports.pdf.continued')})`, X0, y + 4, 10.5, {
-        font: c.bold,
-      });
+      title(c, page, `${m('exports.pdf.kitPerPlate')} (${m('exports.pdf.continued')})`, X0, y + 4, 10.5);
       y += 7;
     }
     const parts = BRICKS.slice().reverse();
@@ -960,11 +1007,8 @@ export async function renderPdfGuide(input: PdfGuideInput): Promise<Uint8Array> 
     const { col, southRow } = parsePlateName(plate.plate, platesY);
     const heights = plateHeights(hm, col, southRow);
     let y = bodyTop + 2;
-    text(c, page, m('common.plate.name', { plate: '' }).trim().toUpperCase(), X0, y + 3, 7, {
-      font: c.bold,
-      color: MUTED,
-    });
-    text(c, page, plate.plate, X0, y + 17, 40, { font: c.bold });
+    eyebrow(c, page, m('common.plate.name', { plate: '' }).trim(), X0, y + 3);
+    title(c, page, plate.plate, X0, y + 17, 40);
     // mini map + position
     const mx = X0 + 40;
     const cell = Math.min(7, 30 / Math.max(platesX, platesY));
@@ -1006,14 +1050,12 @@ export async function renderPdfGuide(input: PdfGuideInput): Promise<Uint8Array> 
       para(c, page, m('exports.pdf.emptyPlate'), X0, y, CW, 11);
       return;
     }
-    text(c, page, m('exports.pdf.heightGridTitle'), X0, y, 10.5, { font: c.bold });
+    title(c, page, m('exports.pdf.heightGridTitle'), X0, y, 10.5);
     text(
       c,
       page,
       m('exports.pdf.heightGridNote'),
-      X0 +
-        2 +
-        c.bold.widthOfTextAtSize(pdfSafe(c.bold, m('exports.pdf.heightGridTitle'), c.cache), 10.5) / MM,
+      X0 + 2 + titleWidth(c, m('exports.pdf.heightGridTitle'), 10.5),
       y,
       7.5,
       {
@@ -1081,7 +1123,7 @@ export async function renderPdfGuide(input: PdfGuideInput): Promise<Uint8Array> 
       rx += 7.6;
     }
     y += 10;
-    text(c, page, m('exports.pdf.kitTitle', { plate: plate.plate }), X0, y, 10.5, { font: c.bold });
+    title(c, page, m('exports.pdf.kitTitle', { plate: plate.plate }), X0, y, 10.5);
     y = callout(c, page, [...calloutItems(plate.counts)], X0, y + 1.5, CW, 8.5);
     text(c, page, `1 × ${m('exports.pdf.baseplateName')}`, X0, y + 4, 8.5, { font: c.mono });
   }
@@ -1107,14 +1149,13 @@ export async function renderPdfGuide(input: PdfGuideInput): Promise<Uint8Array> 
       const cx = X0 + (idx % 2) * (cellW + 6),
         cy = y + Math.floor(idx / 2) * (cellH + 5);
       const bricks = bricksByPlateLayer.get(`${plate.plate}:${k}`) ?? [];
-      const titleW = text(
+      const titleW = title(
         c,
         page,
         m('exports.pdf.layerTitle', { layer: k, total: plate.layers }),
         cx,
         cy + 4,
         10,
-        { font: c.bold },
       );
       text(
         c,
@@ -1190,9 +1231,9 @@ export async function renderPdfGuide(input: PdfGuideInput): Promise<Uint8Array> 
 
   function drawProjection(page: PDFPage) {
     let y = bodyTop + 4;
-    text(c, page, m('exports.projection.eyebrow').toUpperCase(), X0, y, 7, { font: c.bold, color: MUTED });
+    eyebrow(c, page, m('exports.projection.eyebrow'), X0, y);
     y += 8;
-    text(c, page, m('exports.projection.title'), X0, y, 18, { font: c.bold });
+    title(c, page, m('exports.projection.title'), X0, y, 18);
     text(c, page, m('exports.pdf.projectionPageNote', { w: num(sizeW, 1), d: num(sizeD, 1) }), X1, y, 8, {
       color: MUTED,
       align: 'right',
@@ -1234,13 +1275,9 @@ export async function renderPdfGuide(input: PdfGuideInput): Promise<Uint8Array> 
       const x = X0 + (k % 2) * pw + 6,
         y = top + Math.floor(k / 2) * ph + 6;
       const w = pw - 12;
-      text(c, page, m('exports.pass.title').toUpperCase(), x, y + 3, 7, { font: c.bold, color: MUTED });
-      text(c, page, projectName.toUpperCase(), x + w - 42, y + 3, 7, {
-        font: c.bold,
-        color: MUTED,
-        maxWidthMm: 40,
-      });
-      text(c, page, plate.plate, x, y + 20, 40, { font: c.bold });
+      eyebrow(c, page, m('exports.pass.title'), x, y + 3);
+      eyebrow(c, page, projectName, x + w - 42, y + 3, 7, 40);
+      title(c, page, plate.plate, x, y + 20, 40);
       const info = passFor(plate);
       const qx = x + w - 38;
       if (info.url) {
@@ -1280,7 +1317,7 @@ export async function renderPdfGuide(input: PdfGuideInput): Promise<Uint8Array> 
         const gw = (g.viewBox[2] * 1.6) / 12,
           gh = (g.viewBox[3] * 1.6) / 12;
         const label = `×${it.q} ${part.width}×${part.length}`;
-        const lw = c.mono.widthOfTextAtSize(pdfSafe(c.mono, label, c.cache), 7) / MM;
+        const lw = measure(c, c.mono, label, 7) / MM;
         if (kx + Math.max(gw, lw) > x + w) {
           kx = x;
           ky += 17;
@@ -1305,9 +1342,9 @@ export async function renderPdfGuide(input: PdfGuideInput): Promise<Uint8Array> 
 
   function drawAppendix(page: PDFPage) {
     let y = bodyTop + 4;
-    text(c, page, m('exports.pdf.sections.appendix').toUpperCase(), X0, y, 7, { font: c.bold, color: MUTED });
+    eyebrow(c, page, m('exports.pdf.sections.appendix'), X0, y);
     y += 8;
-    text(c, page, m('exports.pdf.appendix.title'), X0, y, 18, { font: c.bold });
+    title(c, page, m('exports.pdf.appendix.title'), X0, y, 18);
     y += 6;
     const legacyOf: Record<string, unknown> = {
       heightMode: 'normalized',
@@ -1353,9 +1390,9 @@ export async function renderPdfGuide(input: PdfGuideInput): Promise<Uint8Array> 
       ['parts', `${input.inventory.enabled.join(', ')}; max length ${input.inventory.maxLength}`],
     ];
     const half = (CW - 6) / 2;
-    const box = (x: number, top: number, w: number, title: string, rows: [string, string][]) => {
+    const box = (x: number, top: number, w: number, head: string, rows: [string, string][]) => {
       let yy = top + 6;
-      text(c, page, title, x + 4, yy, 10.5, { font: c.bold });
+      title(c, page, head, x + 4, yy, 10.5);
       yy += 3;
       for (const [k, v] of rows) {
         text(c, page, k, x + 4, yy + 3, 7, { font: c.mono, color: MUTED, maxWidthMm: 30 });
@@ -1381,7 +1418,7 @@ export async function renderPdfGuide(input: PdfGuideInput): Promise<Uint8Array> 
     const y1 = box(X0, y, half, m('exports.pdf.appendix.settings'), settings);
     const y2 = box(X0 + half + 6, y, half, m('exports.pdf.appendix.inputs'), versions.slice(0, 30));
     y = Math.max(y1, y2) + 4;
-    text(c, page, m('exports.pdf.appendix.files'), X0, y + 4, 10.5, { font: c.bold });
+    title(c, page, m('exports.pdf.appendix.files'), X0, y + 4, 10.5);
     para(
       c,
       page,

@@ -1,5 +1,5 @@
 /**
- * Persistence (ux-spec §4.3, §5.1): the project is saved in IndexedDB; a reload inside the wizard
+ * Persistence (SPEC §7: the state survives a reload): the project is saved in IndexedDB; a reload inside the wizard
  * continues where it was, a return to the import step offers Continue / Start a new project, and
  * the build progress survives.
  */
@@ -16,7 +16,7 @@ test('reload continues the project; the resume banner offers Continue or Start n
   await page.getByRole('textbox', { name: /Who builds A1/ }).fill('Team 1');
   await page.getByRole('textbox', { name: /Who builds A1/ }).press('Tab');
   await expect(page.locator('#lz-actionbar, body')).toBeTruthy();
-  await page.waitForTimeout(1200); // autosave within 1 s (§4.3)
+  await page.waitForTimeout(1200); // autosave within 1 s
 
   // 1) reload inside the guide: same step, same result, same progress
   await page.reload();

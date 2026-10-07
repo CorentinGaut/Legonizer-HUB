@@ -92,7 +92,7 @@ export function announce(text: string, kind: 'polite' | 'assertive' = 'polite'):
   requestAnimationFrame(() => (el.textContent = text));
 }
 
-// ------------------------------------------------------------------ toasts (components.md §13)
+// ------------------------------------------------------------------ toasts
 let toastHost: HTMLElement | null = null;
 export function toast(
   message: string,
@@ -144,7 +144,7 @@ export function toast(
   arm();
 }
 
-// ------------------------------------------------------------------ dialogs (components.md §23)
+// ------------------------------------------------------------------ dialogs
 export interface DialogOptions {
   title: string;
   body: Raw | string;
@@ -267,7 +267,7 @@ export async function copyText(text: string): Promise<boolean> {
 
 export const reducedMotion = (): boolean => matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-/** Parses a number typed with "." or "," as decimal separator (ux-spec §9.7). */
+/** Parses a number typed with "." or "," as decimal separator (EN and FR, SPEC N6). */
 export function parseNumber(s: string): number {
   const t = s
     .trim()

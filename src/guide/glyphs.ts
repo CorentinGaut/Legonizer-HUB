@@ -1,5 +1,5 @@
 /**
- * Brick glyphs on the page (components.md §16): one sprite of `<symbol>`s built once from the core
+ * Brick glyphs on the page (SPEC O3: drawn to scale): one sprite of `<symbol>`s built once from the core
  * glyph geometry (the same drawing as the PDF), referenced with `<use>`.
  */
 import { BRICKS, BASEPLATE } from '../core/packing/catalog.ts';
@@ -41,5 +41,7 @@ export function glyph(partId: string, opts: { top?: boolean; className?: string 
   const vb = boxes.get(id);
   if (!vb) return '';
   const quarter = partId === BASEPLATE.id ? ' lz-glyph--quarter' : '';
-  return `<svg class="lz-glyph${quarter}${opts.className ? ' ' + opts.className : ''}" viewBox="${vb.join(' ')}" style="--vbw:${vb[2]};--vbh:${vb[3]}" aria-hidden="true" focusable="false"><use href="#${id}"/></svg>`;
+  // The <use> gets the viewBox's origin and size: by default it would place the symbol's viewport at
+  // (0, 0) of a viewBox that starts at (vb[0], vb[1]) < 0, shifting the drawing right and down.
+  return `<svg class="lz-glyph${quarter}${opts.className ? ' ' + opts.className : ''}" viewBox="${vb.join(' ')}" style="--vbw:${vb[2]};--vbh:${vb[3]}" aria-hidden="true" focusable="false"><use href="#${id}" x="${vb[0]}" y="${vb[1]}" width="${vb[2]}" height="${vb[3]}"/></svg>`;
 }

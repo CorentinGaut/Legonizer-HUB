@@ -15,7 +15,7 @@ const fixture = join(import.meta.dirname, '..', '..', HOME_FIXTURE_PATH);
 describe('home brick model', () => {
   const { model, fixture: f } = buildHomeModel(fixture);
 
-  it('uses the 5 × 3 plate fixture produced by our pipeline (storyboard §1.1)', () => {
+  it('uses the 5 × 3 plate fixture produced by our pipeline (SPEC H4)', () => {
     expect(f.kind).toBe('legonizer-home-heightmap');
     expect(f.source.dataset).toBe('synthetic-district');
     expect([model.platesX, model.platesY]).toEqual([5, 3]);

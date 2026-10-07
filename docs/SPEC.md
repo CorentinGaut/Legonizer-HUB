@@ -1,6 +1,6 @@
 # Legonizer website — Product specification
 
-Version 1.3 — 2026-10-07 — Product owner: Corentin Gautier (corentin.gautier2@univ-lyon2.fr)
+Version 1.4 — 2026-10-07 — Product owner: Corentin Gautier (corentin.gautier2@univ-lyon2.fr)
 Status: approved for design and implementation. Decisions recorded in §12.
 
 Sources:
@@ -128,7 +128,8 @@ included, except the filename bug (L8).
 
 ### Out of scope (v1, candidates for later)
 
-- Server-side conversion of raw CityGML (py3dtilers): documented as a preparation step instead.
+- Server-side conversion of raw CityGML: documented as a preparation step instead (CityGML → CityJSON with
+  citygml-tools, I13).
 - Projector calibration/keystone tool and the change-layer/timeline authoring of the paper (§4).
 - Hollow interiors / structural optimization to reduce part count (v2 lever, see §7.4).
 - Coloured bricks (the device is white-only by design).
@@ -200,7 +201,7 @@ and can be saved/loaded as a project file.
 | I2 | **3D Tiles 1.1** with glTF/GLB content: best effort (same pipeline) |
 | I3 | **glTF / GLB** single files (Y-up → converted to Z-up) |
 | I4 | **OBJ** (+ optional `.mtl`, ignored for geometry) |
-| I5 | **CityJSON** 1.x (`transform` scale/translate applied; LoD choice: highest available ≤ 2.2 by default) |
+| I5 | **CityJSON** 1.x and 2.0 (`transform` scale/translate applied; LoD choice: highest available ≤ 2.2 by default) |
 | I6 | Unit and up-axis override for generic meshes (m / cm / mm / ft; Y-up / Z-up), with a sensible auto-detection and a visible summary (bounding box size in metres) so the user can spot a wrong unit |
 | I7 | Georeferencing: ECEF tilesets (coordinates ~6.4e6 m from origin) are converted to a local ENU frame at the tileset centre; projected tilesets used as is; **py3dtilers tilesets** (per-tile `transform` to EPSG:3946 origins, see README) loaded consistently; world coordinates kept in float64 except in legacy mode, which reproduces UD-Viz's float32 rounding |
 | I8 | Feature identity: use `gml_id` from the batch table when present (legacy grouping, §3.1 step 3); otherwise `_BATCHID`; otherwise one feature per mesh (fixes L7) |
@@ -208,7 +209,7 @@ and can be saved/loaded as a project file.
 | I10 | **Demo dataset** bundled with the site: one synthetic sample made by our own generator (no real-world data, so no third-party licence); one click "Try the sample" on the home page and the import step. The demo has a manifest with a curated default area and **suggested settings**: the whole sample on 3 × 3 plates at 4 m per stud (fits the table), *Legacy + Keep small buildings*, with a visible note and a one-click switch to strict Legacy (whose 1 brick = 9.6 m erases 18 % of the built-up studs, L1) |
 | I11 | Parsing in a Web Worker with progress, cancel, and clear errors (unsupported format, empty geometry, no features, too large, missing files referenced by `tileset.json`) |
 | I12 | Size guidance: works up to ~2 M triangles / 300 MB on a mid-range laptop; above, warn and suggest cropping or decimation |
-| I13 | A "Prepare your data" help page: CityGML → 3D Tiles with py3dtilers, OSM buildings → glTF, exporting from Blender/QGIS |
+| I13 | A "Prepare your data" help page: CityGML 1.0–3.0 → CityJSON with citygml-tools (`to-cityjson`, optional `subset --bbox` crop), OSM buildings → glTF, exporting from Blender/QGIS |
 
 ### 7.2 Step 2 — Area
 
@@ -382,34 +383,21 @@ Order: UX and the core engine (dev, phase 1) in parallel → UI (from UX) → de
 | 2026-10-06 | ⌈area/8⌉ is not a lower bound once 2×6/2×8 are enabled; the engine reports its valid bound, the microcopy must not say "at least ⌈area/8⌉" |
 | 2026-10-06 | `rotation: 'aabb' \| 'rotate'` parameter + effective sampled rectangle returned; 2D mode without WebGL 2 |
 | 2026-10-07 | No real-world data on the site: the Part-Dieu demo and everything derived from the Métropole de Lyon tiles (demo, home animation model, credits) are removed, which closes the demo data licence question. The synthetic sample is the only demo (whole sample on 3 × 3 plates at 4 m/stud, Legacy + Keep small buildings); the home animation shows an invented district from a synthetic generator, run through our pipeline (H2, H4). Real Lyon tiles stay developer tooling (parity and performance tests on the git-ignored `fixtures/`, skipped when absent). Development credit for Jey Puget Gil in the footer, the About page and the README |
+| 2026-10-07 | The public site keeps the name "Legonizer". The site licence is LGPL-2.1. The manual checks (LeoCAD, usability test, real-GPU performance, French review, real-tile parity outside CI) are accepted as they stand |
+| 2026-10-07 | Data preparation: CityGML → CityJSON with citygml-tools replaces py3dtilers (development discontinued in January 2025; py3dtiles, its suggested successor, does not read CityGML). CityJSON 2.0 accepted |
+| 2026-10-07 | The PDF guide embeds the site fonts (IBM Plex Sans/Mono, Bricolage Grotesque) via `@pdf-lib/fontkit`, loaded lazily with the PDF code; phone controls never sit under the sticky bars (axe `target-size` fully enforced) |
 
 ## 13. Open questions (non-blocking)
 
-1. **Name**: "Legonizer" contains the LEGO trademark. Keep it (research tool name) or rename the public site
-   (e.g. "Brickonizer", "CityBricks")? Owner: VCity team.
-2. **Hosting**: GitHub Pages under VCityTeam or a lab domain?
-3. **Site licence**: LGPL-2.1 to match UD-Viz, or another?
-4. **Part numbers**: confirm the catalog in §7.5.1 and the 32×32 white baseplate reference on BrickLink.
-5. **Function layer in greyscale**: the six building-function colours stay distinct for colour-blind viewers but
+1. **Part numbers**: confirm the catalog in §7.5.1 and the 32×32 white baseplate reference on BrickLink.
+2. **Function layer in greyscale**: the six building-function colours stay distinct for colour-blind viewers but
    not in greyscale; printed or monochrome uses need labels or patterns. Owner: VCity team.
-6. **Home animation content**: the district is invented and its projected uses, tram lines, changes and media
+3. **Home animation content**: the district is invented and its projected uses, tram lines, changes and media
    cards are illustrative (the site says so). A real district with real changes between two dataset years and
    rights-cleared media would replace them, with data whose licence allows redistribution. Owner: VCity team.
-7. **Older Safari**: colours use `light-dark()` (Safari ≥ 17.5). Schools with older iPads would need a build-time
+4. **Older Safari**: colours use `light-dark()` (Safari ≥ 17.5). Schools with older iPads would need a build-time
    fallback.
-8. **v1.1 candidates**: custom table size (A5 assumes 1 × 2 m); subtract bricks already owned (Rebrickable CSV) from
+5. **v1.1 candidates**: custom table size (A5 assumes 1 × 2 m); subtract bricks already owned (Rebrickable CSV) from
    the shop lists; split very large layers into 16 × 16 sub-steps; build progress in the project file; several
    models in one project (v1 imports one).
-9. **Accepted limits**: no progress sync between devices (no backend); no prices, affiliate links or store accounts.
-
-### Engineering follow-ups
-
-- PDF uses the standard PDF fonts; embedding the site fonts needs `@pdf-lib/fontkit`.
-- Shared CSS bugs worked around in the create page: `.lz-logo__mark` needs `flex-shrink: 0`; `.lz-option > legend`
-  overrides `.lz-visually-hidden`; `.lz-tablefit text` overflows its viewBox; the shelf tray is narrower than the
-  2×8 glyph; the viewport's 18rem minimum height with a 4:3 ratio is wider than a phone.
-- On phones, "Show as list", "Copy link" and the `.mpd` radio sit partly under the sticky bars (excluded from the
-  axe `target-size` check in `e2e/create-helpers.ts`).
-- Data-preparation help: point to py3dtiles (py3dtilers is unmaintained since January 2025).
-- Manual checks: open the LDraw file in LeoCAD (§10.7); run the usability test (`docs/usability-test-plan.md`);
-  measure frame rate and generation time on a real laptop and phone GPU.
+6. **Accepted limits**: no progress sync between devices (no backend); no prices, affiliate links or store accounts.

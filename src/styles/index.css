@@ -1,6 +1,6 @@
 /*
- * Global styles for every page: fonts (self-hosted, UI-1), design tokens and components
- * (copies of docs/ui/tokens.css and docs/ui/components.css), shell additions.
+ * Global styles for every page: fonts (self-hosted, SPEC §12), design tokens and components,
+ * shell additions.
  * Page-specific styles live next to the page code (src/home/home.css, …); import this file
  * before them so the cascade layers keep their order (lz.pages after lz.components).
  */

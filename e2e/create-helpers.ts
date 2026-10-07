@@ -30,62 +30,67 @@ export interface AxeViolation {
 }
 
 /**
- * Runs axe-core on the page. One adjustment, reported rather than hidden: on phones the guide has a
- * fixed bottom tab bar (and the wizard a sticky action bar), so at most scroll positions some control
- * sits partly under it and axe's `target-size` measures only its uncovered sliver. Those nodes, and
- * only those (their box intersects a fixed or sticky bar that is not their ancestor), are moved to
- * `obscured`; every other `target-size` node still fails.
+ * Runs axe-core on the page (WCAG 2.0–2.2 A/AA + best practices); every rule counts, `target-size`
+ * included.
+ *
+ * `target-size` measures a target where it is when axe runs. On phones the guide's tab bar (with
+ * the Done button sticking above it in the Build tab) and the wizard's action bar stay at the
+ * bottom of the screen while the page scrolls under them, so a control that the previous step of
+ * the test left near the bottom edge is measured as the sliver above the bar. Such a node is
+ * checked again where a user reaches it: it receives keyboard focus, which scrolls it into view as
+ * Tab does (clear of the bars, thanks to the page's scroll-padding, WCAG technique C43), and
+ * `target-size` runs again on it. It fails if it still fails there; no node is skipped. The nodes
+ * checked this way are listed in the test's annotations.
  */
 export async function runAxe(page: Page): Promise<AxeViolation[]> {
   const src = axeSource();
   if (!src) throw new Error('axe-core not found: install it or set AXE_CORE_PATH');
   await page.addScriptTag({ content: src });
-  const { violations, obscured } = await page.evaluate(async () => {
+  const { violations, refocused } = await page.evaluate(async () => {
     type AxeResult = {
       violations: { id: string; impact: string; help: string; nodes: { target: string[] }[] }[];
     };
-    const axe = (window as unknown as { axe: { run: (c: Document, o: object) => Promise<AxeResult> } }).axe;
+    const axe = (
+      window as unknown as { axe: { run: (c: Document | Element, o: object) => Promise<AxeResult> } }
+    ).axe;
     const r = await axe.run(document, {
       runOnly: {
         type: 'tag',
         values: ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa', 'best-practice'],
       },
     });
-    const bars = [...document.querySelectorAll<HTMLElement>('body *')].filter((e) => {
-      const cs = getComputedStyle(e);
-      return (
-        (cs.position === 'fixed' || cs.position === 'sticky') &&
-        e.getClientRects().length > 0 &&
-        e.offsetHeight < 200
-      );
-    });
-    const underBar = (sel: string) => {
-      const el = document.querySelector(sel);
-      if (!el) return false;
-      const a = el.getBoundingClientRect();
-      return bars.some((b) => {
-        if (b.contains(el)) return false;
-        const c = b.getBoundingClientRect();
-        return a.left < c.right && a.right > c.left && a.top < c.bottom && a.bottom > c.top;
-      });
-    };
-    const obscured: string[] = [];
-    const violations = r.violations
-      .map((v) => {
-        let nodes = v.nodes.map((n) => n.target.join(' '));
-        if (v.id === 'target-size') {
-          obscured.push(...nodes.filter(underBar));
-          nodes = nodes.filter((n) => !underBar(n));
+    const refocused: string[] = [];
+    const violations: { id: string; impact: string; help: string; nodes: string[] }[] = [];
+    for (const v of r.violations) {
+      let nodes = v.nodes.map((n) => n.target.join(' '));
+      if (v.id === 'target-size') {
+        const failing: string[] = [];
+        for (const sel of nodes) {
+          const el = document.querySelector<HTMLElement>(sel);
+          const x = window.scrollX,
+            y = window.scrollY,
+            prev = document.activeElement;
+          el?.focus(); // scrolls into view like Tab (no smooth scrolling on these pages)
+          if (!el || document.activeElement !== el) {
+            failing.push(sel);
+            continue;
+          }
+          const again = await axe.run(el, { runOnly: { type: 'rule', values: ['target-size'] } });
+          (again.violations.length ? failing : refocused).push(sel);
+          el.blur();
+          if (prev instanceof HTMLElement && prev !== document.body) prev.focus({ preventScroll: true });
+          window.scrollTo(x, y);
         }
-        return { id: v.id, impact: v.impact, help: v.help, nodes };
-      })
-      .filter((v) => v.nodes.length > 0);
-    return { violations, obscured };
+        nodes = failing;
+      }
+      if (nodes.length) violations.push({ id: v.id, impact: v.impact, help: v.help, nodes });
+    }
+    return { violations, refocused };
   });
-  if (obscured.length)
+  if (refocused.length)
     test.info().annotations.push({
-      type: 'axe target-size, under a fixed/sticky bar',
-      description: obscured.join(', '),
+      type: 'axe target-size, passed once focused (scrolled clear of the sticky bars)',
+      description: refocused.join(', '),
     });
   return violations;
 }

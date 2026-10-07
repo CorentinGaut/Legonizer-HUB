@@ -1,7 +1,7 @@
 /**
  * Engine service for the page: starts the engine Worker on first use (three.js, the BVH, pdf-lib
  * and the importers stay in the Worker chunk, N5) and restarts it when a non-interruptible job is
- * cancelled (parsing a file, building the BVH: ux-spec §6.3).
+ * cancelled (parsing a file, building the BVH; SPEC I11, G1).
  */
 import { createEngineClient } from '../core/worker/browser.ts';
 import { EngineRequestError, type EngineClient, type Pending } from '../core/worker/client.ts';

@@ -4,8 +4,9 @@
     "intro": "Le Legonizer lit les formats 3D Tiles, glTF/GLB, OBJ et CityJSON. Voici comment obtenir l'un d'eux à partir des données dont vous disposez.",
     "citygml": {
       "title": "Depuis CityGML",
-      "body": "Convertissez le CityGML en 3D Tiles avec py3dtilers (l'outil libre de l'équipe VCity), puis déposez le dossier produit, ou un .zip de ce dossier, à l'étape Importer.",
-      "note": "py3dtilers n'est plus maintenu (janvier 2025) ; ses auteurs recommandent py3dtiles, le projet communautaire dont il est issu."
+      "body": "Convertissez vos fichiers CityGML en CityJSON avec citygml-tools, un outil libre et maintenu qui lit CityGML 1.0, 2.0 et 3.0 (il demande Java 17 ou plus récent, ou Docker). Cette commande écrit city.json à côté de city.gml ; déposez city.json à l'étape Importer :",
+      "crop": "Une ville entière est trop lourde pour un navigateur : découpez d'abord votre quartier, en donnant ses coins dans les coordonnées de votre fichier, puis convertissez city__subset.gml :",
+      "note": "py3dtilers, que cette page conseillait auparavant, a été abandonné en janvier 2025, et py3dtiles, vers lequel renvoient ses auteurs, ne lit pas CityGML."
     },
     "osm": {
       "title": "Depuis les bâtiments OpenStreetMap",
@@ -17,7 +18,7 @@
     },
     "qgis": {
       "title": "Depuis QGIS",
-      "body": "Exportez votre scène 3D en OBJ, ou préparez vos bâtiments et convertissez-les en 3D Tiles. Gardez la maquette dans un système de coordonnées projeté en mètres."
+      "body": "Exportez votre scène 3D en OBJ (menu Export de la vue cartographique 3D). Gardez la maquette dans un système de coordonnées projeté en mètres."
     },
     "size": {
       "title": "Restez léger",

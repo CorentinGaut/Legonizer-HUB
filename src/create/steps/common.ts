@@ -58,7 +58,7 @@ export function staleBanner(p: ProjectState, busy: boolean): Raw | '' {
 
 /**
  * The Legonizer table (1 × 2 m) seen from above, to scale (1 unit = 1 cm), with the model at one
- * end (turned when it fits that way), the free part hatched for projected media (components §22).
+ * end (turned when it fits that way), the free part hatched for projected media (SPEC A5).
  */
 export function tableFitSvg(
   platesX: number,
@@ -159,7 +159,7 @@ export function tableFitSvg(
     }`;
 }
 
-/** Integer stepper `[−] value [+]` (components §10). */
+/** Integer stepper `[−] value [+]`. */
 export function stepperInput(o: {
   id: string;
   value: number;
@@ -198,7 +198,7 @@ export function stepperInput(o: {
   </div>`;
 }
 
-/** Shows or clears the inline error of a field (components §10: the field keeps the typed value). */
+/** Shows or clears the inline error of a field (the field keeps the typed value). */
 export function setFieldError(input: HTMLInputElement, message: string | null): void {
   const errId = `${input.id}-err`;
   let err = document.getElementById(errId);

@@ -1,5 +1,5 @@
 /**
- * Home animation timeline (storyboard §1, §4; SPEC §10.1): every property is a pure function of
+ * Home animation timeline (SPEC §6.2, §10.1): every property is a pure function of
  * t mod 28 s, so the loop seam is exact and cycles cannot drift.
  */
 import { describe, expect, it } from 'vitest';
@@ -49,7 +49,7 @@ function expectClose(a: unknown, b: unknown, path = ''): void {
 }
 
 describe('home timeline', () => {
-  it('lasts 28 s (≤ 30 s, storyboard §1)', () => {
+  it('lasts 28 s (≤ 30 s, SPEC §6.2)', () => {
     expect(LOOP).toBe(28);
     expect(CAPTIONS.at(-1)!.end).toBe(LOOP);
   });
@@ -78,7 +78,7 @@ describe('home timeline', () => {
     }
   });
 
-  it('passes through every storyboard keyframe at its time (§2.1)', () => {
+  it('passes through every keyframe at its time', () => {
     for (const key of CAMERA_KEYS) {
       const p = cameraAt(key.t);
       expect(p.target[0]).toBeCloseTo(key.pose.target[0], 9);
@@ -87,7 +87,7 @@ describe('home timeline', () => {
     }
   });
 
-  it('is at the dim, empty frame-0 state from 27.6 s to the seam (§4)', () => {
+  it('is at the dim, empty frame-0 state from 27.6 s to the seam', () => {
     for (const t of [27.6, 27.8, 27.99, 0, 1, 2.9]) {
       expect(projectorPower(t)).toBe(0);
       expect(screenPower(t)).toBe(0);
@@ -118,14 +118,14 @@ describe('home timeline', () => {
     expect(plateSlideOut(0, 15) + PLATES.outDur).toBeCloseTo(27.6, 9);
   });
 
-  it('switches captions at 0, 3, 11, 16, 23 s (storyboard §3) and chapters start there', () => {
+  it('switches captions at 0, 3, 11, 16, 23 s and chapters start there', () => {
     expect(CHAPTER_STARTS).toEqual([0, 3, 11, 16, 23]);
     expect([0, 2.99, 3, 10.99, 11, 15.99, 16, 22.99, 23, 27.99, 28].map(captionIndexAt)).toEqual([
       0, 0, 1, 1, 2, 2, 3, 3, 4, 4, 0,
     ]);
   });
 
-  it('shows the poster frame state at t = 19 s (storyboard §5)', () => {
+  it('shows the poster frame state at t = 19 s (SPEC H10)', () => {
     const p = projectionAt(POSTER_T);
     expect(projectorPower(POSTER_T)).toBe(1);
     expect(p.b).toBe('change-1');

@@ -1,5 +1,5 @@
 /**
- * Create page application (SPEC §7, ux-spec §4.3–§4.4): stepper, step panel, viewport stage, action
+ * Create page application (SPEC §7): stepper, step panel, viewport stage, action
  * bar, hash routing, project menu, autosave and resume. Steps 1–4 live in ./steps, step 5 in
  * ../guide.
  */
@@ -92,7 +92,7 @@ export class CreateApp implements Ctx {
     this.route(true);
   }
 
-  /** Saved project waiting for "Continue" (resume banner, ux-spec §5.1). */
+  /** Saved project waiting for "Continue" (resume banner). */
   get resumeCandidate(): ProjectState | null {
     return this.savedProject;
   }
@@ -450,7 +450,7 @@ export class CreateApp implements Ctx {
     );
   }
 
-  // ------------------------------------------------------------------ autosave (§4.3)
+  // ------------------------------------------------------------------ autosave
 
   private scheduleSave = debounce(() => void this.save(), 600);
 
@@ -472,13 +472,13 @@ export class CreateApp implements Ctx {
     }
   }
 
-  // ------------------------------------------------------------------ project menu (ux-spec §4.2)
+  // ------------------------------------------------------------------ project menu
 
   private mountProjectMenu() {
     const slot = document.getElementById('lz-header-actions');
     if (!slot) return;
     if (this.inPlateMode) {
-      // a plate pass carries one plate, not the project: no project menu (ux-spec §5.5)
+      // a plate pass carries one plate, not the project: no project menu
       slot.innerHTML = '';
       return;
     }
@@ -644,7 +644,7 @@ export class CreateApp implements Ctx {
   }
   private lastRename: string | null = null;
 
-  // ------------------------------------------------------------------ plate mode (QR, OI-4)
+  // ------------------------------------------------------------------ plate mode (QR, SPEC O10)
 
   private inPlateMode = false;
 

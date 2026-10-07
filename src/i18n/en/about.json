@@ -46,8 +46,8 @@
   "links": {
     "udviz": "UD-Viz on GitHub",
     "legonizer": "legonizer on npm",
-    "py3dtilers": "py3dtilers on GitHub",
-    "py3dtiles": "py3dtiles on GitLab"
+    "citygmlTools": "citygml-tools on GitHub",
+    "citygmlToolsDocker": "citygml-tools Docker image"
   },
   "software": {
     "title": "Software and fonts used by this site",

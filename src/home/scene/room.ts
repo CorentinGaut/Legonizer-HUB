@@ -1,5 +1,5 @@
 /**
- * The room and the device (SPEC §2, H3; 3d-look.md §3, §5.2, §7–9): floor and walls, the 1 × 2 m
+ * The room and the device (SPEC §2, H3): floor and walls, the 1 × 2 m
  * table at 0.60 m, the 2.30 m mast with the projector at the top and the 31.5" screen centred at
  * 1.30 m, the room lights, the projector's two SpotLights (layer crossfades) and its light cone. Static parts sharing a material are merged to keep draw calls low.
  */
@@ -79,7 +79,7 @@ function spot(castShadow: boolean, mapSize: number): THREE.SpotLight {
   s.position.set(LENS.x, LENS.y, LENS.z);
   s.target.position.set(LENS.x, LENS.y, 0);
   // z-up world, light looking straight down: the default up is parallel to the view direction and
-  // the projection degenerates (3d-look §7). North (+y) is the texture's up.
+  // the projection degenerates. North (+y) is the texture's up.
   s.shadow.camera.up.set(0, 1, 0);
   s.shadow.focus = SPOT.focus; // vertical fov = angle → the map spans the 1 m table width
   s.shadow.mapSize.set(mapSize * SPOT.aspect, mapSize); // aspect 2 : 1 → the map spans the 2 m length
@@ -171,7 +171,7 @@ export function buildRoom(opts: { shadowSize: number }): Room {
   screen.position.set(0, 0.504, 0.7);
   group.add(screen);
 
-  // lights (3d-look §5.2)
+  // lights
   const hemi = new THREE.HemisphereLight('#a7b0ca', '#3a342e', 1.1);
   const key = new THREE.DirectionalLight('#ffe7c7', 2.4);
   key.position.set(-1.2, -2.6, 3.0);

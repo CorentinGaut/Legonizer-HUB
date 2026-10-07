@@ -177,7 +177,7 @@ describe('PDF build guide (O5) and plate passes (O10)', () => {
     await expect(p).rejects.toMatchObject({ code: 'cancelled' });
   });
 
-  it('pass URLs carry the plate in the fragment, decode back, and respect the QR budget (UI-8)', () => {
+  it('pass URLs carry the plate in the fragment, decode back, and respect the QR budget (SPEC O10)', () => {
     const route = parseGuideRoute('guide/build/B2/3&d=abc_-');
     expect(route).toEqual({ tab: 'build', plate: 'B2', layer: 3, payload: 'abc_-' });
     const url = platePassUrl('https://example.org/legonizer/create.html?x=1#old', 'A1', 'PAYLOAD');
@@ -239,7 +239,7 @@ describe('engine: restore, project file, estimate extras, new exports', () => {
   }
   const area = { cx: SYNTHETIC_CENTRE[0], cy: SYNTHETIC_CENTRE[1], rotationDeg: 0 };
 
-  it('estimate gives fixes, the sampled stud share (UI-17) and per-building data', async () => {
+  it('estimate gives fixes, the sampled share of built-up studs left empty and per-building data', async () => {
     const c = connect();
     const files = [...syntheticBoxesCity(1)].map(([path, data]) => ({ path, data }));
     const summary = await c.request('import', { files }).promise;

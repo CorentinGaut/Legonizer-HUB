@@ -45,7 +45,7 @@ describe('create, exports and errors catalogues', () => {
     for (const k of PDF_MESSAGE_KEYS) expect(all.has(k), k).toBe(true);
   });
 
-  it('UI-16 and UI-6 wording: no "area divided by 8" bound, demo preset named', () => {
+  it('SPEC §12 wording: no "area divided by 8" bound, demo preset named', () => {
     const en = flat('en', 'create');
     expect(en.get('create.guide.bricks.report.body')).not.toMatch(/divided by 8/);
     expect(en.get('create.settings.preset.legacyKeepSmall.name')).toBe(

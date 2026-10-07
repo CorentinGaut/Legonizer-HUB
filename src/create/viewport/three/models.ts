@@ -1,5 +1,5 @@
 /**
- * Scene content builders (docs/ui/3d-look.md §3, §4, §12): the source model ("plaster" massing, with
+ * Scene content builders: the source model ("plaster" massing, with
  * per-building flags for disappearing / outside buildings), the brick model (one InstancedMesh per
  * footprint and state, studs on exposed tops, baseplates with a stud texture), plate labels, stud
  * rulers and brick-level guides.
@@ -168,7 +168,7 @@ export function polygonOutline(
   return lineSegments(pts, color, opacity);
 }
 
-/** Text sprite on a pill (plate labels, 3d-look §12). */
+/** Text sprite on a pill (plate labels). */
 export function textSprite(
   text: string,
   opts: { size: number; fg?: string; bg?: string; font?: string },

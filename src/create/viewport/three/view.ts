@@ -1,5 +1,5 @@
 /**
- * A three.js viewport for the create page and the build guide (docs/ui/3d-look.md §2, §5.1, §10, §12):
+ * A three.js viewport for the create page and the build guide:
  * transparent canvas over the CSS scene gradient, Khronos PBR Neutral tone mapping, sRGB output,
  * studio rig (hemisphere + key light attached to the camera azimuth + fill), contact shadows on a
  * ShadowMaterial ground, orbit controls (Z up), orthographic top view (north up), render on demand.
@@ -59,7 +59,7 @@ export class ThreeView {
   /** Extra per-frame hook (labels, compass). */
   onRender: (() => void) | null = null;
   readonly canvas: HTMLCanvasElement;
-  /** Pixels reserved at the top/bottom for the floating toolbar and legend (UI-9 safe rectangle). */
+  /** Pixels reserved at the top/bottom for the floating toolbar and legend (safe rectangle). */
   safeTop = 60;
   safeBottom = 56;
   shadows: boolean;
@@ -86,7 +86,7 @@ export class ThreeView {
     this.ortho.up.set(0, 1, 0);
     this.camera = this.persp;
 
-    // studio rig (3d-look §5.1)
+    // studio rig
     this.scene.add(new HemisphereLight(new Color('#F4F6FF'), new Color('#A49F96'), 0.95));
     this.key = new DirectionalLight(new Color('#FFF6EA'), 3.1);
     this.key.castShadow = this.shadows;
@@ -307,7 +307,7 @@ export class ThreeView {
 
   render(): void {
     if (this.disposed) return;
-    // key light follows the camera azimuth (3d-look §5.1: keyAz = cameraAz − 75°)
+    // key light follows the camera azimuth (keyAz = cameraAz − 75°)
     const t = this.controls.target;
     const camAz = Math.atan2(this.camera.position.x - t.x, -(this.camera.position.y - t.y));
     const keyAz = camAz - 75 * DEG;

@@ -1,5 +1,5 @@
 /**
- * Step 4 — Generate (SPEC G1–G4, ux-spec §5.4, §6.3, §7.5, mockups/create-4-generate.html):
+ * Step 4 — Generate (SPEC G1–G4):
  * ready, running (stages, bar, elapsed, cancel; shown after 400 ms), done (key figures, histogram,
  * per-plate summary, height grid table), warnings, empty model, error, out of date.
  */
@@ -23,7 +23,7 @@ export function presetName(preset: ReturnType<typeof presetOf>): string {
         : t('create.settings.preset.custom.name');
 }
 
-/** Height grid table of one plate (N3, components §22): rows north → south, columns west → east. */
+/** Height grid table of one plate (SPEC N3): rows north → south, columns west → east. */
 export function heightGridTable(heights: Int32Array, max: number, plate: string): Raw {
   const head: Raw[] = [];
   for (let i = 1; i <= 32; i++) head.push(html`<th scope="col">${i}</th>`);
@@ -624,7 +624,7 @@ export class GenerateStep implements StepView {
     }
   };
 
-  /** Esc cancels when focus is in the progress region (§6.3). */
+  /** Esc cancels when focus is in the progress region. */
   private onKey = (e: KeyboardEvent) => {
     if (e.key === 'Escape' && this.state === 'running' && (e.target as Element).closest('#lz-gen-running')) {
       this.ctx.actions.cancelGenerate();

@@ -202,14 +202,14 @@ export function platePassUrlInfo(
 }
 
 /**
- * Plate pass URL (ux-spec §4.1, §6.4.3): `<base>#guide/build/<plate>/1&d=<payload>`. The fragment is
+ * Plate pass URL (SPEC O10): `<base>#guide/build/<plate>/1&d=<payload>`. The fragment is
  * never sent to a server; opening it shows Plate mode for that plate on any device.
  */
 export function platePassUrl(baseUrl: string, plate: string, payload: string, layer = 1): string {
   return `${baseUrl.replace(/#.*$/, '')}#guide/build/${plate}/${layer}&d=${payload}`;
 }
 
-/** QR budget for printed passes (UI-8): version 15 at ECC M (77 modules, 412 bytes) in a 38 mm square. */
+/** QR budget for printed passes (the scannability threshold of SPEC O10): version 15 at ECC M (77 modules, 412 bytes) in a 38 mm square. */
 export const PASS_MAX_QR_VERSION = 15;
 
 /** Whether a pass URL still fits a scannable printed QR code. */

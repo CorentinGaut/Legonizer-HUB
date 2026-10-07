@@ -1,5 +1,5 @@
 /**
- * Wizard flows (ux-spec §5): import (files, folder, zip, demo, URL, project file), live estimates,
+ * Wizard flows (SPEC §7.1–7.4): import (files, folder, zip, demo, URL, project file), live estimates,
  * generation with progress and cancel, re-packing, restore after a reload, exports.
  */
 import { t } from '../shared/i18n.ts';
@@ -78,7 +78,7 @@ async function fetchBytes(
   return out;
 }
 
-/** Overlap test between the current area and new model bounds (keep the area on replace, §4.3). */
+/** Overlap test between the current area and new model bounds (keep the area on replace). */
 function areaOverlaps(area: Area, params: Params, s: MeshSummary): boolean {
   const half = (Math.max(params.platesX, params.platesY) * 32 * params.scale) / 2;
   const b = s.bounds;
@@ -153,7 +153,7 @@ export class Actions {
       };
       const summary = await this.runImport(files, source, {}, token);
       if (!summary) return;
-      // demo: curated area and suggested settings (I10, OI-1)
+      // demo: curated area and suggested settings (SPEC I10)
       const sug = m.suggested.params;
       this.store.set({
         area: { ...m.defaultArea.area },
@@ -196,7 +196,7 @@ export class Actions {
     if (!summary) return;
     if (!this.store.p.nameEdited)
       this.store.set({ name: label.replace(/\.(zip|glb|gltf|obj|json|city\.json|jsonl)$/i, '') });
-    // keep the files for a reload (ux-spec §4.3), when they fit
+    // keep the files for a reload (SPEC §7), when they fit
     void saveFiles(files).then((stored) => {
       if (this.store.p.source && this.store.p.source.label === label)
         this.store.set({ source: { ...this.store.p.source, stored } });
@@ -649,7 +649,7 @@ export class Actions {
     }
   }
 
-  // ================================================================== estimate (§6.2.3)
+  // ================================================================== estimate (SPEC §7.3 live feedback)
 
   scheduleEstimate = debounce(() => void this.runEstimate(), 120);
   private estimateTimer = 0;
@@ -673,7 +673,7 @@ export class Actions {
     }
   }
 
-  // ================================================================== generate (§6.3)
+  // ================================================================== generate (SPEC G1)
 
   async generate(): Promise<void> {
     const p = this.store.p;
@@ -811,7 +811,7 @@ export class Actions {
     this.scheduleEstimate();
   }
 
-  // ================================================================== re-pack (§6.5)
+  // ================================================================== re-pack (SPEC §7.5.1 part settings)
 
   private repackJob: { cancel(): void } | null = null;
   scheduleRepack = debounce(() => void this.repack(), 300);
@@ -835,7 +835,7 @@ export class Actions {
     }
   }
 
-  // ================================================================== exports (§6.6)
+  // ================================================================== exports (SPEC §7.5.2)
 
   async exportFiles(
     kind: ExportKind,

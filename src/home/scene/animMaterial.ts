@@ -1,6 +1,6 @@
 /**
  * Shader patches for the home animation. Everything moves on the GPU from one `uTime` uniform, so a
- * frame is a pure function of t (storyboard §1) and thousands of bricks cost one draw call.
+ * frame is a pure function of t (SPEC §6.2) and thousands of bricks cost one draw call.
  *
  * Instanced bricks, studs and baseplates carry `aAnim = (mode, t0, t1, unused)`:
  *  - mode 0, brick: falls from 2 brick heights from t0 (ease-out quint), lifts off from t1
