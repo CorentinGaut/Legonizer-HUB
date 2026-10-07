@@ -35,9 +35,9 @@ accessibility tests need `axe-core`: it is not a dependency yet, so they are ski
 
 ```
 index.html, about.html   static pages; English text filled at build time from src/i18n/en
-src/styles/              index.css = fonts.css (self-hosted, UI-1) + tokens.css + components.css
-                         (copies of docs/ui/) + shell.css; about.css
-src/shared/              i18n.ts, shell.ts, theme.ts, icons.ts (+ icons.svg from docs/ui)
+src/styles/              index.css = fonts.css (self-hosted) + tokens.css + components.css
+                         (design tokens and components) + shell.css; about.css
+src/shared/              i18n.ts, shell.ts, theme.ts, icons.ts (+ icons.svg, 68 project icons)
 src/i18n/<en|fr>/<ns>.json  one file per namespace (file name = top-level key)
 src/home/                hero controller, timeline, scene/ (three.js stage, lazy chunk), assets/
 scripts/vite/            Vite plugins: i18n-html (static text), home-model (bricks at build time)
@@ -59,13 +59,13 @@ e2e/                     Playwright specs; playwright.config.ts at the root
   logo, Create / About / Help (help → `about.html#prepare-data`), EN | FR switch, page action
   (*Create your model*; the create page gets an empty `#lz-header-actions` slot for its project
   menu and the full-width header), phone menu sheet, footer with citation, credit, source code,
-  licences, privacy line, theme switch (*Automatic / Light / Dark*, UI-13) and the trademark
+  licences, privacy line, theme switch (*Automatic / Light / Dark*) and the trademark
   disclaimer (N9). It re-renders on `setLocale`.
 - `src/shared/theme.ts`: `getThemeChoice`, `setThemeChoice`, `getEffectiveTheme`, `onThemeChange`
   (3D views re-read scene colours). Pages add the one-line inline script of `index.html` in
   `<head>` to apply a stored theme before the first paint.
 
-**Home animation** (SPEC §6, `docs/ux/storyboard.md`, `docs/ui/3d-look.md`): a 28 s loop where every
+**Home animation** (SPEC §6): a 28 s loop where every
 property is a pure function of `t mod 28` (`src/home/timeline.ts`). The brick model is the H4
 fixture `src/data/home/part-dieu-home.json` packed **at build time by the real packer**
 (`virtual:lz-home-model`; the build fails if the parts differ from the fixture summary): 2,473
@@ -73,7 +73,7 @@ bricks on 5 × 3 plates, dropped layer by layer in build order. Bricks, studs an
 instanced draws animated in the vertex shader (one `uTime` uniform). The projector is a pair of
 `SpotLight`s with `map` textures (crossfades) covering exactly the 2 × 1 m table (2 : 1 frustum);
 the projected layers are drawn with projector parallax so roofs get their own colour; change
-colours are UI-3's `#14B391` / `#B42330` / `#FBE04B`. Building uses, green spaces, tram lines,
+colours are the colour-blind-safe `#14B391` / `#B42330` / `#FBE04B`. Building uses, green spaces, tram lines,
 changes and media cards are illustrative, derived deterministically from the heights (the page and
 the about page say so). Scale figures are smooth one-piece volumes with relaxed poses.
 
@@ -113,13 +113,13 @@ src/guide/
   glyphs.ts guide.css
 ```
 
-- **Wizard (SPEC §7.1–7.4, ux-spec §5–6):** steps 1–4 share one viewport. Step 2 edits the area on
+- **Wizard (SPEC §7.1–7.4):** steps 1–4 share one viewport. Step 2 edits the area on
   a top view rasterized in the Worker (z-buffer of the real triangles): move, resize by whole plates,
   rotate with snaps, draw a new area, pan/zoom, arrow keys, `[`/`]`, Home, Ctrl+Z (50 steps).
-  Settings changes re-run the live estimate (L1 erasure, tallest building, table fit, UI-16/UI-17
-  wording); a result that no longer matches the settings is marked out of date until regenerated.
+  Settings changes re-run the live estimate (L1 erasure, tallest building, table fit, valid lower
+  bound, share of built-up studs left empty); a result that no longer matches the settings is marked out of date until regenerated.
   Every change is saved in IndexedDB; a reload with a step in the URL continues the project.
-- **2D mode (OI-15):** without WebGL 2 (or with `?webgl=0`) every step works with top views,
+- **2D mode (SPEC N2):** without WebGL 2 (or with `?webgl=0`) every step works with top views,
   the 2D layer diagram and the height-grid table; the page says why.
 - **Build guide (SPEC §7.6, O1–O10):** the shelf, the instructions (Enter = done, keypad codes
   `Numpad*`, table mode for a projector or a big screen), progress per plate and per team, plate
@@ -282,18 +282,17 @@ identical (different JPEG encoder and rasterizer). The PNG variant carries a pHY
 with the plate map, shopping list (the shelf on paper, kit per plate), per plate an opener (32 × 32
 height grid, kit, plate-pass QR) and its layer diagrams four per page, the projection layer, plate
 passes four per page, a technical appendix; every page has a running header and footer. It uses the 14 standard PDF fonts (Helvetica,
-Courier) with text mapped to WinAnsi: embedding IBM Plex / Bricolage (UI-11) needs
+Courier) with text mapped to WinAnsi: embedding IBM Plex / Bricolage needs
 `@pdf-lib/fontkit`, which is not a dependency.
 
-**Grey baseplates (UI-5 option).** Light Bluish Gray is BrickLink colour 86 (LEGO Medium Stone
+**Grey baseplates (option).** Light Bluish Gray is BrickLink colour 86 (LEGO Medium Stone
 Grey 194, [colour guide](https://www.bricklink.com/catalogColors.asp)) and Rebrickable colour 71
 ([colors.csv](https://cdn.rebrickable.com/media/downloads/colors.csv.gz)), checked 2026-10-07.
 
 ### Data notes
 
 - Lyon tiles (py3dtilers): each child tile has a translation `transform` in EPSG:3946, and its
-  bounding volume and positions are relative to that transform. This is standard 3D Tiles; it
-  corrects `docs/reference/README.md`, which says they are relative to the root centre. Positions
+  bounding volume and positions are relative to that transform. This is standard 3D Tiles. Positions
   are float32, Z-up, in a node with a Z-up → Y-up matrix that the client's Y-up → Z-up rotation
   cancels. Geometry is a non-indexed triangle soup with one contiguous `_BATCHID` run per building.
 - Licence: Métropole de Lyon publishes its 3D building products under Licence Ouverte 2.0
@@ -311,8 +310,8 @@ Grey 194, [colour guide](https://www.bricklink.com/catalogColors.asp)) and Rebri
 | `fflate` | zip extraction, deflate for plate passes / project heights, PNG zlib; 8 kB, Worker-friendly |
 | dev: `typescript`, `vite`, `vitest`, `fast-check`, `eslint` + `typescript-eslint` + `eslint-config-prettier`, `prettier`, `@types/*`, `globals` | build, tests, lint |
 | dev: `legonizer@1.1.0` (+ its nested three r147), `three-r154` (alias of three 0.154) | parity reference: the exact code and three versions UD-Viz 4.6.1 ran |
-| `intl-messageformat` | ICU plurals and locale number formatting for EN/FR (SPEC N6); the microcopy is written in ICU (`docs/ux/microcopy.en.json`) |
-| `@fontsource-variable/bricolage-grotesque`, `@fontsource/ibm-plex-sans`, `@fontsource/ibm-plex-mono` | self-hosted fonts (UI-1: no request to Google Fonts), OFL-1.1; only latin + latin-ext declared |
+| `intl-messageformat` | ICU plurals and locale number formatting for EN/FR (SPEC N6); the messages in `src/i18n/` are written in ICU |
+| `@fontsource-variable/bricolage-grotesque`, `@fontsource/ibm-plex-sans`, `@fontsource/ibm-plex-mono` | self-hosted fonts (no request to Google Fonts), OFL-1.1; only latin + latin-ext declared |
 | dev: `@playwright/test` | e2e tests, poster/stills rendering (headless Chromium with SwiftShader) |
 | `pdf-lib` | PDF build guide (O5) in the Worker: pure JavaScript, runs in Workers and in Node tests, MIT |
 | `qrcode` (core encoder only, `qrcode/lib/core/qrcode.js`) + dev `@types/qrcode` | plate-pass QR codes (O10), drawn as SVG on screen and as vector squares in the PDF, MIT |

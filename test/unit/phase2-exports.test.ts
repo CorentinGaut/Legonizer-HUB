@@ -111,8 +111,8 @@ describe('legacy calque (O2: calqueTemplate.jpg as UD-Viz rendered it)', () => {
 });
 
 describe('brick glyphs', () => {
-  it('same geometry as the UI reference generator (docs/ui/brick-glyphs/glyphs.json)', () => {
-    const ref = JSON.parse(readFileSync('docs/ui/brick-glyphs/glyphs.json', 'utf8')).glyphs as {
+  it('same geometry as the reference glyphs (test/fixtures/brick-glyphs.json)', () => {
+    const ref = JSON.parse(readFileSync('test/fixtures/brick-glyphs.json', 'utf8')).glyphs as {
       w: number;
       l: number;
       vbw: number;
