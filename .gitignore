@@ -2,7 +2,8 @@ node_modules/
 dist/
 .claude/
 coverage/
-fixtures/
+# Real Lyon tiles fetched by `npm run fixtures:lyon` (root only: test/fixtures/ is versioned)
+/fixtures/
 *.log
 .DS_Store
 /test-results/
