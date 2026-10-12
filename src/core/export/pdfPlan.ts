@@ -4,6 +4,7 @@
  * collect the messages without loading the PDF library.
  */
 import type { PackingResult } from '../packing/pack.ts';
+import { TILES } from '../packing/catalog.ts';
 
 export type PaperSize = 'A4' | 'Letter';
 
@@ -37,13 +38,29 @@ export const PASSES_PER_PAGE = 4;
 /** Plate rows of the "kit per plate" table on one page (continued on the next pages). */
 export const KIT_ROWS_FIRST_PAGE = 18;
 export const KIT_ROWS_PER_PAGE = 46;
+/** Each row of cap-tile slots on the parts page takes the room of this many kit rows. */
+const KIT_ROWS_PER_TILE_ROW = 9;
+
+/** Kit rows on the parts page, after `tileRows` rows of cap-tile slots (6 tile kinds per row). */
+export function kitRowsFirstPage(tileRows: number): number {
+  return Math.max(0, KIT_ROWS_FIRST_PAGE - KIT_ROWS_PER_TILE_ROW * tileRows);
+}
+
+/** Rows of cap-tile slots on the parts page. */
+export function tileSlotRows(counts: Record<string, number>): number {
+  return Math.ceil(TILES.filter((t) => (counts[t.id] ?? 0) > 0).length / 6);
+}
 
 /** Number of pages the renderer will produce. */
-export function pdfPageCount(packing: Pick<PackingResult, 'plates'>, s: PdfSections = ALL_SECTIONS): number {
+export function pdfPageCount(
+  packing: Pick<PackingResult, 'plates'> & Partial<Pick<PackingResult, 'counts'>>,
+  s: PdfSections = ALL_SECTIONS,
+): number {
   const n = packing.plates.length;
+  const first = kitRowsFirstPage(tileSlotRows(packing.counts ?? {}));
   let pages = 0;
   if (s.cover) pages += 2; // cover + technical appendix
-  if (s.shopping) pages += 1 + Math.max(0, Math.ceil((n - KIT_ROWS_FIRST_PAGE) / KIT_ROWS_PER_PAGE));
+  if (s.shopping) pages += 1 + Math.max(0, Math.ceil((n - first) / KIT_ROWS_PER_PAGE));
   for (const p of packing.plates) {
     if (s.plates) pages += 1;
     if (s.layers) pages += Math.ceil(p.layers / LAYERS_PER_PAGE);
@@ -136,6 +153,9 @@ export const PDF_MESSAGE_KEYS = [
   'create.guide.bricks.rows.oneWide',
   'create.guide.bricks.rows.twoWide',
   'create.guide.bricks.rows.baseplates',
+  'create.guide.bricks.rows.tiles',
+  'exports.pdf.tileSize',
+  'exports.pdf.tilesColumn',
   'create.guide.bricks.table.part',
   'create.guide.bricks.table.number',
   'create.guide.bricks.total',

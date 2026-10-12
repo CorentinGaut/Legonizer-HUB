@@ -21,6 +21,10 @@
  * Plate-local (SPEC §7.5.1, O10): a plate's packing depends only on its own heights, the part
  * settings and PACKING_ALGORITHM_VERSION; the bond tie-break only looks at the same plate's layer below.
  *
+ * Smooth cap (`tileCap`): a column of height h that gets a cap (h ≥ 1 for 'roofs', h ≥ 0 for 'all') carries one
+ * tile at layer h + 1. The tile mask of layer k = {H == k − 1} is covered by tiles the same way (no bond
+ * tie-break), after the bricks of layer k. Bricks are packed exactly as without the cap.
+ *
  * Lower bounds per layer: `lowerBound` = Σ components max(⌈area / largest enabled shape fitting the
  * component's bounding box⌉, ⌈boundary vertices / 4⌉) — the second because every vertex of the
  * component's outline (convex or reflex, holes included) is a corner of at least one brick and a
@@ -31,7 +35,14 @@ import { STUDS_PER_PLATE, type HeightMap, type PlacedBrick } from '../types.ts';
 import { throwIfAborted } from '../util/errors.ts';
 import { runAsync, runSync, type Steps } from '../util/steps.ts';
 import type { ProgressFn } from '../util/progress.ts';
-import { BASEPLATE, enabledShapes, type InventoryOptions, type Shape } from './catalog.ts';
+import {
+  BASEPLATE,
+  tileCapsColumn,
+  enabledShapes,
+  tileShapes,
+  type InventoryOptions,
+  type Shape,
+} from './catalog.ts';
 import { plateName } from './plates.ts';
 import { PACKING_ALGORITHM_VERSION } from '../version.ts';
 
@@ -53,6 +64,9 @@ export interface LayerStats {
   layer: number;
   area: number;
   bricks: number;
+  /** Cap tiles placed at this layer (area = tiled studs). */
+  tiles: number;
+  tileArea: number;
   lowerBound: number;
   lowerBound8: number;
   bond: number;
@@ -63,19 +77,28 @@ export interface PlateSummary {
   col: number;
   /** Plate row counted from the south (0-based). */
   southRow: number;
+  /** Part id → quantity (bricks and tiles). */
   counts: Record<string, number>;
+  /** Bricks only. */
   bricks: number;
+  /** Cap tiles. */
+  tiles: number;
+  /** Highest layer used (a cap tile adds one). */
   layers: number;
 }
 
 export interface PackingResult {
+  /** Placed parts: bricks and, with a cap, tiles (see `isTile`). */
   bricks: PlacedBrick[];
-  /** Part id → quantity (bricks only). */
+  /** Part id → quantity (bricks and tiles; baseplates apart). */
   counts: Record<string, number>;
   baseplates: { id: string; quantity: number };
   plates: PlateSummary[];
   layers: LayerStats[];
+  /** Bricks only. */
   total: number;
+  /** Cap tiles. */
+  tiles: number;
   lowerBound: number;
   lowerBound8: number;
   bond: number;
@@ -523,6 +546,8 @@ export function* packHeightMapSteps(hm: HeightMap, opts: PackingOptions = {}): S
   const t0 = performance.now();
   if (hm.cols % N || hm.rows % N) throw new Error('height map size must be a multiple of 32');
   const shapes = enabledShapes(opts);
+  const cap = opts.tileCap ?? 'none';
+  const tShapes = cap === 'none' ? [] : tileShapes(opts);
   const beamWidth = opts.beamWidth ?? 12;
   const bothOrders = opts.bothOrders ?? true;
   const px = hm.cols / N,
@@ -533,7 +558,8 @@ export function* packHeightMapSteps(hm: HeightMap, opts: PackingOptions = {}): S
   const layers: LayerStats[] = [];
   let lowerBound = 0,
     lowerBound8 = 0,
-    bond = 0;
+    bond = 0,
+    tiles = 0;
   const totalPlates = px * py;
   let done = 0;
   for (let row = py - 1; row >= 0; row--) {
@@ -549,9 +575,35 @@ export function* packHeightMapSteps(hm: HeightMap, opts: PackingOptions = {}): S
           if (v > hmax) hmax = v;
         }
       }
-      const summary: PlateSummary = { plate: name, col, southRow: row, counts: {}, bricks: 0, layers: hmax };
+      let capped = false;
+      for (let c = 0; c < N * N && !capped; c++) capped = tileCapsColumn(cap, heights[c]!);
+      const top = hmax + (capped ? 1 : 0);
+      const summary: PlateSummary = {
+        plate: name,
+        col,
+        southRow: row,
+        counts: {},
+        bricks: 0,
+        tiles: 0,
+        layers: top,
+      };
+      const place = (p: Placement, k: number) => {
+        const b: PlacedBrick = {
+          plate: name,
+          layer: k,
+          x: p.x,
+          y: p.y,
+          w: p.shape.w,
+          d: p.shape.d,
+          rotation: p.shape.rotation,
+          partId: p.shape.part.id,
+        };
+        bricks.push(b);
+        counts[b.partId] = (counts[b.partId] ?? 0) + 1;
+        summary.counts[b.partId] = (summary.counts[b.partId] ?? 0) + 1;
+      };
       let below: Int32Array | null = null;
-      for (let k = 1; k <= hmax; k++) {
+      for (let k = 1; k <= top; k++) {
         const mask = new Uint32Array(N);
         for (let y = 0; y < N; y++) {
           let r = 0;
@@ -564,6 +616,8 @@ export function* packHeightMapSteps(hm: HeightMap, opts: PackingOptions = {}): S
           layer: k,
           area: maskArea(mask),
           bricks: 0,
+          tiles: 0,
+          tileArea: 0,
           lowerBound: 0,
           lowerBound8: 0,
           bond: 0,
@@ -578,22 +632,30 @@ export function* packHeightMapSteps(hm: HeightMap, opts: PackingOptions = {}): S
             const id = bricks.length;
             for (let y = p.y; y < p.y + p.shape.d; y++)
               for (let x = p.x; x < p.x + p.shape.w; x++) ids[y * N + x] = id;
-            const b: PlacedBrick = {
-              plate: name,
-              layer: k,
-              x: p.x,
-              y: p.y,
-              w: p.shape.w,
-              d: p.shape.d,
-              rotation: p.shape.rotation,
-              partId: p.shape.part.id,
-            };
-            bricks.push(b);
-            counts[b.partId] = (counts[b.partId] ?? 0) + 1;
-            summary.counts[b.partId] = (summary.counts[b.partId] ?? 0) + 1;
+            place(p, k);
           }
           stats.bricks += r.placements.length;
           stats.bond += r.bond;
+        }
+        if (capped) {
+          const tmask = new Uint32Array(N);
+          for (let y = 0; y < N; y++) {
+            let r = 0;
+            for (let x = 0; x < N; x++) {
+              const h = heights[y * N + x]!;
+              if (h === k - 1 && tileCapsColumn(cap, h)) r |= 1 << x;
+            }
+            tmask[y] = r >>> 0;
+          }
+          stats.tileArea = maskArea(tmask);
+          for (const comp of components(tmask)) {
+            const r = packComponent(comp, tShapes, null, beamWidth, bothOrders, k % 2 === 0);
+            r.placements.sort((a, b) => a.y - b.y || a.x - b.x);
+            for (const p of r.placements) place(p, k);
+            stats.tiles += r.placements.length;
+          }
+          summary.tiles += stats.tiles;
+          tiles += stats.tiles;
         }
         lowerBound += stats.lowerBound;
         lowerBound8 += stats.lowerBound8;
@@ -614,11 +676,23 @@ export function* packHeightMapSteps(hm: HeightMap, opts: PackingOptions = {}): S
     baseplates: { id: BASEPLATE.id, quantity: totalPlates },
     plates,
     layers,
-    total: bricks.length,
+    total: bricks.length - tiles,
+    tiles,
     lowerBound,
     lowerBound8,
     bond,
     algorithmVersion: PACKING_ALGORITHM_VERSION,
     timeMs: performance.now() - t0,
   };
+}
+
+/** Tallest column of a plate in bricks (`layers` minus the cap-tile layer). */
+export function plateBrickHeight(p: Pick<PlateSummary, 'layers' | 'tiles'>): number {
+  return p.tiles ? p.layers - 1 : p.layers;
+}
+
+/** Physical height of the tallest point in cm: 9.6 mm per brick, + 3.2 mm when the model has a tile cap. */
+export function tallestCm(packing: Pick<PackingResult, 'plates' | 'tiles'>): number {
+  const bricks = packing.plates.reduce((a, p) => Math.max(a, plateBrickHeight(p)), 0);
+  return (bricks * 9.6 + (packing.tiles ? 3.2 : 0)) / 10;
 }

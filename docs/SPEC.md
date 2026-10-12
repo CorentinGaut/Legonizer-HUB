@@ -279,6 +279,13 @@ The CSV says *how high* each stud is; the build guide says *which bricks to buy 
 - **Plate-local**: the packing of plate P depends only on the heights inside P, the part settings and the algorithm
   version (the running-bond tie-break looks only at P's lower layers). Required by the plate passes (O10).
 - Output: list of placed bricks `{plate, layer, x, y, w, d, rotation, partId}` + counts per part, per plate, total.
+- **Smooth tile cap** (option, part settings and step 3; default off): *On roofs* puts one layer of white flat tiles
+  (⅓ brick, no studs: `3070b` 1×1, `3069b` 1×2, `63864` 1×3, `2431` 1×4, `6636` 1×6, `4162` 1×8, `3068b` 2×2,
+  `26603` 2×3, `87079` 2×4, `69729` 2×6) on every column of height ≥ 1; *Whole model* also tiles the bare baseplate.
+  A column of height h gets its tile at layer h + 1; the tile mask of each layer is packed like the bricks (exact
+  cover, plate-local, max part length applies, 1×1 tile always on, no bond tie-break). Heights, CSV and brick packing
+  are unchanged. Tiles appear in every parts list, shop export, instruction step, PDF, LDraw (8 LDU on the layer
+  below) and plate pass (bits 14–15 of the part mask).
 
 #### 7.5.2 Outputs
 
@@ -386,6 +393,7 @@ Order: UX and the core engine (dev, phase 1) in parallel → UI (from UX) → de
 | 2026-10-07 | The public site keeps the name "Legonizer". The site licence is LGPL-2.1. The manual checks (LeoCAD, usability test, real-GPU performance, French review, real-tile parity outside CI) are accepted as they stand |
 | 2026-10-07 | Data preparation: CityGML → CityJSON with citygml-tools replaces py3dtilers (development discontinued in January 2025; py3dtiles, its suggested successor, does not read CityGML). CityJSON 2.0 accepted |
 | 2026-10-07 | The PDF guide embeds the site fonts (IBM Plex Sans/Mono, Bricolage Grotesque) via `@pdf-lib/fontkit`, loaded lazily with the PDF code; phone controls never sit under the sticky bars (axe `target-size` fully enforced) |
+| 2026-10-12 | Optional smooth tile cap (none / on roofs / whole model), stored with the part settings (`inventory.tileCap`); it adds ⅓ brick on top and never changes the heights (§7.5.1) |
 
 ## 13. Open questions (non-blocking)
 

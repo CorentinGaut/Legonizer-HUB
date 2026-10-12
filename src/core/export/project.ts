@@ -6,7 +6,7 @@
  * the inputs can be re-checked against the hashes to regenerate the heights themselves.
  */
 import type { Area, HeightMap, Params } from '../types.ts';
-import { normalizeInventory, type InventoryOptions } from '../packing/catalog.ts';
+import { normalizeInventory, type TileCapMode, type InventoryOptions } from '../packing/catalog.ts';
 import type { FileMap } from '../import/fileMap.ts';
 import { decodeHeights, encodeHeights } from '../util/heightCodec.ts';
 import { APP_VERSION, HEIGHTMAP_ALGORITHM_VERSION, PACKING_ALGORITHM_VERSION } from '../version.ts';
@@ -32,7 +32,8 @@ export interface ProjectFile {
   importOptions: Record<string, unknown>;
   area: Area;
   params: Params;
-  inventory: { enabled: string[]; maxLength: number };
+  /** `tileCap` (smooth tile cap) is written only when set; absent = 'none'. */
+  inventory: { enabled: string[]; maxLength: number; tileCap?: TileCapMode };
   heightMap: { cols: number; rows: number; encoding: 'rle-deflate-base64url'; data: string };
 }
 
@@ -75,7 +76,7 @@ export function createProject(args: {
     importOptions: args.importOptions ?? {},
     area: { ...args.area },
     params: { ...args.params },
-    inventory: normalizeInventory(args.inventory),
+    inventory: projectInventory(args.inventory),
     heightMap: {
       cols: args.heightMap.cols,
       rows: args.heightMap.rows,
@@ -86,6 +87,11 @@ export function createProject(args: {
   if (args.title) p.title = args.title;
   if (args.demo) p.demo = args.demo;
   return p;
+}
+
+function projectInventory(inv?: InventoryOptions): ProjectFile['inventory'] {
+  const { tileCap, ...rest } = normalizeInventory(inv);
+  return tileCap === 'none' ? rest : { ...rest, tileCap };
 }
 
 export function serializeProject(p: ProjectFile): string {
@@ -124,6 +130,7 @@ export function parseProject(text: string): ProjectFile {
     throw new Error('Project file has no valid height matrix');
   }
   if (!p.params || !p.area || !Array.isArray(p.inputs)) throw new Error('Project file is incomplete');
+  if (p.inventory) p.inventory = projectInventory(p.inventory);
   return p;
 }
 

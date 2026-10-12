@@ -124,7 +124,9 @@
     "shoppingTitle": "Shopping list",
     "plateSummary": "{layers, plural, one {# layer} other {# layers}} · {bricks} bricks",
     "cancel": "Cancel",
-    "preparingShort": "Preparing the PDF…"
+    "preparingShort": "Preparing the PDF…",
+    "tileSize": "{size} tile",
+    "tilesColumn": "Tiles"
   },
   "bricklink": {
     "title": "BrickLink wanted list",

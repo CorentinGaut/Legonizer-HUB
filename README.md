@@ -2,7 +2,8 @@
 
 Turns a 3D city model into a buildable model of white bricks on 32 × 32 baseplates: the legacy
 height matrix (CSV, identical to UD-Viz 4.6.1 + `legonizer@1.1.0`), plus a parts list, building
-instructions, shop exports and a projection layer. Static site, everything runs in the browser.
+instructions, shop exports and a projection layer. Optionally, a layer of smooth flat tiles caps the roofs or the
+whole model. Static site, everything runs in the browser.
 Specification: [`docs/SPEC.md`](docs/SPEC.md).
 
 Status: **phase 2** — core engine (phase 1); shared shell, home page with its 3D animation and

@@ -53,7 +53,10 @@ export async function saveProject(p: ProjectState): Promise<void> {
 export async function loadProject(): Promise<ProjectState | null> {
   try {
     const p = (await tx<ProjectState>('readonly', (s) => s.get('project'))) ?? null;
-    return p && p.version === 1 ? p : null;
+    if (!p || p.version !== 1) return null;
+    // states saved before the tile cap existed
+    if (p.inventory && !p.inventory.tileCap) p.inventory = { ...p.inventory, tileCap: 'none' };
+    return p;
   } catch {
     return null;
   }

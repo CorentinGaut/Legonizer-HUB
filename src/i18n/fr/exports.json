@@ -124,7 +124,9 @@
     "shoppingTitle": "Liste d'achat",
     "plateSummary": "{layers, plural, one {# couche} other {# couches}} · {bricks} briques",
     "cancel": "Annuler",
-    "preparingShort": "Préparation du PDF…"
+    "preparingShort": "Préparation du PDF…",
+    "tileSize": "{size} lisse",
+    "tilesColumn": "Lisses"
   },
   "bricklink": {
     "title": "Liste de souhaits BrickLink",

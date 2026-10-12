@@ -11,7 +11,9 @@
  * - Colour 15 = White (LDConfig.ldr).
  *
  * Mapping (no mirroring): LDraw +X = east, +Z = north, −Y = up. A brick of layer k sits with its
- * top face at y = −24·k; a part whose long side runs north is rotated 90° about Y (X → +Z).
+ * top face at y = −24·k; a cap tile of layer k (8 LDU high, origin at its top face too) sits on the
+ * bricks of layer k − 1, top face at y = −24·(k − 1) − 8. A part whose long side runs north is rotated
+ * 90° about Y (X → +Z).
  * One `0 STEP` per layer so the builder apps show layer-by-layer steps.
  */
 import { STUDS_PER_PLATE, type PlacedBrick } from '../types.ts';
@@ -21,6 +23,7 @@ import { parsePlateName } from '../packing/plates.ts';
 
 const LDU_PER_STUD = 20;
 const LDU_PER_BRICK = 24;
+const LDU_PER_TILE = 8;
 const IDENTITY = '1 0 0 0 1 0 0 0 1';
 const ROT_NORTH = '0 0 -1 0 1 0 1 0 0'; // part X axis → +Z (north)
 
@@ -34,7 +37,7 @@ function brickLine(b: PlacedBrick, offX: number, offZ: number): string {
   if (!part) throw new Error(`unknown part ${b.partId}`);
   const x = (b.x + b.w / 2) * LDU_PER_STUD + offX;
   const z = (b.y + b.d / 2) * LDU_PER_STUD + offZ;
-  const y = -LDU_PER_BRICK * b.layer;
+  const y = part.kind === 'tile' ? -LDU_PER_BRICK * (b.layer - 1) - LDU_PER_TILE : -LDU_PER_BRICK * b.layer;
   const m = b.rotation === 90 && part.width !== part.length ? ROT_NORTH : IDENTITY;
   return `1 ${COLOR_WHITE.ldraw} ${x} ${y} ${z} ${m} ${part.ldrawFile}`;
 }

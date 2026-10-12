@@ -152,7 +152,7 @@ export class Stage {
         this.renderChrome();
         return;
       }
-      const sig = `bricks:${r.generatedAt}:${r.packing.total}:${this.ghost}:${this.labels}:${p.baseplateColour}`;
+      const sig = `bricks:${r.generatedAt}:${r.packing.total}:${r.packing.tiles ?? 0}:${this.ghost}:${this.labels}:${p.baseplateColour}`;
       if (sig === this.builtFor) return;
       const firstBuild = !this.builtFor.startsWith('bricks:' + r.generatedAt);
       this.builtFor = sig;

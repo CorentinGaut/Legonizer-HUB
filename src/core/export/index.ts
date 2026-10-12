@@ -51,6 +51,8 @@ export {
   baseplateGlyph,
   brickIsoGlyph,
   brickTopGlyph,
+  tileIsoGlyph,
+  tileTopGlyph,
   glyphSvg,
   glyphSvgContent,
   type Glyph,

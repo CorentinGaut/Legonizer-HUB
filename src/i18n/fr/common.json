@@ -79,7 +79,10 @@
     "number": "pièce {id}",
     "numberToConfirm": "numéro de pièce à confirmer",
     "quantity": "×{count}",
-    "quantityWithSize": "{count} × {size}"
+    "quantityWithSize": "{count} × {size}",
+    "tileCompact": "{w}×{d} lisse",
+    "tileName": "Plate lisse {w} × {d}",
+    "tileSpoken": "plate lisse {w} par {d}"
   },
   "time": {
     "justNow": "à l'instant",
