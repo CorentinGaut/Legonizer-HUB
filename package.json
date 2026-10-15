@@ -4,7 +4,7 @@
   "private": true,
   "description": "Legonizer website: turn a 3D city model into a buildable model of white bricks (height matrix, parts list, instructions, exports).",
   "type": "module",
-  "license": "LGPL-2.1-only",
+  "license": "GPL-3.0-or-later",
   "engines": {
     "node": ">=20"
   },

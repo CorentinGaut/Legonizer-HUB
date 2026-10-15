@@ -382,7 +382,16 @@ test.describe('about page', () => {
     await page.goto('/about.html#prepare-data');
     await expect(page.getByRole('heading', { level: 1 })).toHaveText('About the Legonizer');
     await expect(page.getByRole('heading', { level: 2, name: 'Prepare your data' })).toBeInViewport();
-    await expect(page.locator('#licences')).toContainText('legonizer 1.1.0 (core algorithm): ISC licence.');
+    await expect(page.locator('#licences')).toContainText(
+      'legonizer 1.1.0 (core algorithm, reimplemented by this site): GPL-3.0 licence.',
+    );
+    await expect(page.locator('#licences')).toContainText(
+      "This site's source code: GNU GPL licence, version 3 or later.",
+    );
+    await expect(page.getByRole('link', { name: 'Read the licence' })).toHaveAttribute(
+      'href',
+      'https://www.gnu.org/licenses/gpl-3.0.html',
+    );
     await expect(page.locator('#licences')).toContainText('UD-Viz Legonizer widget 4.6.1: LGPL-2.1 licence.');
     await expect(page.locator('#licences')).toContainText('Research paper and figures: CC0 1.0.');
     await expect(page.locator('#licences')).toContainText(

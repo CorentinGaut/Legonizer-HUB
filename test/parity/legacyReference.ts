@@ -12,6 +12,10 @@
  *
  * Only the b3dm/GLB byte layout is read by a small reader below (py3dtiles content: one node, one
  * non-indexed primitive, float32 attributes).
+ *
+ * Ported code keeps its licence (THIRD_PARTY_NOTICES.md): iTowns, Copyright 2016 iTowns Contributors,
+ * MIT licence; UD-Viz, Copyright of University of Lyon 2012 - 2023, LGPL-2.1, used here under the
+ * GPL-3.0-or-later as LGPL-2.1 section 3 allows.
  */
 import { THREE154 as T, legonizer } from '../helpers/threeVersions.ts';
 
