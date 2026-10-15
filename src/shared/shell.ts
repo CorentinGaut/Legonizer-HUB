@@ -17,6 +17,7 @@ import '../styles/index.css';
 import { getLocale, onLocaleChange, setLocale, t, type Locale } from './i18n.ts';
 import { ensureIconSprite, icon } from './icons.ts';
 import { getThemeChoice, setThemeChoice, type ThemeChoice } from './theme.ts';
+import lirisLogoUrl from './assets/logo-liris.svg';
 
 export type ShellPage = 'home' | 'create' | 'about';
 
@@ -37,6 +38,8 @@ export const DEVELOPERS = [
   { name: 'Corentin Gautier', url: 'https://corentingaut.github.io/' },
 ] as const;
 export const UDVIZ_URL = 'https://github.com/VCityTeam/UD-Viz';
+/** The research lab: its logo follows the site's in the home page header. */
+export const LIRIS_URL = 'https://liris.cnrs.fr/';
 /** Source code of this site; another repository can be set with VITE_SOURCE_URL at build time. */
 export const SOURCE_URL: string =
   (import.meta.env?.VITE_SOURCE_URL as string | undefined) || 'https://github.com/CorentinGaut/Legonizer-HUB';
@@ -108,6 +111,11 @@ function renderHeader(el: HTMLElement, opts: ShellOptions): void {
     <a class="lz-logo" href="${PAGE_HREF.home}" aria-label="${escapeHtml(t('header.homeLink'))}">
       ${LOGO_MARK}<span class="lz-logo__word">${escapeHtml(t('common.productName'))}</span>
     </a>
+    ${
+      opts.page === 'home'
+        ? `<a class="lz-lab-logo" href="${LIRIS_URL}"><img src="${lirisLogoUrl}" width="264" height="119" alt="LIRIS" /></a>`
+        : ''
+    }
     <nav class="lz-nav" aria-label="${escapeHtml(t('header.nav.label'))}">${navHtml(opts.page, helpHref)}</nav>
     <span class="lz-header__spacer"></span>
     ${langHtml()}

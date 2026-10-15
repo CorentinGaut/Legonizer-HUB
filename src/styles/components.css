@@ -303,6 +303,24 @@
     backdrop-filter: saturate(1.4) blur(10px);
     border-bottom: 1px solid var(--lz-color-border);
   }
+  /* the research lab's logo, after the site's: it keeps its own colours on a light plate, so its
+     dark blue also reads in the dark theme */
+  .lz-lab-logo {
+    display: inline-flex;
+    align-items: center;
+    padding: var(--lz-space-1) var(--lz-space-2);
+    border-radius: var(--lz-radius-sm);
+    background: #ffffff;
+  }
+  .lz-lab-logo img {
+    display: block;
+    width: auto;
+    height: 1.75rem;
+  }
+  .lz-lab-logo:focus-visible {
+    outline: none;
+    box-shadow: var(--lz-focus-ring);
+  }
   .lz-header__inner {
     display: flex;
     align-items: center;
@@ -401,6 +419,18 @@
     }
     .lz-header__inner {
       gap: var(--lz-space-3);
+    }
+    /* phones: a smaller lab logo, so the site's name stays whole down to 360 px */
+    .lz-lab-logo {
+      padding: var(--lz-space-1);
+    }
+    .lz-lab-logo img {
+      height: 1.25rem;
+    }
+  }
+  @media (max-width: 359px) {
+    .lz-lab-logo {
+      display: none;
     }
   }
 
