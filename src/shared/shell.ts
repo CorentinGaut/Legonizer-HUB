@@ -31,12 +31,15 @@ export interface ShellOptions {
 
 /** Research paper on HAL (SPEC §0, H7). */
 export const PAPER_URL = 'https://hal.science/hal-04924304';
-/** Development credit: the name ends the sentence in every locale, so it follows `footer.developedBy`. */
-export const DEVELOPER = { name: 'Jey Puget Gil', url: 'https://hemoreg.me' } as const;
+/** Development credit, main contributors: the names end the sentence in every locale, so they follow `footer.developedBy`. */
+export const DEVELOPERS = [
+  { name: 'Jey Puget Gil', url: 'https://hemoreg.me' },
+  { name: 'Corentin Gautier', url: 'https://corentingaut.github.io/' },
+] as const;
 export const UDVIZ_URL = 'https://github.com/VCityTeam/UD-Viz';
 /** Source code of this site; another repository can be set with VITE_SOURCE_URL at build time. */
 export const SOURCE_URL: string =
-  (import.meta.env?.VITE_SOURCE_URL as string | undefined) || 'https://github.com/JPugetGil/Legonizer-demo';
+  (import.meta.env?.VITE_SOURCE_URL as string | undefined) || 'https://github.com/CorentinGaut/Legonizer-HUB';
 
 export const PAGE_HREF = {
   home: './',
@@ -147,7 +150,7 @@ function renderFooter(el: HTMLElement): void {
       <p lang="fr">${escapeHtml(t('footer.citation'))}</p>
       <p class="u-mt-2"><a class="lz-link" href="${PAPER_URL}">${escapeHtml(t('footer.paperLink'))}</a></p>
       <p class="u-mt-4">${escapeHtml(t('footer.credit'))}</p>
-      <p class="u-mt-2">${escapeHtml(t('footer.developedBy'))} <a class="lz-link" href="${DEVELOPER.url}">${DEVELOPER.name}</a>.</p>
+      <p class="u-mt-2">${escapeHtml(t('footer.developedBy'))} ${DEVELOPERS.map((d) => `<a class="lz-link" href="${d.url}">${d.name}</a>`).join(` ${escapeHtml(t('footer.and'))} `)}.</p>
     </div>
     <div class="lz-footer__links">
       <a class="lz-link" href="${escapeHtml(SOURCE_URL)}">${escapeHtml(t('footer.sourceCode'))}</a>

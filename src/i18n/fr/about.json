@@ -41,7 +41,8 @@
   },
   "credits": {
     "title": "Crédits",
-    "developedBy": "Site développé pour le plaisir par"
+    "developedBy": "Site développé pour le plaisir par",
+    "and": "et"
   },
   "links": {
     "udviz": "UD-Viz sur GitHub",

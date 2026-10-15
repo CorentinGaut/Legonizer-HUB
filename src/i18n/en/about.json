@@ -41,7 +41,8 @@
   },
   "credits": {
     "title": "Credits",
-    "developedBy": "Website developed for fun by"
+    "developedBy": "Website developed for fun by",
+    "and": "and"
   },
   "links": {
     "udviz": "UD-Viz on GitHub",
