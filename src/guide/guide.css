@@ -1,0 +1,484 @@
+/*
+ * Build guide (step 5) and plate mode: page layout, Table mode, 2D layer diagrams, export card
+ * extras and the phone's bottom bars.
+ */
+@layer lz.pages {
+  .lz-guide-host {
+    flex: 1;
+  }
+  .guide-head {
+    background: var(--lz-color-surface);
+    border-bottom: 1px solid var(--lz-color-border);
+  }
+  .guide-head .lz-tabs {
+    padding: 0 var(--lz-gutter);
+    border-bottom: 0;
+    margin-top: var(--lz-space-2);
+  }
+  .guide-body {
+    padding: var(--lz-space-5) var(--lz-gutter) var(--lz-space-8);
+    display: flex;
+    flex-direction: column;
+    gap: var(--lz-space-5);
+  }
+  #lz-guide-panel:focus {
+    outline: none;
+  }
+  #lz-guide-banners:empty {
+    display: none;
+  }
+  .lz-guide h1[tabindex='-1']:focus,
+  .lz-guide h2[tabindex='-1']:focus {
+    outline: none;
+  }
+
+  /* get the bricks */
+  .bricks-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(18rem, 26rem);
+    gap: var(--lz-space-6);
+    align-items: start;
+  }
+  .bricks-grid .lz-viewport {
+    aspect-ratio: 1;
+    position: sticky;
+    top: calc(var(--lz-header-h) + var(--lz-space-4));
+  }
+  .shelf-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--lz-space-3);
+  }
+  .lz-scope {
+    border: 0;
+    padding: 0;
+    margin: 0;
+    --lz-cluster-gap: var(--lz-space-3);
+  }
+  .lz-slot__qty.is-updating {
+    color: var(--lz-color-text-disabled);
+  }
+  .lz-slot__buy {
+    color: var(--lz-color-text-muted);
+  }
+  .lz-parts-table {
+    margin-top: var(--lz-space-2);
+  }
+  .buy-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--lz-space-4);
+  }
+  .lz-buy-options {
+    --lz-cluster-gap: var(--lz-space-6);
+  }
+  .lz-inline-fieldset {
+    border: 0;
+    padding: 0;
+    margin: 0;
+  }
+  .lz-inline-fieldset > legend {
+    float: left;
+    margin-right: var(--lz-space-3);
+  }
+  .lz-param--narrow {
+    max-width: 22rem;
+  }
+
+  /* build */
+  .build-grid {
+    display: grid;
+    grid-template-columns: var(--lz-guide-side-w) minmax(0, 1fr);
+    gap: var(--lz-space-5);
+    align-items: start;
+  }
+  .build-side {
+    display: flex;
+    flex-direction: column;
+    gap: var(--lz-space-5);
+  }
+  .build-main {
+    display: flex;
+    flex-direction: column;
+    gap: var(--lz-space-3);
+    min-width: 0;
+  }
+  .build-main .lz-viewport {
+    height: min(58vh, 34rem);
+  }
+  .lz-build-chrome {
+    display: contents;
+  }
+  .lz-vp-text {
+    padding: 0 4px;
+    align-self: center;
+  }
+  .lz-step-title {
+    font-size: var(--lz-text-xl);
+  }
+  .list-twin {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: var(--lz-space-5);
+  }
+  .list-twin figure {
+    margin: 0;
+  }
+  .newlist td,
+  .newlist th {
+    white-space: nowrap;
+  }
+  .lz-legend--inline {
+    position: static;
+    box-shadow: none;
+  }
+  .lz-allbuilt.is-celebrating {
+    animation: lz-built 900ms var(--lz-ease-brick) 1;
+  }
+  @keyframes lz-built {
+    0% {
+      box-shadow: 0 0 0 0 var(--lz-color-success-icon);
+    }
+    100% {
+      box-shadow: 0 0 0 12px transparent;
+    }
+  }
+  .lz-keys-table kbd {
+    white-space: nowrap;
+  }
+  .lz-dialog--wide {
+    width: min(100% - 2rem, 44rem);
+  }
+
+  /* 2D layer diagram (also in Table mode without WebGL) */
+  .lz-layer {
+    width: 100%;
+    height: auto;
+    max-height: 70vh;
+  }
+  .lz-layer__plate {
+    fill: var(--lz-color-surface);
+    stroke: var(--lz-color-border-strong);
+    stroke-width: 1;
+  }
+  .lz-layer__stud {
+    fill: none;
+    stroke: var(--lz-color-border);
+    stroke-width: 0.6;
+  }
+  .lz-layer__below {
+    fill: var(--lz-brick-ghost);
+  }
+  .lz-layer__below--old {
+    opacity: 0.5;
+  }
+  .lz-layer__brick rect {
+    fill: var(--lz-brick-new-top);
+    stroke: var(--lz-brick-new-edge);
+    stroke-width: 1.8;
+  }
+  .lz-layer__brick path {
+    fill: none;
+    stroke: var(--lz-brick-new-edge);
+    stroke-width: 0.8;
+  }
+  .lz-layer__brick.is-dim rect {
+    fill: var(--lz-color-surface);
+    stroke: var(--lz-color-border-strong);
+  }
+  .lz-layer__brick.is-dim path {
+    stroke: var(--lz-color-border-strong);
+  }
+  .lz-layer__ruler text {
+    font: 500 9px var(--lz-font-mono);
+    fill: var(--lz-color-text-muted);
+  }
+  .lz-layer__ruler path {
+    stroke: var(--lz-color-border-strong);
+  }
+
+  /* set up the table */
+  .table-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: var(--lz-space-6);
+    align-items: start;
+  }
+  .table-grid h1 .lz-tab__num,
+  .table-grid h2 .lz-tab__num {
+    display: inline-grid;
+    margin-right: 6px;
+  }
+  .calque {
+    position: relative;
+    border: 1px solid var(--lz-color-border);
+    border-radius: var(--lz-radius-md);
+    overflow: hidden;
+    background: #fff;
+    min-height: 12rem;
+    display: grid;
+    place-items: center;
+  }
+  .calque img {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+  .checklist {
+    display: flex;
+    flex-direction: column;
+    gap: var(--lz-space-2);
+  }
+  .lz-tablefit--large {
+    max-width: 34rem;
+  }
+  .lz-tablefit--large text {
+    font-size: 5.5px;
+  }
+  .lz-tablefit--large .plate-labels text {
+    font-size: 7px;
+  }
+  .calque img {
+    max-height: 32rem;
+    object-fit: contain;
+  }
+  .lz-option--flat {
+    border-top: 0;
+    padding-top: 0;
+  }
+
+  /* downloads */
+  .dl-groups {
+    display: flex;
+    flex-direction: column;
+    gap: var(--lz-space-6);
+  }
+  .dl-group {
+    display: grid;
+    gap: var(--lz-space-3);
+  }
+  .lz-export__progress {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: var(--lz-space-1);
+  }
+  .lz-export__status--error {
+    color: var(--lz-color-danger-text);
+  }
+  .lz-dl-all {
+    align-items: flex-end;
+    min-width: 16rem;
+  }
+
+  /* 2D model map in the shelf viewport */
+  .lz-hm2d--inline {
+    position: absolute;
+    inset: var(--lz-space-3);
+  }
+
+  /* Table mode: full screen on the device's screen (24 px text, 40 px header, 16 px glyphs) */
+  .tm {
+    position: fixed;
+    inset: 0;
+    z-index: var(--lz-z-tablemode);
+    display: grid;
+    grid-template-rows: auto 1fr auto auto auto;
+    gap: var(--lz-space-4);
+    padding: var(--lz-space-6);
+    --lz-glyph-unit: var(--lz-glyph-unit-large);
+    font-size: 1.5rem;
+  }
+  .tm:focus {
+    outline: none;
+  }
+  .tm__head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: var(--lz-space-5);
+  }
+  .tm__title {
+    font-family: var(--lz-font-display);
+    font-weight: 760;
+    font-size: 2.5rem;
+    line-height: 1.1;
+    color: var(--lz-color-room-text);
+    margin: 0;
+  }
+  .tm__sub {
+    font-size: 1.5rem;
+    color: var(--lz-color-room-muted);
+    font-family: var(--lz-font-sans);
+    font-weight: 500;
+  }
+  .tm__view {
+    position: relative;
+    border-radius: var(--lz-radius-lg);
+    overflow: hidden;
+    background: linear-gradient(#24262c, #141518);
+    min-height: 0;
+  }
+  .tm__view .lz-layer {
+    position: absolute;
+    inset: 0;
+    margin: auto;
+    height: 100%;
+  }
+  .tm__callout {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    gap: var(--lz-space-5);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    font-size: 1.5rem;
+    color: var(--lz-color-room-text);
+  }
+  .tm__callout li {
+    display: flex;
+    align-items: flex-end;
+    gap: var(--lz-space-2);
+  }
+  .tm__controls {
+    display: flex;
+    justify-content: center;
+    gap: var(--lz-space-4);
+    transition: opacity var(--lz-duration-base) var(--lz-ease-standard);
+  }
+  .tm.is-idle .tm__controls,
+  .tm.is-idle .tm__exit {
+    opacity: 0;
+  }
+  .tm__keys {
+    margin: 0;
+    padding: var(--lz-space-3) var(--lz-space-4);
+    border-radius: var(--lz-radius-md);
+    background: rgb(255 255 255 / 0.08);
+    font-size: 1.5rem;
+    color: var(--lz-color-room-text);
+    opacity: 0;
+    transition: opacity var(--lz-duration-base) var(--lz-ease-standard);
+  }
+  .tm.show-keys .tm__keys {
+    opacity: 1;
+  }
+  .tm .lz-platemap {
+    width: 18rem;
+  }
+  .tm .lz-plate-tile {
+    min-height: 0;
+    padding: 6px;
+  }
+
+  /* plate mode (phones) */
+  .lz-plate-mode__head {
+    padding: var(--lz-space-4) var(--lz-gutter);
+    display: flex;
+    flex-direction: column;
+    gap: var(--lz-space-3);
+  }
+
+  @media (max-width: 1023px) {
+    .bricks-grid,
+    .table-grid,
+    .buy-grid,
+    .build-grid {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .bricks-grid .lz-viewport {
+      position: relative;
+      top: auto;
+      aspect-ratio: 4 / 3;
+    }
+    .build-side {
+      order: 2;
+    }
+  }
+  @media (max-width: 767px) {
+    .lz-tabbar {
+      display: grid;
+    }
+    .guide-head .lz-tabs {
+      display: none;
+    }
+    .lz-summary-strip .sep,
+    .lz-summary-strip .opt {
+      display: none;
+    }
+    .build-main .lz-viewport {
+      height: 55vh;
+    }
+    .lz-callout__list {
+      flex-direction: row;
+      overflow-x: auto;
+      /* contains the visually hidden labels (position: absolute): without it they escape the
+         scroller and widen the page, which a phone then zooms out */
+      position: relative;
+    }
+    .lz-callout__item {
+      grid-template-columns: auto auto;
+      min-width: max-content;
+    }
+    .lz-callout__part {
+      display: none;
+    }
+    .lz-stepctl__row .lz-btn--hide-sm,
+    .lz-keyhint {
+      display: none;
+    }
+    /* the table diagram is ~280 px wide here: 5.5 viewBox units would print 7 px text */
+    .lz-tablefit--large text,
+    .lz-tablefit--large .plate-labels text {
+      font-size: 8.5px;
+    }
+    /* phones: the layer ticks on their own line, Previous and Next side by side below */
+    .lz-stepctl__row .lz-scrubber {
+      order: -1;
+      flex-basis: 100%;
+    }
+    .lz-stepctl__row [data-k='prev'],
+    .lz-stepctl__row [data-k='next'] {
+      flex: 1;
+      justify-content: center;
+    }
+    /* bottom bars (see create.css): the tab bar, and in the build tab the Done button that sticks
+       above it, so it stays at hand while the instructions scroll */
+    :root:has(.lz-tabbar) {
+      --lz-tabbar-cover: calc(var(--lz-tabbar-h) + 1px + env(safe-area-inset-bottom)); /* + top border */
+      --lz-dock-h: var(--lz-tabbar-cover);
+    }
+    :root:has(.lz-tabbar):has(.lz-stepctl__done) {
+      --lz-dock-h: calc(var(--lz-tabbar-cover) + var(--lz-space-4) + var(--lz-control-h-lg));
+    }
+    .lz-stepctl__done {
+      position: sticky;
+      bottom: calc(var(--lz-tabbar-cover) + var(--lz-space-4));
+      z-index: 2;
+    }
+    /* plate mode has no tab bar under it */
+    :root:has(.lz-plate-mode .lz-stepctl__done) {
+      --lz-dock-h: calc(var(--lz-space-4) + var(--lz-control-h-lg));
+    }
+    .lz-plate-mode .lz-stepctl__done {
+      bottom: var(--lz-space-4);
+    }
+    .lz-shelf__slots {
+      --lz-glyph-unit: var(--lz-glyph-unit-compact);
+    }
+    .list-twin {
+      grid-template-columns: 1fr;
+    }
+    .guide-body {
+      padding-bottom: 6rem;
+    }
+    .lz-dl-all {
+      align-items: stretch;
+      min-width: 0;
+      width: 100%;
+    }
+  }
+}

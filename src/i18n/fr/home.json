@@ -1,0 +1,168 @@
+{
+  "meta": {
+    "title": "Legonizer · Transformer une maquette 3D de ville en maquette de briques",
+    "description": "Transformez une maquette 3D de ville en maquette de briques blanches à construire, sur laquelle projeter des données urbaines et autour de laquelle discuter. Gratuit, dans votre navigateur, avec liste des pièces, instructions et listes d'achat."
+  },
+  "hero": {
+    "regionLabel": "Animation : construction d'une maquette de quartier en briques et projection de données dessus",
+    "headline": "D'une maquette 3D de ville à une maquette en briques à construire, à projeter et à discuter.",
+    "lead": "Transformez vos données 3D urbaines en briques blanches, avec les pièces à acheter, des instructions pas à pas et un calque de projection.",
+    "ctaPrimary": "Créer votre maquette",
+    "ctaDemo": "Essayer l'exemple",
+    "posterAlt": "Une maquette d'un quartier en briques blanches sur une table : des îlots avec leurs cours, une gare et quelques tours. Un vidéoprojecteur sur un mât colore certains bâtiments en vert, rouge et jaune pour montrer ce qui a été construit, démoli ou modifié, et projette une image à côté de la maquette. Trois personnes se tiennent autour de la table ; l'une tient un pavé numérique. Un écran sur le mât affiche une frise chronologique.",
+    "pause": "Mettre l'animation en pause",
+    "play": "Lire l'animation",
+    "playReducedMotion": "Lire l'animation",
+    "readStory": "Lire l'histoire en texte",
+    "chaptersLabel": "Chapitres de l'animation",
+    "chapter": "Chapitre {n} sur 5 : {title}",
+    "webglFallback": "L'animation a besoin de graphismes 3D, désactivés dans ce navigateur. Voici l'histoire en images et en mots."
+  },
+  "animation": {
+    "captions": {
+      "c1": "Une table, un vidéoprojecteur, un écran.",
+      "c2": "Le Legonizer transforme une maquette 3D de ville en maquette de briques.",
+      "c3": "Projetez des données urbaines sur les briques blanches.",
+      "c4": "Voyez comment le quartier a changé, et parlez-en ensemble.",
+      "c5": "Construisez la vôtre."
+    },
+    "chapterTitles": {
+      "c1": "Le décor",
+      "c2": "Construire",
+      "c3": "Projeter",
+      "c4": "Discuter",
+      "c5": "À vous"
+    },
+    "transcript": {
+      "title": "L'histoire de l'animation",
+      "extra": "Dans le calque des changements, le vert signifie construit, le rouge démoli et le jaune modifié."
+    },
+    "legend": {
+      "housing": "Logements",
+      "offices": "Bureaux",
+      "shops": "Commerces et services",
+      "public": "Équipements publics",
+      "vegetation": "Espaces verts",
+      "tram": "Lignes de tram",
+      "built": "Construit",
+      "demolished": "Démoli",
+      "modified": "Modifié"
+    }
+  },
+  "what": {
+    "title": "Une maquette en briques de votre ville, prête à construire",
+    "body": "Le Legonizer transforme une maquette 3D de ville en maquette de briques blanches sur des plaques de base carrées de 32 × 32 tenons. Il vous donne tout ce qu'il faut pour la construire : la liste des briques à acheter, des instructions de montage pas à pas et un calque de projection pour votre vidéoprojecteur.",
+    "imageModelAlt": "Un quartier construit en briques blanches sur des plaques de base grises.",
+    "imageProjectionAlt": "Des données colorées projetées sur une maquette en briques blanches.",
+    "imageScreenAlt": "Un écran montrant le même quartier en 3D."
+  },
+  "why": {
+    "title": "Pourquoi des briques, et pourquoi projeter dessus ?",
+    "intro": "Une maquette physique réunit les gens autour d'une table. Une maquette numérique peut montrer des données, des changements et le temps. Une maquette augmentée combine les deux : un vidéoprojecteur affiche des données urbaines sur les briques pendant qu'un écran montre la ville en 3D.",
+    "together": {
+      "title": "Autour d'une table",
+      "body": "Tout le monde regarde la même maquette et peut la montrer du doigt. Il est plus facile de parler d'un lieu ensemble."
+    },
+    "tangible": {
+      "title": "On peut la toucher",
+      "body": "On tourne autour de la maquette, on se penche et on reconnaît sa rue, même sans savoir lire une carte."
+    },
+    "white": {
+      "title": "Des briques blanches qui font écran",
+      "body": "Le vidéoprojecteur éclaire les briques blanches avec les usages des bâtiments, les espaces verts ou les lignes de tram, à leur place exacte."
+    },
+    "modular": {
+      "title": "Modulaire, réutilisable, ludique",
+      "body": "Démontez-la et construisez un autre quartier, ou le même à une autre échelle. La construire ensemble fait partie du plaisir."
+    }
+  },
+  "how": {
+    "title": "Comment ça marche",
+    "import": {
+      "title": "1. Importez une maquette 3D de ville",
+      "body": "Utilisez notre exemple ou votre propre fichier : 3D Tiles, glTF, OBJ ou CityJSON. Tout reste sur votre ordinateur."
+    },
+    "area": {
+      "title": "2. Choisissez la zone et l'échelle",
+      "body": "Dessinez le quartier voulu et voyez quelle place il prendra sur la table avant de commencer."
+    },
+    "build": {
+      "title": "3. Construisez-la, projetez dessus",
+      "body": "Obtenez la liste des pièces, des instructions pas à pas, des listes d'achat et le calque de projection."
+    },
+    "cta": "Créer votre maquette"
+  },
+  "whatYouGet": {
+    "title": "Ce que vous obtenez",
+    "shelf": {
+      "title": "Une étagère de briques",
+      "body": "Chaque brique nécessaire, dessinée à l'échelle, avec les quantités et les références."
+    },
+    "instructions": {
+      "title": "Des instructions 3D",
+      "body": "Plaque par plaque, couche par couche. Fonctionne sur un téléphone à la table."
+    },
+    "pdf": {
+      "title": "Un guide imprimable",
+      "body": "Un plan des plaques, une grille des hauteurs et un schéma pour chaque couche."
+    },
+    "shop": {
+      "title": "Des listes d'achat",
+      "body": "Prêtes à importer sur BrickLink ou Rebrickable."
+    },
+    "projection": {
+      "title": "Un calque de projection",
+      "body": "Une vue de dessus de votre maquette pour aligner le vidéoprojecteur et dessiner vos propres calques de données."
+    },
+    "data": {
+      "title": "Des fichiers de données",
+      "body": "La hauteur de chaque tenon (CSV), un modèle 3D pour les outils LDraw et un fichier de projet pour reprendre plus tard."
+    }
+  },
+  "who": {
+    "title": "Pour qui",
+    "facilitators": {
+      "title": "Animateurs d'ateliers et musées",
+      "body": "Construisez un quartier pour un atelier public, une exposition ou une maison du projet."
+    },
+    "planners": {
+      "title": "Urbanistes et chercheurs",
+      "body": "Réalisez la maquette d'une zone précise à une échelle précise, avec des réglages reproductibles."
+    },
+    "teachers": {
+      "title": "Enseignants, élèves et makers",
+      "body": "Découvrez votre ville en la construisant, à partir d'une démo prête à l'emploi."
+    }
+  },
+  "useCase": {
+    "title": "Cas d'usage : un atelier sur un quartier qui change",
+    "intro": "Prenez un quartier qui a changé au fil des ans : des tours construites près de la gare, des îlots démolis ou rénovés. Voici comment un groupe en atelier peut utiliser le Legonizer pour en parler.",
+    "build": {
+      "title": "Construire",
+      "body": "Le groupe construit le quartier en briques blanches, une plaque de base par équipe, en suivant les instructions."
+    },
+    "project": {
+      "title": "Projeter",
+      "body": "Le vidéoprojecteur montre l'usage de chaque bâtiment, les espaces verts et les lignes de tram, directement sur les briques."
+    },
+    "compare": {
+      "title": "Comparer",
+      "body": "L'écran montre les versions précédentes du quartier. Le vidéoprojecteur colore les bâtiments qui ont changé : vert pour construit, rouge pour démoli, jaune pour modifié."
+    },
+    "discuss": {
+      "title": "Discuter",
+      "body": "Des images et des documents apparaissent à côté de la maquette. Un pavé numérique passe de main en main pour changer de calque et de version."
+    },
+    "cta": "Essayer l'exemple"
+  },
+  "credits": {
+    "title": "Crédits",
+    "research": "Le Legonizer est issu de recherches sur les maquettes physiques augmentées de villes menées par C. Le Bihan Gautier, J. Delanoy et G. Gesquière, équipe VCity, laboratoire LIRIS (CNRS, Université de Lyon).",
+    "paperLabel": "Lire l'article sur HAL",
+    "paperCitation": "Représentation de l'évolution urbaine à travers une maquette tangible de territoires. Journées Françaises de l'Informatique Graphique (JFIG), Strasbourg, octobre 2024. hal-04924304.",
+    "udviz": "Il prolonge le widget Legonizer d'UD-Viz, le framework libre de l'équipe VCity pour les données urbaines.",
+    "udvizLink": "UD-Viz sur GitHub",
+    "data": "Données de démonstration : générées par le Legonizer, aucune donnée réelle.",
+    "illustrative": "Le quartier de l'animation est inventé, comme les usages des bâtiments, espaces verts, lignes de tram, changements et images qui y sont montrés. La maquette en briques est un vrai résultat : notre propre chaîne de traitement a transformé ce quartier en briques."
+  }
+}

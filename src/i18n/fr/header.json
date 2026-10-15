@@ -1,0 +1,18 @@
+{
+  "skipToContent": "Aller au contenu principal",
+  "homeLink": "Accueil Legonizer",
+  "nav": {
+    "label": "Principal",
+    "create": "Créer",
+    "about": "À propos",
+    "help": "Aide"
+  },
+  "language": {
+    "label": "Langue",
+    "en": "English",
+    "fr": "Français"
+  },
+  "menu": "Menu",
+  "closeMenu": "Fermer le menu",
+  "cta": "Créer votre maquette"
+}

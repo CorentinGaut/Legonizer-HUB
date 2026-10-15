@@ -1,0 +1,21 @@
+{
+  "skipToContent": "Aller au contenu principal",
+  "skipToStep": "Aller au contenu de l'étape",
+  "dialogClose": "Fermer la boîte de dialogue",
+  "required": "obligatoire",
+  "announce": {
+    "importStage": "{stage}.",
+    "generationProgress": "Génération : {percent} %.",
+    "generationFailed": "Génération interrompue : {reason}.",
+    "resultStale": "La maquette en briques n'est plus à jour.",
+    "stepChanged": "Étape {n} sur {total} : {name}."
+  },
+  "viewport": {
+    "import": "Vue 3D de la maquette importée",
+    "area": "Vue de dessus de la maquette avec la zone à convertir",
+    "settings": "Vue 3D des bâtiments de la zone, avec les niveaux de briques",
+    "generate": "Vue 3D de la maquette en briques",
+    "build": "Vue 3D de la plaque {plate}, couche {layer}",
+    "description": "Une version texte de cette vue est disponible : {link}."
+  }
+}

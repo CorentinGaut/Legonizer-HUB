@@ -1,0 +1,572 @@
+/*
+ * Create page (steps 1–4): page layout, the plan view, the project menu and the bottom bars.
+ * Layer `lz.pages` so component and utility layers keep their order (the @layer statement at the
+ * top of src/styles/components.css).
+ */
+@layer lz.pages {
+  /* ------------------------------------------------------------------ shell */
+  body:has(#lz-create) {
+    background: var(--lz-color-bg);
+  }
+  .lz-create {
+    display: flex;
+    flex-direction: column;
+    min-height: calc(100vh - var(--lz-header-h));
+  }
+  .lz-create__main {
+    flex: 1;
+    min-height: calc(100vh - var(--lz-header-h) - var(--lz-stepper-h) - var(--lz-actionbar-h));
+  }
+  .lz-create__main[hidden],
+  .lz-guide-host[hidden],
+  .lz-actionbar[hidden] {
+    display: none;
+  }
+  .lz-stage[hidden] {
+    display: none;
+  }
+  @media (min-width: 1024px) {
+    .lz-stage > .lz-viewport {
+      min-height: 28rem;
+    }
+  }
+  @media (max-width: 1023px) {
+    .lz-stage > .lz-viewport {
+      min-height: 0;
+    }
+  }
+  @media (max-width: 767px) {
+    .lz-vp-toolbar {
+      flex-wrap: wrap;
+      row-gap: var(--lz-space-2);
+    }
+    /* the groups wrap too: "Top view · 3D view · Draw new area · Fit model" is wider than a phone */
+    .lz-vp-group {
+      flex-wrap: wrap;
+      max-width: 100%;
+    }
+    /* the area is chosen on the map: give it more of the screen than the shared 42vh */
+    .lz-create[data-step='area'] .lz-stage {
+      height: 55vh;
+    }
+    .lz-vp-toolbar kbd {
+      display: none;
+    }
+    .lz-vp-toolbar .lz-switch {
+      font-size: var(--lz-text-xs);
+    }
+    .lz-vp-bottom .lz-legend {
+      max-width: 58%;
+      font-size: var(--lz-text-xs);
+    }
+    .lz-scalebar {
+      max-width: 30vw;
+    }
+  }
+  /* ------------------------------------------------------------------ bottom bars (WCAG 2.4.11)
+     --lz-dock-h is the height the sticky bars cover at the bottom of the viewport: the action bar
+     here, the guide's tab bar and Done button in guide.css. The bars are sticky in the flow, so the
+     end of the content is never under them; toasts sit above them. When keyboard focus,
+     scrollIntoView or a #fragment brings a control into view, its scroll-margin keeps the dock's
+     height free below it (as the page's scroll-padding would, WCAG technique C43). Not
+     scroll-padding: it would also apply to the bars' own controls, which never leave the bottom
+     of the screen, so focusing one would scroll the page by half a screen. */
+  :root:has(.lz-actionbar:not([hidden])) {
+    --lz-dock-h: var(--lz-actionbar-h);
+  }
+  * {
+    scroll-margin-bottom: calc(var(--lz-dock-h, 0px) + var(--lz-space-4));
+  }
+  .lz-actionbar,
+  .lz-actionbar *,
+  .lz-tabbar,
+  .lz-tabbar *,
+  .lz-stepctl__done,
+  .lz-stepctl__done * {
+    scroll-margin-bottom: 0;
+  }
+  .lz-toast-region {
+    bottom: calc(var(--lz-dock-h, 0px) + var(--lz-space-4));
+  }
+  .lz-actionbar__spacer {
+    width: 6rem;
+  }
+  .lz-actionbar__status {
+    margin: 0;
+    min-height: 1.5em;
+    font-size: var(--lz-text-sm);
+    color: var(--lz-color-text-muted);
+  }
+  .lz-autosave {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--lz-space-1);
+  }
+  .lz-autosave--error {
+    color: var(--lz-color-warning-text);
+  }
+  .lz-panel h1[tabindex='-1']:focus,
+  .lz-guide h1[tabindex='-1']:focus {
+    outline: none;
+  }
+  .lz-alert--busy {
+    font-size: var(--lz-text-sm);
+  }
+  .lz-steps-menu {
+    display: grid;
+    gap: var(--lz-space-2);
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  .lz-step.is-busy .lz-step__marker,
+  li.is-busy .lz-step__marker {
+    box-shadow: 0 0 0 2px var(--lz-color-accent);
+  }
+
+  /* ------------------------------------------------------------------ project menu (header slot) */
+  .lz-project {
+    position: relative;
+  }
+  .lz-project__btn {
+    /* a long project name must not push the shell's logo and menu button off a phone screen */
+    max-width: min(22rem, 50vw);
+    min-width: 0;
+  }
+  .lz-project__label {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .lz-project__btn > .lz-icon:first-child {
+    display: none;
+  }
+  /* phones: the header has room for the logo, one button and the menu only; the project button
+     shows a folder icon and keeps its full name for assistive technology */
+  @media (max-width: 767px) {
+    .lz-project__btn > .lz-icon:first-child {
+      display: inline-block;
+    }
+    .lz-project__label {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      margin: -1px;
+      clip: rect(0 0 0 0);
+      overflow: hidden;
+    }
+    .lz-project__btn {
+      position: relative;
+    }
+  }
+  .lz-menu {
+    position: absolute;
+    right: 0;
+    top: calc(100% + var(--lz-space-1));
+    z-index: var(--lz-z-dropdown);
+    min-width: 16rem;
+    margin: 0;
+    padding: var(--lz-space-1);
+    list-style: none;
+    background: var(--lz-color-surface-raised);
+    border: 1px solid var(--lz-color-border);
+    border-radius: var(--lz-radius-md);
+    box-shadow: var(--lz-shadow-3);
+  }
+  .lz-menu[hidden] {
+    display: none;
+  }
+  .lz-menu button {
+    display: flex;
+    width: 100%;
+    min-height: 2.5rem;
+    align-items: center;
+    padding: 0 var(--lz-space-3);
+    border: 0;
+    border-radius: var(--lz-radius-sm);
+    background: transparent;
+    color: var(--lz-color-text);
+    font: inherit;
+    font-size: var(--lz-text-sm);
+    text-align: left;
+    cursor: pointer;
+  }
+  .lz-menu button:hover,
+  .lz-menu button:focus-visible {
+    background: var(--lz-color-surface-hover);
+  }
+  .lz-menu button:focus-visible {
+    outline: 2px solid var(--lz-color-focus);
+    outline-offset: -2px;
+  }
+  .lz-menu button[disabled] {
+    color: var(--lz-color-text-disabled);
+    cursor: not-allowed;
+  }
+  .lz-menu button.is-danger {
+    color: var(--lz-color-danger-text);
+  }
+
+  /* ------------------------------------------------------------------ step 1 */
+  .lz-demo-card:not(:has(.lz-demo-card__thumb)):not(.lz-demo-card--compact) {
+    grid-template-columns: 1fr;
+  }
+  .lz-param > .lz-stepper-input,
+  .lz-param > .lz-input--num {
+    justify-self: start;
+  }
+  .lz-panel.is-dragover {
+    outline: 2px dashed var(--lz-color-accent);
+    outline-offset: -8px;
+  }
+  .lz-privacy {
+    --lz-cluster-gap: var(--lz-space-2);
+    flex-wrap: nowrap;
+    align-items: flex-start;
+  }
+  .lz-privacy .lz-icon {
+    color: var(--lz-color-success-icon);
+    margin-top: 2px;
+  }
+  .lz-formats {
+    padding-left: 2.6rem;
+  }
+  .lz-success-title {
+    --lz-cluster-gap: var(--lz-space-2);
+  }
+  .lz-success-title .lz-icon,
+  .lz-generated .lz-icon {
+    color: var(--lz-color-success-icon);
+  }
+  .lz-generated {
+    --lz-cluster-gap: var(--lz-space-1);
+  }
+  .lz-link--button {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--lz-space-1);
+    padding: 0;
+    border: 0;
+    background: none;
+    color: var(--lz-color-accent-text);
+    font: inherit;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    cursor: pointer;
+  }
+  .lz-link--button:hover {
+    text-decoration-thickness: 2px;
+  }
+
+  /* ------------------------------------------------------------------ step 2: inputs fit the 424 px panel
+     (the "Centre Y (north)" field would be clipped at 1440 px) */
+  .lz-coords {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--lz-space-3);
+  }
+  .lz-coords .lz-field {
+    min-width: 0;
+  }
+  .lz-coords .lz-input input {
+    width: 100%;
+  }
+  .lz-coords__help {
+    grid-column: 1 / -1;
+    margin-top: calc(-1 * var(--lz-space-1));
+  }
+  .lz-coords .lz-field:last-child {
+    grid-column: 1 / -1;
+  }
+  @media (max-width: 380px) {
+    .lz-coords {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+  .lz-keep-ground {
+    display: flex;
+    align-items: center;
+    gap: var(--lz-space-1);
+  }
+
+  /* ------------------------------------------------------------------ step 3 */
+  .lz-plates-row {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: var(--lz-space-2);
+  }
+  .lz-tip {
+    position: relative;
+    display: inline-flex;
+  }
+  .lz-tip .lz-tooltip {
+    display: none;
+    left: 0;
+    top: calc(100% + 4px);
+    width: max-content;
+  }
+  .lz-tip:hover .lz-tooltip,
+  .lz-tip:focus-within .lz-tooltip {
+    display: block;
+  }
+  .lz-estimates {
+    display: flex;
+    flex-direction: column;
+    gap: var(--lz-space-1);
+    transition: opacity var(--lz-duration-fast) var(--lz-ease-standard);
+  }
+  .lz-estimates.is-updating {
+    opacity: 0.55;
+  }
+  .lz-badge--plain {
+    text-transform: none;
+    letter-spacing: 0;
+  }
+  .lz-option__why {
+    padding-left: 1.6rem;
+  }
+  .lz-advanced__note {
+    padding: var(--lz-space-3) 0;
+  }
+
+  /* ------------------------------------------------------------------ step 4 */
+  .lz-grid-wrap {
+    overflow: auto;
+    max-height: 34rem;
+    border: 1px solid var(--lz-color-border);
+    border-radius: var(--lz-radius-md);
+  }
+  .lz-table-wrap {
+    overflow-x: auto;
+  }
+  .lz-select--sm {
+    min-height: 2rem;
+  }
+  .lz-histogram__bar[data-zero='true'] {
+    box-shadow: inset 0 0 0 1px var(--lz-color-border-strong);
+  }
+
+  /* ------------------------------------------------------------------ viewport */
+  .lz-viewport[data-busy='true'] .lz-viewport__canvas {
+    opacity: 0.45;
+  }
+  .lz-vp-banner--top {
+    top: var(--lz-space-3);
+  }
+  .lz-toast--inline {
+    margin: 0 auto;
+    width: fit-content;
+    animation: none;
+  }
+  .lz-vp-label--busy {
+    background: var(--lz-color-surface-raised);
+    border-color: var(--lz-color-border);
+    color: var(--lz-color-text);
+  }
+  .lz-bbox-label {
+    position: absolute;
+    z-index: 2;
+    transform: translate(-50%, -50%);
+    padding: 2px 8px;
+    border-radius: var(--lz-radius-sm);
+    background: var(--lz-color-surface-raised);
+    border: 1px solid var(--lz-color-border);
+    font: 600 var(--lz-text-xs) / 1.4 var(--lz-font-mono);
+    box-shadow: var(--lz-shadow-1);
+    pointer-events: none;
+    white-space: nowrap;
+  }
+  .lz-hm2d {
+    position: absolute;
+    inset: 5.5rem 1rem 4.5rem;
+    display: grid;
+    place-items: center;
+  }
+  .lz-hm2d svg {
+    max-width: 100%;
+    max-height: 100%;
+    width: auto;
+    height: 100%;
+  }
+  .lz-viewport:fullscreen {
+    border-radius: 0;
+  }
+
+  /* plan view (step 2, 2D mode) */
+  .lz-plan {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    touch-action: none;
+    cursor: grab;
+  }
+  .lz-plan[data-drag='pan'] {
+    cursor: grabbing;
+  }
+  .lz-plan[data-draw='true'] {
+    cursor: crosshair;
+  }
+  .lz-plan__raster,
+  .lz-plan__overlay {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+  .lz-plan__overlay {
+    overflow: visible;
+  }
+  .lz-plan .lz-area .body {
+    fill: var(--lz-viz-area-fill);
+    stroke: var(--lz-viz-area-stroke);
+    stroke-width: 2.4;
+    cursor: move;
+  }
+  .lz-plan[data-draw='true'] .lz-area .body {
+    cursor: crosshair;
+  }
+  .lz-plan .lz-area:focus {
+    outline: none;
+  }
+  .lz-plan .lz-area:focus-visible .body {
+    stroke: var(--lz-color-focus);
+    stroke-width: 4;
+  }
+  .lz-plan .lz-area .grid {
+    fill: none;
+    stroke: var(--lz-viz-plate-grid);
+    stroke-width: 1.5;
+    stroke-dasharray: 6 4;
+    pointer-events: none;
+  }
+  .lz-plan .lz-area .label {
+    font-family: var(--lz-font-display);
+    font-weight: 760;
+    fill: var(--lz-color-accent-text);
+    paint-order: stroke;
+    stroke: var(--lz-color-surface);
+    stroke-width: 3px;
+    pointer-events: none;
+  }
+  .lz-plan .lz-area .north {
+    font: 700 10px var(--lz-font-sans);
+    fill: var(--lz-color-text);
+    pointer-events: none;
+  }
+  .lz-plan .lz-area .dim {
+    font: 500 11px var(--lz-font-mono);
+    fill: var(--lz-color-text);
+    paint-order: stroke;
+    stroke: var(--lz-color-surface);
+    stroke-width: 3px;
+    pointer-events: none;
+  }
+  .lz-plan .lz-area .stem {
+    stroke: var(--lz-viz-area-stroke);
+    stroke-width: 1.5;
+  }
+  .lz-plan .lz-area .handle {
+    fill: var(--lz-viz-area-handle);
+    stroke: var(--lz-viz-area-stroke);
+    stroke-width: 2;
+    pointer-events: none;
+  }
+  .lz-plan .lz-area .hit {
+    fill: transparent;
+    cursor: pointer;
+  }
+  .lz-plan .lz-area .hit[data-h='n'],
+  .lz-plan .lz-area .hit[data-h='s'] {
+    cursor: ns-resize;
+  }
+  .lz-plan .lz-area .hit[data-h='e'],
+  .lz-plan .lz-area .hit[data-h='w'] {
+    cursor: ew-resize;
+  }
+  .lz-plan .lz-area .hit[data-h='ne'],
+  .lz-plan .lz-area .hit[data-h='sw'] {
+    cursor: nesw-resize;
+  }
+  .lz-plan .lz-area .hit[data-h='nw'],
+  .lz-plan .lz-area .hit[data-h='se'] {
+    cursor: nwse-resize;
+  }
+  .lz-plan .lz-area .hit[data-h='rotate'] {
+    cursor: grab;
+  }
+  .lz-plan .lz-area .handle--move {
+    pointer-events: auto;
+    cursor: move;
+  }
+  .lz-plan .sampled {
+    fill: none;
+    stroke: var(--lz-viz-sampled-stroke);
+    stroke-width: 1.6;
+    stroke-dasharray: 7 5;
+    pointer-events: none;
+  }
+  .lz-plan .included {
+    fill: none;
+    stroke: var(--lz-viz-included-whole);
+    stroke-width: 2;
+    stroke-dasharray: 5 3;
+    pointer-events: none;
+  }
+  .lz-plan .disappear {
+    fill: url(#lz-plan-hatch);
+    stroke: var(--lz-viz-disappear);
+    stroke-width: 1;
+    pointer-events: none;
+  }
+  .lz-plan .hatch-bg {
+    fill: #f3e3df;
+  }
+  .lz-plan .hatch-line {
+    stroke: var(--lz-viz-disappear);
+    stroke-width: 2;
+  }
+  .lz-plan .tallest circle,
+  .lz-plan .tallest path {
+    fill: none;
+    stroke: var(--lz-viz-tallest);
+    stroke-width: 1.5;
+  }
+  .lz-plan .tallest text,
+  .lz-plan .live {
+    font: 500 12px var(--lz-font-sans);
+    fill: var(--lz-color-text);
+    paint-order: stroke;
+    stroke: var(--lz-color-surface);
+    stroke-width: 3px;
+  }
+  .lz-plan .live {
+    font-weight: 600;
+    font-size: 13px;
+  }
+
+  /* table-fit diagram pieces used by tableFitSvg */
+  .lz-tablefit .media {
+    fill: var(--hatch);
+  }
+  .lz-tablefit .hatch {
+    stroke: var(--lz-color-border-strong);
+    stroke-width: 1;
+  }
+  .lz-tablefit .north {
+    fill: var(--lz-color-text);
+  }
+  .lz-tablefit .north-label {
+    font-weight: 700;
+  }
+  .lz-tablefit .model--toobig {
+    stroke: var(--lz-color-warning-icon);
+    fill: color-mix(in srgb, var(--lz-color-warning-icon) 12%, transparent);
+  }
+  .lz-tablefit .plate-labels text {
+    font-weight: 700;
+    font-size: 7px;
+    fill: var(--lz-color-text);
+  }
+}

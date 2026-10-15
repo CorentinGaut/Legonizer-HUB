@@ -1,0 +1,21 @@
+{
+  "skipToContent": "Skip to main content",
+  "skipToStep": "Skip to step content",
+  "dialogClose": "Close dialog",
+  "required": "required",
+  "announce": {
+    "importStage": "{stage}.",
+    "generationProgress": "Generating: {percent}%.",
+    "generationFailed": "Generation stopped: {reason}.",
+    "resultStale": "The brick model is out of date.",
+    "stepChanged": "Step {n} of {total}: {name}."
+  },
+  "viewport": {
+    "import": "3D view of the imported model",
+    "area": "Top view of the model with the area to convert",
+    "settings": "3D view of the buildings in the area, with brick levels",
+    "generate": "3D view of the brick model",
+    "build": "3D view of plate {plate}, layer {layer}",
+    "description": "A text version of this view is available: {link}."
+  }
+}

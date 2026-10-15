@@ -1,0 +1,1036 @@
+{
+  "meta": {
+    "title": "Créer votre maquette · Legonizer"
+  },
+  "stepper": {
+    "label": "Étapes",
+    "steps": {
+      "import": "Importer",
+      "area": "Zone",
+      "settings": "Échelle et hauteur",
+      "generate": "Générer",
+      "guide": "Guide de montage"
+    },
+    "stepOf": "Étape {n} sur {total} · {name}",
+    "menu": "Toutes les étapes",
+    "state": {
+      "done": "{name}, terminée",
+      "current": "{name}, étape en cours",
+      "unavailable": "{name}, pas encore disponible",
+      "outOfDate": "{name}, à mettre à jour",
+      "warning": "{name}, à vérifier"
+    },
+    "why": {
+      "area": "Importez d'abord un modèle.",
+      "settings": "Importez d'abord un modèle.",
+      "generate": "Importez d'abord un modèle.",
+      "guide": "Générez d'abord votre maquette."
+    }
+  },
+  "shell": {
+    "skipToStep": "Aller au contenu de l'étape",
+    "viewportLabel": "Vue 3D",
+    "viewportPlaceholder": "Votre modèle 3D apparaîtra ici",
+    "toolbar": {
+      "label": "Commandes de la vue",
+      "resetView": "Réinitialiser la vue",
+      "topView": "Vue de dessus",
+      "view3d": "Vue 3D",
+      "zoomIn": "Zoom avant",
+      "zoomOut": "Zoom arrière",
+      "fullScreen": "Plein écran",
+      "exitFullScreen": "Quitter le plein écran",
+      "collapse": "Masquer la vue 3D",
+      "expand": "Afficher la vue 3D",
+      "legend": "Légende"
+    },
+    "compass": "Nord",
+    "scaleBar": "Échelle : {value}",
+    "busyInputs": "Génération en cours… Annulez pour modifier.",
+    "smallScreen": "Créer une maquette est plus confortable sur un ordinateur ou une tablette. Les guides de montage fonctionnent bien sur téléphone.",
+    "webgl": {
+      "title": "Les vues 3D sont désactivées dans ce navigateur",
+      "body": "Votre navigateur ne prend pas en charge WebGL 2, ou il est désactivé. Vous pouvez quand même créer votre maquette avec les vues 2D et les tableaux.",
+      "dismiss": "Masquer ce message",
+      "chip": "Vues 2D"
+    },
+    "primary": {
+      "import": "Continuer vers la zone",
+      "area": "Continuer vers l'échelle et la hauteur",
+      "settings": "Générer la maquette",
+      "generate": "Ouvrir le guide de montage"
+    },
+    "stepperCompactLabel": "Progression",
+    "textTwin": "Afficher en texte",
+    "unsavedLarge": "Le modèle 3D est trop volumineux pour être conservé dans ce navigateur : après un rechargement, il faudra ajouter à nouveau les fichiers.",
+    "actionbarLabel": "Actions de l'étape",
+    "view2d": {
+      "import": "Vue de dessus du modèle importé",
+      "settings": "Vue de dessus des bâtiments de la zone",
+      "generate": "Vue de dessus de la maquette, ombrée selon la hauteur"
+    }
+  },
+  "project": {
+    "menuLabel": "Projet : {name}",
+    "untitled": "Sans titre",
+    "rename": "Renommer",
+    "renameLabel": "Nom du projet",
+    "save": "Enregistrer le fichier de projet",
+    "open": "Ouvrir un fichier de projet",
+    "new": "Nouveau projet",
+    "clear": "Effacer les données de ce navigateur",
+    "newConfirm": {
+      "title": "Commencer un nouveau projet ?",
+      "body": "Enregistrez d'abord un fichier de projet si vous voulez revenir à « {name} ».",
+      "confirm": "Commencer un nouveau projet",
+      "saveFirst": "Enregistrer d'abord le fichier de projet"
+    },
+    "clearConfirm": {
+      "title": "Effacer toutes les données de ce navigateur ?",
+      "body": "Cela supprime de ce navigateur le projet enregistré, le modèle 3D et l'avancement du montage. Les fichiers de projet enregistrés restent sur votre ordinateur.",
+      "confirm": "Effacer les données"
+    },
+    "resume": {
+      "message": "Bon retour ! Reprendre « {name} » (enregistré {when}) ?",
+      "continue": "Reprendre",
+      "startNew": "Commencer un nouveau projet",
+      "noSource": "Le modèle 3D n'a pas été conservé car il est trop volumineux pour le stockage de ce navigateur. Votre zone, vos réglages et votre maquette sont intacts. Ajoutez les fichiers d'origine pour faire des modifications."
+    },
+    "openFile": {
+      "opened": "Projet ouvert.",
+      "guideOnly": "Ouvert depuis un fichier de projet. Pour modifier la zone ou les réglages, ajoutez les fichiers d'origine.",
+      "addSource": "Ajouter les fichiers d'origine",
+      "olderVersion": "Ce projet a été créé avec la version {version} ; voici la version {current}. Régénérer peut donner des résultats légèrement différents.",
+      "newerVersion": "Ce projet a été créé avec une version plus récente ({version}). Rechargez la page pour obtenir la dernière version, puis réessayez.",
+      "hashMismatch": {
+        "title": "Ce n'est pas le même fichier",
+        "body": "{file} est différent du fichier utilisé dans ce projet. Si vous continuez, la maquette peut changer.",
+        "continue": "Utiliser ce fichier",
+        "choose": "Choisir un autre fichier"
+      }
+    },
+    "renameSave": "Renommer",
+    "saved": "Fichier de projet enregistré."
+  },
+  "stale": {
+    "title": "À mettre à jour",
+    "message": "Vous avez modifié {changes} après la génération.",
+    "change": "{name} ({from} → {to})",
+    "listSeparator": ", ",
+    "names": {
+      "model": "le modèle 3D",
+      "area": "la zone",
+      "plates": "Plaques",
+      "rotation": "Rotation",
+      "scale": "Échelle",
+      "maxHeight": "Hauteur max",
+      "preset": "le préréglage",
+      "option": "{name}"
+    },
+    "regenerate": "Régénérer",
+    "undo": "Annuler les modifications",
+    "downloadsDisabled": "Régénérez d'abord : vos réglages ont changé.",
+    "previewLabel": "À mettre à jour",
+    "progressConfirm": {
+      "title": "Cela modifie les instructions",
+      "body": "Les plaques déjà montées restent telles quelles, mais les guides imprimés et les listes d'achat ne seront plus à jour.",
+      "confirm": "Continuer",
+      "cancel": "Garder les instructions actuelles"
+    }
+  },
+  "import": {
+    "title": "Importer un modèle 3D de ville",
+    "lead": "Commencez avec notre démo, ou apportez votre propre modèle.",
+    "demo": {
+      "sample": {
+        "title": "Quartier d'exemple",
+        "body": "Un petit quartier inventé de 118 bâtiments simples et une tour de 96 m, généré par le Legonizer. Chargement instantané.",
+        "cta": "Essayer l'exemple"
+      },
+      "unavailable": "Cette démo n'est pas disponible sur cette copie du site.",
+      "loading": "Chargement de la démo {name}…"
+    },
+    "or": "ou utilisez votre propre modèle",
+    "dropzone": {
+      "title": "Déposez des fichiers, un dossier ou un .zip ici",
+      "active": "Déposez pour importer",
+      "chooseFiles": "Choisir des fichiers",
+      "chooseFolder": "Choisir un dossier",
+      "label": "Importer un modèle 3D : déposez des fichiers ici, ou utilisez les boutons"
+    },
+    "url": {
+      "toggle": "Utiliser l'URL d'un tileset",
+      "label": "Adresse du tileset.json",
+      "placeholder": "https://example.org/tiles/tileset.json",
+      "help": "Le serveur doit autoriser d'autres sites à lire ses fichiers (CORS). La plupart ne le font pas : si le chargement échoue, téléchargez le tileset et déposez-le ici.",
+      "submit": "Charger"
+    },
+    "privacy": "Vos fichiers restent sur cet ordinateur. Rien n'est envoyé.",
+    "privacyMobile": "Vos fichiers restent sur cet appareil. Rien n'est envoyé.",
+    "sizeGuidance": "Fonctionne au mieux jusqu'à environ 2 millions de triangles (300 Mo) sur un ordinateur portable courant.",
+    "formats": {
+      "toggle": "Formats pris en charge",
+      "tiles10": "3D Tiles 1.0 (.b3dm) : un dossier ou un .zip contenant tileset.json et ses tuiles",
+      "tiles11": "3D Tiles 1.1 avec contenu glTF (au mieux)",
+      "gltf": "glTF et GLB (.gltf, .glb)",
+      "obj": "OBJ (.obj). Un fichier .mtl est accepté mais pas nécessaire.",
+      "cityjson": "CityJSON 1.x ou 2.0 (.json, .city.json)",
+      "citygml": "CityGML (.gml) doit d'abord être converti. Voir « Préparer vos données »."
+    },
+    "helpLink": "Comment obtenir un modèle 3D ?",
+    "openProject": "Ouvrir un fichier de projet",
+    "loading": {
+      "title": "Import de {name}",
+      "stages": {
+        "reading": "Lecture des fichiers",
+        "tiles": "Lecture des tuiles : {done} sur {total}",
+        "model": "Lecture du modèle",
+        "features": "Repérage des bâtiments",
+        "preparing": "Préparation de la vue 3D"
+      },
+      "cancel": "Annuler",
+      "cancelled": "Import annulé.",
+      "downloading": "Téléchargement des tuiles : {done} sur {total}",
+      "indeterminate": "Traitement en cours…"
+    },
+    "success": {
+      "formatTiles": "3D Tiles {version} · {count, plural, one {# tuile} other {# tuiles}}",
+      "formatGlb": "glTF binaire (.glb)",
+      "formatGltf": "glTF (.gltf)",
+      "formatObj": "OBJ",
+      "formatCityjson": "CityJSON {version}",
+      "demoName": "{name} (démo)",
+      "buildings": "{count, plural, one {# bâtiment} other {# bâtiments}}",
+      "size": "{w} × {d}, {h} de haut",
+      "triangles": "{value} millions de triangles",
+      "trianglesSmall": "{count, plural, one {# triangle} other {# triangles}}",
+      "coordinates": {
+        "projected": "Coordonnées projetées (mètres)",
+        "ecef": "Coordonnées géocentriques, converties dans un repère local",
+        "local": "Coordonnées locales (mètres)",
+        "py3dtilers": "décalages py3dtilers détectés et appliqués"
+      },
+      "unit": {
+        "label": "Unité",
+        "m": "Mètres",
+        "cm": "Centimètres",
+        "mm": "Millimètres",
+        "ft": "Pieds",
+        "detected": "{unit} (détecté)"
+      },
+      "upAxis": {
+        "label": "Axe vertical",
+        "y": "Y vers le haut",
+        "z": "Z vers le haut",
+        "detected": "{axis} (détecté)"
+      },
+      "lod": {
+        "label": "Niveau de détail",
+        "option": "LoD {lod}",
+        "highest": "LoD {lod} (le plus élevé disponible)"
+      },
+      "tilesLod": "Niveau de détail le plus fin utilisé",
+      "details": {
+        "toggle": "Détails",
+        "featuresGml": "Bâtiments identifiés par gml_id (CityGML)",
+        "featuresBatch": "Bâtiments identifiés par batch id",
+        "featuresMesh": "Un bâtiment par maillage",
+        "featureTerm": "Pour les experts : un « bâtiment » est ici une entité (feature).",
+        "files": "{count, plural, one {# fichier lu} other {# fichiers lus}}",
+        "bbox": "Boîte englobante : {min} à {max}"
+      },
+      "replace": "Remplacer le modèle",
+      "announce": "Modèle chargé : {buildings}, {size}.",
+      "labels": {
+        "format": "Format",
+        "buildings": "Bâtiments",
+        "size": "Taille",
+        "triangles": "Triangles",
+        "coordinates": "Coordonnées",
+        "detail": "Détail",
+        "unit": "Unité",
+        "files": "Fichiers",
+        "bbox": "Boîte englobante"
+      },
+      "lodOption": "LoD {lod}",
+      "unitAuto": "Automatique",
+      "reimporting": "Mise à jour du modèle…",
+      "detectedUnit": "Détecté : {unit}"
+    },
+    "sizeCheck": "Ce modèle fait {size} de large. L'unité est-elle la bonne ?",
+    "partial": {
+      "title": "{loaded} tuiles chargées sur {total}",
+      "missing": "Manquant : {files}",
+      "broken": "Illisible : {files}",
+      "addMissing": "Ajouter les fichiers manquants",
+      "continueWithout": "Continuer sans eux"
+    },
+    "large": {
+      "message": "Ce modèle est volumineux : {value} millions de triangles. La génération peut être lente ou échouer sur cet ordinateur.",
+      "link": "Comment recadrer ou simplifier un modèle",
+      "continue": "Continuer quand même"
+    },
+    "replaceDialog": {
+      "title": "Remplacer {current} par {next} ?",
+      "body": "Votre maquette générée sera effacée. La zone est conservée si elle recouvre le nouveau modèle.",
+      "confirm": "Remplacer",
+      "cancel": "Garder le modèle actuel"
+    },
+    "errors": {
+      "tryAnother": "Essayer un autre fichier",
+      "unsupported": {
+        "title": "Nous ne pouvons pas utiliser ce fichier",
+        "body": "Les fichiers {ext} ne sont pas pris en charge. Utilisez 3D Tiles, glTF/GLB, OBJ ou CityJSON."
+      },
+      "citygml": {
+        "title": "Le CityGML doit d'abord être converti",
+        "body": "Convertissez vos fichiers .gml en CityJSON avec citygml-tools, puis déposez le fichier .json ici.",
+        "action": "Comment convertir du CityGML"
+      },
+      "emptyGeometry": {
+        "title": "Aucune forme 3D dans ce fichier",
+        "body": "Nous n'avons trouvé aucune surface à transformer en briques. Le fichier ne contient peut-être que des métadonnées, des points ou des lignes."
+      },
+      "noTileset": {
+        "title": "Pas de tileset.json dans ce .zip",
+        "body": "Un .zip 3D Tiles doit contenir tileset.json et les fichiers de tuiles qu'il liste."
+      },
+      "noTilesFound": {
+        "title": "Aucune tuile trouvée",
+        "body": "Aucun des fichiers listés dans tileset.json n'a été trouvé. Déposez le dossier entier, ou un .zip de celui-ci."
+      },
+      "cityjsonVersion": {
+        "title": "Cette version de CityJSON n'est pas prise en charge",
+        "body": "Ce fichier est en CityJSON {version}. Utilisez CityJSON 1.x ou 2.0."
+      },
+      "cors": {
+        "title": "Ce serveur ne laisse pas d'autres sites lire ses fichiers",
+        "body": "Téléchargez le tileset sur votre ordinateur, puis déposez le dossier ou un .zip ici.",
+        "action": "Choisir des fichiers à la place"
+      },
+      "network": {
+        "title": "Impossible de joindre cette adresse",
+        "body": "Vérifiez l'adresse et votre connexion, ou téléchargez le tileset et déposez-le ici."
+      },
+      "outOfMemory": {
+        "title": "Votre navigateur manque de mémoire",
+        "body": "Ce modèle est trop volumineux pour cet ordinateur. Essayez une partie plus petite de la ville, ou un modèle simplifié.",
+        "action": "Comment recadrer ou simplifier un modèle"
+      },
+      "corrupt": {
+        "title": "Ce fichier semble endommagé",
+        "body": "Nous n'avons pas pu lire {file}."
+      },
+      "multipleModels": {
+        "title": "Importez un seul modèle à la fois",
+        "body": "Déposez un seul tileset, ou un seul fichier (un OBJ peut être accompagné de son .mtl)."
+      },
+      "invalidProject": {
+        "title": "Ce n'est pas un fichier de projet Legonizer",
+        "body": "Les fichiers de projet se terminent par .legonizer.json. Ils s'enregistrent depuis le menu Projet."
+      },
+      "missingFiles": {
+        "title": "Des fichiers manquent",
+        "body": "{count, plural, one {# fichier listé dans tileset.json manque} other {# fichiers listés dans tileset.json manquent}}."
+      },
+      "generic": {
+        "title": "Nous n'avons pas pu lire ce modèle",
+        "body": "Le fichier est peut-être endommagé ou utilise une fonction que nous ne prenons pas encore en charge."
+      }
+    }
+  },
+  "area": {
+    "title": "Choisir la zone",
+    "lead": "Placez le rectangle sur le quartier que vous voulez construire.",
+    "defaultPlaced": "Nous avons placé une zone de {x} × {y} plaques au milieu de votre modèle. Déplacez-la ou dessinez-en une nouvelle.",
+    "defaultWhole": "Votre modèle entier tient sur {x} × {y} plaques : nous l'avons sélectionné en entier.",
+    "demoSuggested": "Nous avons placé la zone sur tout l'exemple : {x} × {y} plaques, qui tiennent sur la table. Déplacez-la ou dessinez-en une nouvelle.",
+    "position": {
+      "title": "Position",
+      "centreX": "Centre X (est)",
+      "centreY": "Centre Y (nord)",
+      "frameModel": "Coordonnées du modèle (mètres)",
+      "frameLocal": "Mètres depuis le centre du modèle (convertis depuis des coordonnées géocentriques)",
+      "rotation": "Rotation",
+      "rotationUnit": "degrés",
+      "rotationNormalised": "{input}° équivaut à {value}°.",
+      "centreXShort": "Centre X",
+      "centreYShort": "Centre Y"
+    },
+    "size": {
+      "title": "Taille",
+      "platesX": "Plaques ouest–est",
+      "platesY": "Plaques nord–sud",
+      "platesHelp": "Chaque plaque de base fait 32 × 32 tenons (25,6 cm).",
+      "scale": "Échelle",
+      "scaleUnit": "m par tenon",
+      "keepGroundArea": "Garder plutôt la même surface au sol ({x} × {y} plaques)",
+      "fewerX": "Moins de plaques ouest–est",
+      "moreX": "Plus de plaques ouest–est",
+      "fewerY": "Moins de plaques nord–sud",
+      "moreY": "Plus de plaques nord–sud",
+      "keepGroundAreaApply": "Garder la même surface au sol"
+    },
+    "summary": {
+      "title": "Sur la table",
+      "ground": "{w} × {d} m au sol",
+      "table": "{w} × {d} cm sur la table",
+      "studs": "{total} tenons ({cols} × {rows})",
+      "mapScale": "Échelle 1:{n}",
+      "compact": "{x} × {y} plaques · {w} × {d} cm · 1:{n}"
+    },
+    "tableFit": {
+      "diagramTitle": "La table du Legonizer, 1 × 2 m, vue de dessus",
+      "mediaArea": "Place pour les médias projetés",
+      "fits": "Tient sur la table du Legonizer, avec de la place pour les médias projetés",
+      "fitsLengthwise": "Tient sur la table du Legonizer dans la longueur, avec de la place pour les médias projetés",
+      "tooBig": "Trop grand pour la table du Legonizer ({w} × {d} cm). Vous pouvez quand même le construire.",
+      "diagramAlt": "{x} plaques sur {y} placées à une extrémité d'une table de 1 mètre sur 2. Le reste de la table est libre pour les médias projetés."
+    },
+    "tools": {
+      "draw": "Dessiner une zone",
+      "drawShortcut": "D",
+      "drawHint": "Cliquez et faites glisser sur la carte. Échap pour annuler.",
+      "fit": "Cadrer le modèle",
+      "centre": "Centrer sur le modèle",
+      "reset": "Réinitialiser la zone"
+    },
+    "viewport": {
+      "dimension": "{count, plural, one {# plaque} other {# plaques}} · {m} m",
+      "drawLabel": "{x} × {y} plaques · {w} × {d} m",
+      "angleLabel": "{value}°",
+      "tallest": "Plus haut : {h} m, fixe la hauteur d'une brique",
+      "includedWhole": "Inclus en entier",
+      "max16": "16 plaques au maximum par côté.",
+      "legend": {
+        "includedWhole": "Inclus en entier (touche la zone)",
+        "disappears": "Disparaît : plus bas qu'une brique",
+        "sampled": "Zone réellement échantillonnée en mode historique",
+        "area": "Zone à convertir, avec ses plaques"
+      },
+      "rectangleName": "Zone de {x} plaques sur {y}, centre X {cx} mètres, Y {cy} mètres, rotation {r} degrés. Les flèches la déplacent, Maj et les flèches la déplacent d'une plaque, les crochets la font tourner.",
+      "moved": "Zone déplacée. Centre X {cx} mètres, Y {cy} mètres.",
+      "resized": "Zone redimensionnée : {x} plaques sur {y}.",
+      "rotated": "Zone tournée à {r} degrés.",
+      "cancelled": "Modification annulée.",
+      "drawCancel": "Annuler le dessin",
+      "plan2d": "Plan des bâtiments (vue 2D)",
+      "undo": "Annuler la modification de zone",
+      "rectangleHint": "Sélectionnez la zone pour la déplacer avec les flèches."
+    },
+    "warnings": {
+      "empty": "Aucun bâtiment dans cette zone.",
+      "emptyAction": "Centrer sur le modèle",
+      "legacyRotation": "Le mode historique ignore la rotation : il convertit tout le cadre en pointillés, sans rotation.",
+      "legacyRotationAction": "Tourner avec la zone à la place"
+    },
+    "errors": {
+      "plates": "Saisissez un nombre entier de 1 à 16.",
+      "number": "Saisissez un nombre.",
+      "scale": "Saisissez une échelle de 0,25 à 50 m par tenon.",
+      "rotation": "Saisissez un angle de −180 à 180 degrés."
+    }
+  },
+  "settings": {
+    "title": "Échelle et hauteur",
+    "lead": "Choisissez la taille et la hauteur de votre maquette.",
+    "preset": {
+      "title": "Préréglage",
+      "legacy": {
+        "name": "Historique (UD-Viz 4.6.1)",
+        "description": "Même résultat que le widget UD-Viz. Le bâtiment le plus haut reçoit la hauteur max ; le reste est étiré en proportion."
+      },
+      "trueScale": {
+        "name": "Échelle réelle",
+        "description": "Proportions réelles : une brique vaut environ un étage à 3 m par tenon."
+      },
+      "custom": {
+        "name": "Personnalisé",
+        "description": "{count, plural, one {# option diffère} other {# options diffèrent}} de l'historique."
+      },
+      "resetLegacy": "Revenir à l'historique",
+      "demoNote": "Réglages de la démo : les petits bâtiments sont conservés.",
+      "switchToLegacy": "Passer en historique",
+      "legacyKeepSmall": {
+        "name": "Historique (UD-Viz 4.6.1) avec petits bâtiments conservés",
+        "description": "Même résultat que le widget UD-Viz, sauf que chaque bâtiment reçoit au moins 1 brique."
+      }
+    },
+    "scale": {
+      "label": "Échelle",
+      "unit": "m par tenon",
+      "help": "Un tenon couvre {s} m × {s} m de ville. Échelle 1:{n}.",
+      "udviz": "Dans UD-Viz 4.6.1 : Scales Parameters › Scale",
+      "slider": "Échelle, logarithmique",
+      "sliderValue": "{s} m par tenon"
+    },
+    "maxHeight": {
+      "label": "Hauteur max",
+      "unit": "briques",
+      "help": "Le bâtiment le plus haut reçoit ce nombre de briques.",
+      "udviz": "Dans UD-Viz 4.6.1 : Scales Parameters › Lego Max height",
+      "readOnly": "Le plus haut : {bricks} briques ({cm} cm)",
+      "readOnlyHelp": "Dans ce mode, les hauteurs suivent l'échelle. Utilisez le plafond de hauteur pour limiter les tours.",
+      "error": "Saisissez un nombre entier de 1 à 100.",
+      "lower": "Réduire la hauteur max",
+      "raise": "Augmenter la hauteur max"
+    },
+    "exaggeration": {
+      "label": "Exagération",
+      "help": "Hauteurs × {f} par rapport à l'échelle réelle.",
+      "error": "Saisissez un nombre de 0,5 à 5."
+    },
+    "plates": {
+      "label": "Plaques",
+      "help": "Chaque plaque de base fait 32 × 32 tenons (25,6 cm).",
+      "udviz": "Dans UD-Viz 4.6.1 : Scales Parameters › Count Lego x, y"
+    },
+    "udvizInfo": "Nom dans UD-Viz",
+    "estimates": {
+      "title": "Ce que vous obtiendrez",
+      "updating": "Mise à jour…",
+      "onTable": "{w} × {d} cm, jusqu'à {h} cm de haut",
+      "brickHeight": "1 brique = {m} m de bâtiment",
+      "flatter": "Les bâtiments paraîtront {r} fois plus plats qu'en réalité.",
+      "real": "Les bâtiments gardent leurs proportions réelles.",
+      "taller": "Les bâtiments paraîtront {r} fois plus hauts qu'en réalité.",
+      "studs": "{total} tenons",
+      "mapScale": "Échelle 1:{n}"
+    },
+    "disappear": {
+      "message": "{count} bâtiments sur {total} ({percent} %) sont plus bas qu'une brique ({m} m) et vont disparaître.",
+      "messageAbout": "Environ {count} bâtiments sur {total} ({percent} %) sont plus bas qu'une brique ({m} m) et vont disparaître.",
+      "collapsed": "{count, plural, one {# bâtiment va disparaître} other {# bâtiments vont disparaître}}.",
+      "showFixes": "Voir les solutions",
+      "fixes": {
+        "keepSmall": "Garder les petits bâtiments",
+        "keepSmallDesc": "Chaque bâtiment reçoit au moins 1 brique.",
+        "trueScale": "Passer à l'échelle réelle",
+        "trueScaleDesc": "Le plus haut fera {bricks} briques ({cm} cm).",
+        "maxHeight": "Régler la hauteur max à {n}",
+        "maxHeightDesc": "Garde {percent} % des bâtiments.",
+        "keepAsIs": "Laisser ainsi"
+      },
+      "showThem": "Les montrer dans la vue 3D",
+      "studShare": "Environ {percent} % de la surface bâtie restera vide.",
+      "none": "Chaque bâtiment sélectionné atteint au moins une brique.",
+      "noBuildings": "Aucun bâtiment dans cette zone."
+    },
+    "viewport": {
+      "guides": "Niveaux de brique tous les {m} m",
+      "legendDisappears": "Disparaît : plus bas qu'une brique",
+      "empty": "Aucun bâtiment dans la zone."
+    },
+    "advanced": {
+      "title": "Options avancées",
+      "allLegacy": "Toutes aux valeurs historiques",
+      "changed": "{count, plural, one {# modifiée} other {# modifiées}}",
+      "legacyMarker": "Historique",
+      "changedMarker": "Modifié par rapport à l'historique",
+      "resetAll": "Tout remettre à l'historique",
+      "internalName": "Nom interne : {name}",
+      "heightMode": {
+        "label": "Hauteur",
+        "normalized": "Étirer jusqu'à la hauteur max",
+        "trueScale": "Échelle réelle",
+        "exaggerated": "Exagérée",
+        "consequence": "Échelle réelle : 1 brique = {m} m (échelle × 1,2)."
+      },
+      "heightRef": {
+        "label": "Mesurer les hauteurs depuis",
+        "lowestBase": "La base de bâtiment la plus basse",
+        "ground": "Le sol",
+        "groundUnavailable": "Nécessite un terrain ou des surfaces de sol dans votre modèle.",
+        "consequence": "Sur les pentes, les bâtiments en hauteur ne gagnent plus la hauteur de la colline."
+      },
+      "sampling": {
+        "label": "Échantillonnage",
+        "corner1": "1 par tenon, au coin",
+        "centre1": "1 par tenon, au centre",
+        "super2": "2 × 2 par tenon",
+        "super3": "3 × 3 par tenon",
+        "super4": "4 × 4 par tenon",
+        "aggregate": "Combiner les échantillons",
+        "max": "Le plus haut",
+        "mean": "Moyenne",
+        "median": "Médiane",
+        "consequence": "Plus d'échantillons attrapent les bâtiments fins, mais prennent plus de temps."
+      },
+      "rounding": {
+        "label": "Arrondi",
+        "trunc": "Arrondir vers le bas",
+        "round": "Arrondir au plus proche",
+        "ceil": "Arrondir vers le haut",
+        "keepSmall": "Garder les petits bâtiments (au moins 1 brique)"
+      },
+      "cap": {
+        "label": "Plafond de hauteur",
+        "none": "Aucun",
+        "value": "Briques max par colonne",
+        "consequence": "Limite les grandes tours pour économiser des briques.",
+        "error": "Saisissez un nombre entier de 1 à 100, ou laissez vide."
+      },
+      "selection": {
+        "label": "Bâtiments",
+        "touching": "Bâtiments entiers touchant la zone",
+        "clip": "Coupés au bord de la zone",
+        "consequence": "Des bâtiments entiers peuvent dépasser loin de la zone et fixer l'échelle des hauteurs."
+      },
+      "rotation": {
+        "label": "Rotation",
+        "aabb": "Boîte englobante",
+        "rotate": "Tourner avec la zone",
+        "consequence": "L'historique convertit le cadre non tourné qui entoure votre zone."
+      },
+      "acceleration": "Le lancer de rayons accéléré est toujours actif. Il ne change pas les résultats.",
+      "exaggerationUnit": "×",
+      "capUnit": "briques",
+      "capNone": "Aucun",
+      "legacyNone": "Historique : aucun"
+    },
+    "generate": "Générer la maquette",
+    "tileCap": {
+      "label": "Plates lisses en finition",
+      "none": "Aucune",
+      "roofs": "Sur les toits",
+      "all": "Toute la maquette",
+      "help": {
+        "none": "Briques seules : les tenons restent visibles sur chaque toit.",
+        "roofs": "Une couche de plates lisses (⅓ de brique, sans tenons) sur chaque bâtiment, pour une surface de projection lisse. Les hauteurs ne changent pas.",
+        "all": "Des plates lisses sur chaque bâtiment et sur la plaque de base nue, pour une maquette entièrement lisse. Les hauteurs ne changent pas."
+      }
+    }
+  },
+  "generate": {
+    "ready": {
+      "title": "Générer",
+      "summary": "{x} × {y} plaques · {scale} m par tenon · {preset}",
+      "cta": "Générer la maquette",
+      "lead": "Générez la maquette en briques à partir de votre zone et de vos réglages."
+    },
+    "running": {
+      "title": "Génération de votre maquette en briques",
+      "stages": {
+        "select": "Sélection des bâtiments",
+        "index": "Préparation du lancer de rayons accéléré",
+        "sample": "Mesure des hauteurs : ligne {done} sur {total}",
+        "quantize": "Conversion des hauteurs en briques",
+        "pack": "Choix des briques : plaque {done} sur {total}",
+        "done": "Terminé"
+      },
+      "elapsed": "{value} s",
+      "remaining": "Environ {value} s restantes",
+      "cancel": "Annuler",
+      "cancelled": "Génération annulée.",
+      "documentTitleReady": "Maquette prête · Legonizer",
+      "percent": "{value} %",
+      "label": "Génération… {value} %"
+    },
+    "done": {
+      "title": "Votre maquette en briques",
+      "generatedIn": "Générée en {value} s",
+      "plates": "{x} × {y} plaques · {w} × {d} cm",
+      "tallest": "Le plus haut : {bricks} briques ({cm} cm)",
+      "bricks": "{bricks} briques + {plates} plaques de base",
+      "settings": "{preset} · {scale} m par tenon",
+      "histogram": {
+        "title": "Hauteurs",
+        "axisX": "Briques",
+        "axisY": "Tenons",
+        "showTable": "Afficher en tableau",
+        "caption": "Nombre de tenons à chaque hauteur, en briques",
+        "label": "Nombre de tenons à chaque hauteur, en briques : {values}.",
+        "hideTable": "Masquer le tableau",
+        "height": "Hauteur (briques)",
+        "studs": "Tenons"
+      },
+      "perPlate": {
+        "title": "Par plaque",
+        "caption": "Point le plus haut et nombre de briques de chaque plaque",
+        "plate": "Plaque",
+        "tallest": "Le plus haut",
+        "bricks": "Briques"
+      },
+      "grid": {
+        "show": "Voir la grille des hauteurs en tableau",
+        "caption": "Hauteur de chaque tenon de la plaque {plate}, en briques. Les lignes vont du nord au sud, les colonnes d'ouest en est.",
+        "plateSelect": "Plaque",
+        "hide": "Masquer la grille des hauteurs",
+        "title": "Grille des hauteurs · Plaque {plate}",
+        "region": "Grille des hauteurs, plaque {plate}",
+        "row": "Ligne"
+      },
+      "warnings": {
+        "title": "{count, plural, one {# avertissement} other {# avertissements}}",
+        "disappeared": "{count, plural, one {# bâtiment a disparu} other {# bâtiments ont disparu}}",
+        "uncovered": "{count, plural, one {# tenon ne peut pas être rempli} other {# tenons ne peuvent pas être remplis}} avec les briques autorisées",
+        "missingTiles": "{count, plural, one {# tuile manquait} other {# tuiles manquaient}}",
+        "legacyRotation": "Le mode historique a ignoré la rotation de la zone",
+        "fix": "Corriger",
+        "erasedStuds": "{count, plural, one {# tenon bâti n'a reçu aucune brique} other {# tenons bâtis n'ont reçu aucune brique}}",
+        "flat": "Les bâtiments sélectionnés sont plats : chaque tenon vaut 0."
+      },
+      "toolbar": {
+        "ghost": "Montrer le modèle source",
+        "labels": "Noms des plaques"
+      },
+      "cta": "Ouvrir le guide de montage",
+      "announce": "Maquette générée : {bricks} briques.",
+      "view2d": "Carte des hauteurs (vue 2D)",
+      "legend": {
+        "bricks": "Briques blanches",
+        "baseplates": "Plaques de base 32 × 32"
+      },
+      "keyPlates": "plaques · {w} × {d} cm",
+      "keyBricks": "briques + {plates} plaques de base",
+      "keyTallest": "briques au plus haut ({cm} cm)",
+      "keyTiles": {
+        "roofs": "plates lisses sur les toits",
+        "all": "plates lisses sur toute la maquette"
+      }
+    },
+    "empty": {
+      "title": "Aucune brique à poser",
+      "body": "Rien dans cette zone n'est assez haut pour une brique.",
+      "keepSmall": "Garder les petits bâtiments",
+      "trueScale": "Passer à l'échelle réelle",
+      "moveArea": "Déplacer la zone",
+      "back": "Retour à l'échelle et la hauteur",
+      "viewport": "Plaques vides : rien n'atteint une brique."
+    },
+    "errors": {
+      "outOfMemory": {
+        "title": "Génération interrompue : votre navigateur manque de mémoire",
+        "body": "Essayez moins de plaques ou une zone plus petite.",
+        "action": "Essayer moins de plaques"
+      },
+      "worker": {
+        "title": "Génération interrompue par une erreur",
+        "body": "C'est probablement un bogue. Réessayez ; si cela se reproduit, enregistrez un fichier de projet et signalez le problème."
+      },
+      "noGeometry": {
+        "title": "Aucun bâtiment dans cette zone",
+        "body": "Placez la zone sur le modèle, puis générez à nouveau.",
+        "action": "Déplacer la zone"
+      },
+      "cancelledHint": "La maquette précédente est conservée, marquée à mettre à jour."
+    }
+  },
+  "guide": {
+    "summary": "{name} · {x} × {y} plaques · {w} × {d} cm · {bricks} briques + {plates} plaques de base · {cm} cm au plus haut · {preset}",
+    "tabs": {
+      "label": "Guide de montage",
+      "bricks": "Se procurer les briques",
+      "build": "Construire",
+      "table": "Installer la table",
+      "downloads": "Tous les téléchargements"
+    },
+    "mobileTabs": {
+      "plates": "Plaques",
+      "bricks": "Briques",
+      "table": "Table",
+      "downloads": "Fichiers"
+    },
+    "guideOnly": {
+      "message": "Ouvert depuis un fichier de projet. Pour modifier la zone ou les réglages, ajoutez les fichiers d'origine.",
+      "action": "Ajouter les fichiers d'origine"
+    },
+    "bricks": {
+      "title": "L'étagère à briques",
+      "scope": {
+        "label": "Afficher",
+        "whole": "Maquette entière",
+        "plate": "Plaque {plate}"
+      },
+      "rows": {
+        "oneWide": "Largeur 1 tenon",
+        "twoWide": "Largeur 2 tenons",
+        "baseplates": "Plaques de base",
+        "baseplatesScale": "Dessinée au ¼",
+        "tiles": "Plates lisses"
+      },
+      "slot": {
+        "quantity": "×{count}",
+        "toBuy": "×{buy} à acheter ({need} + {spare} de réserve)",
+        "useThis": "Utiliser cette brique",
+        "notUsed": "Non utilisée",
+        "spoken": "{size}, pièce {id}, {count, plural, one {# brique} other {# briques}}",
+        "noneOnPlate": "Aucune sur cette plaque",
+        "locked": "Les briques 1 × 1 comblent les trous : elles sont toujours utilisées.",
+        "useThisLabel": "Utiliser les briques {size}",
+        "noneNeeded": "Aucune nécessaire"
+      },
+      "total": "{bricks} briques en {kinds} tailles + {plates} plaques de base",
+      "showTable": "Afficher en tableau",
+      "showShelf": "Afficher en étagère",
+      "table": {
+        "caption": "Briques nécessaires, par taille et par plaque",
+        "part": "Brique",
+        "size": "Taille",
+        "number": "Référence",
+        "quantity": "Quantité",
+        "toBuy": "À acheter",
+        "total": "Total",
+        "allPlates": "Toutes les plaques"
+      },
+      "where": {
+        "title": "Où vont-elles ?",
+        "perPlate": "{plate} : {count}",
+        "firstStep": "Montrer la première étape qui l'utilise",
+        "legend": "Briques {size} (surlignées depuis l'étagère)"
+      },
+      "settings": {
+        "title": "Briques utilisables",
+        "summaryAll": "Toutes les tailles",
+        "summaryCount": "{count} tailles sur 11",
+        "quickSets": {
+          "label": "Choix rapide",
+          "all": "Toutes les tailles",
+          "common": "Tailles courantes",
+          "squares": "Carrées seulement"
+        },
+        "longest": "Brique la plus longue",
+        "longestValue": "{n} tenons",
+        "keepOne": "Gardez au moins une taille de brique.",
+        "oneByOneLocked": "Les briques 1 × 1 comblent les trous : elles sont toujours utilisées.",
+        "oneByOneOff": "Sans briques 1 × 1, certains tenons isolés peuvent rester vides.",
+        "uncovered": "{count, plural, one {# tenon ne peut pas être rempli} other {# tenons ne peuvent pas être remplis}} avec les briques autorisées.",
+        "allowOneByOne": "Autoriser les briques 1 × 1",
+        "announceUpdated": "Liste de briques mise à jour : {bricks} briques.",
+        "maxLengthNone": "Sans limite"
+      },
+      "report": {
+        "title": "À propos de ce nombre",
+        "body": "Il faut au moins {lowerBound} briques. Ce plan en utilise {count}, soit {percent} % de plus, car les briques ne peuvent pas chevaucher les bords des plaques et elles recouvrent les joints du dessous pour que la maquette tienne.",
+        "method": "Comment les briques sont choisies"
+      },
+      "buy": {
+        "title": "Les acheter",
+        "spares": {
+          "label": "Réserve",
+          "none": "Aucune",
+          "five": "+5 %",
+          "ten": "+10 %",
+          "help": "Des briques en plus au cas où certaines se perdent. Seules les listes d'achat changent."
+        },
+        "white": "Toutes les briques sont blanches (couleur BrickLink 1, couleur Rebrickable 15).",
+        "baseplateColour": {
+          "label": "Couleur des plaques de base",
+          "grey": "Gris clair",
+          "white": "Blanc"
+        }
+      },
+      "plateKit": "{bricks} briques + 1 plaque de base pour la plaque {plate}",
+      "kitTitle": "Kit de la plaque {plate}",
+      "updating": "Mise à jour…",
+      "viewport": "Vue 3D de la maquette entière",
+      "tilesTotal": "+ {tiles} plates lisses"
+    },
+    "build": {
+      "plateMap": {
+        "title": "Tableau de montage",
+        "label": "Plaques. Utilisez les flèches pour passer d'une plaque à l'autre.",
+        "status": {
+          "notStarted": "Pas commencée",
+          "inProgress": "Couche {done} sur {total}",
+          "built": "Montée",
+          "empty": "Rien à monter"
+        },
+        "tileName": "Plaque {plate}, {status}",
+        "team": {
+          "label": "Qui monte {plate} ?",
+          "placeholder": "Nom de l'équipe"
+        },
+        "markBuilt": "Marquer la plaque comme montée",
+        "markNotBuilt": "Marquer la plaque comme non montée",
+        "legend": "Montée · En cours · Pas commencée · Rien à monter",
+        "layerShort": "{done}/{total}"
+      },
+      "step": {
+        "header": "Plaque {plate} · Couche {layer} sur {total}",
+        "newBricks": "{count, plural, one {# nouvelle brique} other {# nouvelles briques}}",
+        "announce": "Plaque {plate}, couche {layer} sur {total} : {parts}."
+      },
+      "callout": {
+        "title": "Cette étape",
+        "item": "{count} × {size}",
+        "hint": "Sélectionnez une brique pour voir où elle va.",
+        "showAll": "Montrer toutes les briques",
+        "empty": "Aucune nouvelle brique sur cette couche."
+      },
+      "controls": {
+        "first": "Première couche",
+        "previous": "Précédente",
+        "next": "Suivante",
+        "last": "Dernière couche",
+        "done": "Fait, couche suivante",
+        "doneLast": "Fait, plaque terminée",
+        "scrubber": "Couche {layer} sur {total}"
+      },
+      "view": {
+        "top": "Vue de dessus",
+        "threeD": "Vue 3D",
+        "turn": "Tourner de 90°",
+        "turnHelp": "Tournez la vue pour la faire correspondre à votre côté de la table.",
+        "below": {
+          "label": "Couches du dessous",
+          "ghost": "Fantôme",
+          "solid": "Pleines",
+          "hidden": "Masquées"
+        },
+        "neighbours": "Montrer les plaques voisines",
+        "tableMode": "Mode table",
+        "exitTableMode": "Quitter le mode table",
+        "help": "Aide clavier"
+      },
+      "list": {
+        "show": "Afficher en liste",
+        "hide": "Afficher la 3D",
+        "diagramTitle": "Plaque {plate}, couche {layer}, vue de dessus",
+        "rowItem": "Brique {size} en colonne {col}, ligne {row}, {orientation}",
+        "orientationWE": "posée ouest–est",
+        "orientationNS": "posée nord–sud",
+        "rulersNote": "Les colonnes 1 à 32 vont d'ouest en est, les lignes 1 à 32 du nord au sud.",
+        "caption": "Nouvelles briques de la couche {layer}",
+        "brick": "Brique",
+        "column": "Colonne",
+        "row": "Ligne",
+        "lying": "Orientation",
+        "positionNote": "Position = le tenon nord-ouest de la brique.",
+        "lyingWE": "ouest–est",
+        "lyingNS": "nord–sud",
+        "square": "—"
+      },
+      "emptyPlate": "Rien à monter sur cette plaque. Posez simplement la plaque de base.",
+      "plateDone": "Plaque {plate} terminée ! Suivante : plaque {next}.",
+      "plateDoneContinue": "Continuer",
+      "allBuilt": "Votre maquette est montée ! Prochaine étape : installer la table.",
+      "allBuiltCta": "Installer la table",
+      "copyLink": "Copier le lien vers cette étape",
+      "linkCopied": "Lien copié.",
+      "deepLink": {
+        "invalidPlate": "La plaque {plate} n'existe pas dans cette maquette. Affichage de {fallback}.",
+        "invalidLayer": "La plaque {plate} a {total} couches. Affichage de la couche {fallback}.",
+        "noProject": "Ce lien pointe vers un projet qui n'est pas sur cet ordinateur. Ouvrez son fichier de projet, ou demandez une fiche de plaque.",
+        "noResult": "Générez d'abord votre maquette pour voir son guide de montage."
+      },
+      "keys": {
+        "title": "Clavier et pavé numérique",
+        "intro": "Utilisez les flèches, ou un pavé numérique comme celui de la table du Legonizer. Les touches du pavé marchent avec Verr Num activé ou non.",
+        "columns": {
+          "action": "Action",
+          "keyboard": "Clavier",
+          "keypad": "Pavé numérique"
+        },
+        "next": "Couche suivante",
+        "previous": "Couche précédente",
+        "done": "Fait, couche suivante",
+        "first": "Première couche de la plaque",
+        "last": "Dernière couche de la plaque",
+        "nextPlate": "Plaque suivante",
+        "previousPlate": "Plaque précédente",
+        "top": "Vue de dessus",
+        "threeD": "Vue 3D",
+        "turn": "Tourner la vue de 90°",
+        "reset": "Réinitialiser la vue",
+        "zoom": "Zoom avant / arrière",
+        "below": "Couches du dessous : fantôme, pleines, masquées",
+        "help": "Afficher cette aide",
+        "exit": "Quitter le mode table",
+        "shortcuts": {
+          "label": "Raccourcis à une touche",
+          "on": "Activés",
+          "off": "Désactivés",
+          "help": "Désactivez-les si vous utilisez la saisie vocale ou si des touches déclenchent des actions par erreur."
+        },
+        "hint": "←/→ ou 4/6 : couches · 9/3 : plaques · Entrée : fait · ? : toutes les touches",
+        "tableModeHint": "4 précédente · 6 suivante · Entrée fait · 9/3 plaque · 5 tourner · 8/2 vue · Échap quitter",
+        "toggle": "Raccourcis à une touche"
+      },
+      "share": {
+        "action": "Partager cette plaque",
+        "title": "Partager la plaque {plate}",
+        "body": "Scannez ce code avec un téléphone pour y ouvrir les instructions de la plaque {plate}. Rien n'est envoyé : la plaque voyage dans le lien.",
+        "copy": "Copier le lien",
+        "tooLarge": "Cette plaque est trop détaillée pour un QR code. Ouvrez-la sur l'ordinateur principal.",
+        "printPasses": "Imprimer les fiches de plaque",
+        "qrAlt": "QR code qui ouvre la plaque {plate} sur un téléphone",
+        "passTitle": "Fiche de la plaque {plate}",
+        "position": "Colonne {col}, ligne {row}"
+      },
+      "plateMode": {
+        "title": "Plaque {plate} de « {project} »",
+        "shared": "Partagée depuis un autre appareil. Rien n'a été envoyé : la plaque est stockée dans le lien.",
+        "kit": "Briques de cette plaque",
+        "whatIsThis": "Qu'est-ce que c'est ?",
+        "versionMismatch": "Ce lien a été créé avec la version {version}. Les instructions peuvent légèrement différer du guide imprimé.",
+        "invalid": "Ce lien de plaque est endommagé ou incomplet. Redemandez la fiche de plaque.",
+        "backToGuide": "Ouvrir le Legonizer",
+        "loading": "Préparation des instructions…",
+        "done": "La plaque {plate} est construite. Rapportez-la à la table."
+      },
+      "legend": {
+        "new": "Nouvelles à cette étape",
+        "below": "Couches du dessous"
+      },
+      "plateDoneTitle": "Plaque {plate} terminée !",
+      "plateDoneLast": "Plaque {plate} terminée !",
+      "tableModeLabel": "Mode table",
+      "zoomIn": "Zoom avant",
+      "zoomOut": "Zoom arrière",
+      "resetView": "Réinitialiser la vue"
+    },
+    "table": {
+      "layout": {
+        "title": "Disposer les plaques",
+        "body": "A1 est le coin nord-ouest. Gardez le nord du même côté que sur la carte.",
+        "diagramAlt": "{x} plaques sur {y} sur une table de 1 mètre sur 2. La plaque A1 est au coin nord-ouest ; le reste de la table est libre pour les médias projetés.",
+        "checklist": {
+          "title": "Liste de vérification",
+          "allBuilt": "Toutes les plaques montées ({done} sur {total})",
+          "placed": "Plaques posées dans l'ordre, de {first} à {last}",
+          "aligned": "Bords bien accolés, sans espace"
+        },
+        "goBuild": "Aller à Construire"
+      },
+      "projection": {
+        "title": "Calque de projection",
+        "grid": "Grille des plaques",
+        "labels": "Noms des plaques",
+        "howTo": {
+          "title": "Comment l'utiliser",
+          "step1": "Projetez-le sur la maquette blanche.",
+          "step2": "Zoomez, déplacez et inclinez le projecteur jusqu'à ce que les contours tombent sur les briques.",
+          "step3": "Dessinez vos calques de données sur cette image, pour qu'ils tombent eux aussi sur les briques."
+        },
+        "note": "Il n'y a pas encore de calibrage automatique : réglez le projecteur à la main.",
+        "download": "Télécharger le calque de projection",
+        "fileType": "Type de fichier"
+      },
+      "calqueAlt": "Calque de projection : vue de dessus des briques en fins contours sur fond blanc{grid, select, yes {, avec la grille des plaques} other {}}{labels, select, yes { et leurs noms} other {}}."
+    },
+    "downloads": {
+      "title": "Tous les téléchargements",
+      "all": "Tout télécharger (.zip)",
+      "allPreparing": "Préparation du .zip : {done} fichiers sur {total}",
+      "groups": {
+        "building": "Pour construire",
+        "shopping": "Pour acheter",
+        "projector": "Pour le projecteur",
+        "digital": "Pour les outils numériques"
+      },
+      "readme": {
+        "title": "Contenu de ce dossier",
+        "pdf": "{file} : le guide de montage à imprimer.",
+        "bricklink": "{file} : liste de souhaits à coller sur BrickLink.",
+        "rebrickable": "{file} : liste de pièces à importer sur Rebrickable.",
+        "projection": "{file} : calque de projection pour le projecteur.",
+        "csv": "{file} : hauteur de chaque tenon, en briques (lignes du nord au sud, colonnes d'ouest en est, séparées par des points-virgules).",
+        "ldraw": "{file} : modèle 3D pour BrickLink Studio, LeoCAD et les autres outils LDraw.",
+        "project": "{file} : fichier de projet. Ouvrez-le sur le site du Legonizer pour obtenir des fichiers identiques.",
+        "intro": "Fichiers créés avec le Legonizer {version} à partir de « {project} » le {date}."
+      }
+    },
+    "summaryShort": "{x} × {y} plaques · {bricks} briques"
+  }
+}

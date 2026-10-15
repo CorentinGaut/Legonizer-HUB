@@ -1,0 +1,344 @@
+/*
+ * Legonizer design tokens — v1.0 — 2026-10-06
+ * Source of truth for colour, type, space, radius, elevation, motion, data-viz and 3D scene colours.
+ * Contrast ratios and colour-blindness checks are noted next to the colours.
+ *
+ * Consumed as is by the implementation. Rules:
+ *  - Components use the SEMANTIC tokens (--lz-color-*, --lz-space-*, ...), never raw hex.
+ *  - Data colours (--lz-proj-*, --lz-height-*) are the same in both themes: they are data, not chrome.
+ *  - Theme: automatic from prefers-color-scheme; override with <html data-theme="light|dark">.
+ *    Every colour token uses light-dark(), so it resolves from the element's `color-scheme`.
+ *    A subtree can force a theme: `.lz-room { color-scheme: dark; }` (used by the home hero).
+ *  - light-dark() needs Chrome/Edge 123+, Firefox 120+, Safari 17.5+ (SPEC N2: latest two versions).
+ *
+ * Fonts: self-hosted, declared in fonts.css (SPEC §12: no request to Google Fonts).
+ */
+
+/* ------------------------------------------------------------------ theme switch */
+:root {
+  color-scheme: light dark;
+}
+:root[data-theme='light'],
+[data-theme='light'] {
+  color-scheme: light;
+}
+:root[data-theme='dark'],
+[data-theme='dark'] {
+  color-scheme: dark;
+}
+
+:root {
+  /* ================================================================ COLOUR — chrome */
+  /* Surfaces: "plaster" in light, "projection room" in dark. */
+  --lz-color-bg: light-dark(#f6f5f1, #121316); /* page */
+  --lz-color-surface: light-dark(#ffffff, #1a1c20); /* cards, panels, inputs */
+  --lz-color-surface-raised: light-dark(#ffffff, #22242a); /* menus, popovers, toasts */
+  --lz-color-surface-sunken: light-dark(#efede7, #0e0f12); /* wells, shelf trays, code */
+  --lz-color-surface-hover: light-dark(#e8e6df, #26282e); /* hover fill on neutral controls */
+  --lz-color-surface-selected: light-dark(#ecedfc, #23264a); /* = accent-subtle */
+  --lz-color-scrim: light-dark(rgb(22 23 27 / 0.48), rgb(0 0 0 / 0.64)); /* behind dialogs */
+
+  --lz-color-border: light-dark(#dad7cf, #34373e); /* decorative dividers (no contrast duty) */
+  --lz-color-border-strong: light-dark(#85837b, #7c7f88); /* input and control boundaries, >= 3:1 */
+  --lz-color-border-subtle: light-dark(#e9e7e1, #26282e);
+
+  --lz-color-text: light-dark(#1b1c20, #eeede9); /* 15.6:1 / 15.9:1 on bg */
+  --lz-color-text-muted: light-dark(#55575e, #a9abb3); /* 6.6:1 / 8.1:1 on bg */
+  --lz-color-text-placeholder: light-dark(#6b6d74, #8c8f97); /* 5.2:1 / 5.3:1 on surface */
+  --lz-color-text-disabled: light-dark(#8e9096, #6c6f77); /* inactive controls (exempt, 1.4.3) */
+  --lz-color-text-inverse: light-dark(#ffffff, #121316);
+
+  /* Inverse surface: toasts, tooltips, keyboard hint bubbles. */
+  --lz-color-inverse-surface: light-dark(#26272d, #e4e3de);
+  --lz-color-inverse-text: light-dark(#f2f1ec, #1b1c20); /* 13.2:1 / 13.3:1 */
+  --lz-color-inverse-muted: light-dark(#b9bac0, #4a4c52); /* 7.7:1 / 6.7:1 */
+  --lz-color-inverse-accent: light-dark(#bcc2ff, #2f39b3); /* 8.7:1 / 6.9:1 */
+
+  /* Accent: "projector indigo". Never used for data. */
+  --lz-color-accent: light-dark(#3742c4, #a3abff); /* solid buttons, focus ring, selection */
+  --lz-color-accent-hover: light-dark(#2b34a6, #bcc2ff);
+  --lz-color-accent-active: light-dark(#222a88, #cdd1ff);
+  --lz-color-accent-subtle: light-dark(#ecedfc, #23264a); /* tinted backgrounds */
+  --lz-color-accent-border: light-dark(#bfc4f4, #444a8c);
+  --lz-color-accent-text: light-dark(#2f39b3, #aeb5ff); /* links, accent text: 8.2:1 / 9.6:1 */
+  --lz-color-on-accent: light-dark(#ffffff, #0f1236); /* label on solid accent: 7.7:1 / 8.5:1 */
+  --lz-color-focus: light-dark(#3742c4, #a3abff); /* focus ring: 7.0:1 / 8.7:1 on bg */
+
+  /* Status. *-text passes 4.5:1 on its *-bg and on surface; *-icon passes 3:1. */
+  --lz-color-success-text: light-dark(#1f6b44, #7fd4a2);
+  --lz-color-success-icon: light-dark(#23834f, #5cc48a);
+  --lz-color-success-bg: light-dark(#e5f3ea, #12291c);
+  --lz-color-success-border: light-dark(#9fd0b3, #2b5a3e);
+
+  --lz-color-warning-text: light-dark(#774a00, #f3c66e);
+  --lz-color-warning-icon: light-dark(#a86800, #e0a93e);
+  --lz-color-warning-bg: light-dark(#fff1cf, #2c2210);
+  --lz-color-warning-border: light-dark(#e7c27a, #6b5321);
+
+  --lz-color-danger-text: light-dark(#a3241b, #ff9f95);
+  --lz-color-danger-icon: light-dark(#b3261e, #ff8a7e);
+  --lz-color-danger-bg: light-dark(#fceae7, #331714);
+  --lz-color-danger-border: light-dark(#eba59d, #6e2f29);
+  --lz-color-danger-solid: light-dark(#b3261e, #ff8a7e); /* destructive button fill */
+  --lz-color-on-danger: light-dark(#ffffff, #0f1236);
+
+  --lz-color-info-text: var(--lz-color-accent-text);
+  --lz-color-info-icon: var(--lz-color-accent);
+  --lz-color-info-bg: var(--lz-color-accent-subtle);
+  --lz-color-info-border: var(--lz-color-accent-border);
+
+  /* "Legacy (UD-Viz 4.6.1)": archival, calm, never alarming. */
+  --lz-color-legacy-text: light-dark(#5b4d35, #dccfb2); /* 6.9:1 / 9.9:1 on legacy-bg */
+  --lz-color-legacy-bg: light-dark(#f0ebdf, #29251c);
+  --lz-color-legacy-border: light-dark(#8a7852, #7d6f55); /* 4.3:1 / 3.5:1 on surface */
+
+  /* The "room": dark stage for the home hero and Table mode, in both themes. */
+  --lz-color-room: #16171b;
+  --lz-color-room-deep: #0b0c0e;
+  --lz-color-room-text: #f2f1ec; /* 15.8:1 on room */
+  --lz-color-room-muted: #b9bac0; /* 9.3:1 on room */
+  --lz-color-room-scrim: linear-gradient(90deg, rgb(11 12 14 / 0.86) 0%, rgb(11 12 14 / 0.62) 32%, rgb(11 12 14 / 0) 52%);
+
+  /* ================================================================ COLOUR — bricks (glyphs, 2D diagrams, 3D) */
+  /* Physical objects: white bricks stay white in both themes; only the shading adapts. */
+  --lz-brick-top: light-dark(#ffffff, #f4f3ef);
+  --lz-brick-left: light-dark(#e7e5df, #d3d1ca); /* face lit from the left (iso: +y face) */
+  --lz-brick-right: light-dark(#d3d0c8, #b6b3ab); /* face in shade (iso: +x face) */
+  --lz-brick-stud-side: light-dark(#e2e0d9, #cbc9c2);
+  --lz-brick-edge: #2b2c31; /* outlines: dark in both themes (white object) */
+  --lz-brick-edge-width: 1.25; /* SVG user units at the native glyph scale */
+  --lz-brick-off-top: light-dark(#f3f2ee, #2a2c32); /* "Not used" slot */
+  --lz-brick-off-side: light-dark(#e4e2dc, #24262b);
+  --lz-brick-off-edge: light-dark(#8e9096, #7c7f88);
+  --lz-brick-new-top: light-dark(#dfe2ff, #c9ceff); /* new bricks in a step (plus outline) */
+  --lz-brick-new-left: light-dark(#c9cdf7, #b2b8f2);
+  --lz-brick-new-right: light-dark(#b4b9ee, #9ba2e6);
+  --lz-brick-new-edge: light-dark(#222a88, #0f1236);
+  --lz-brick-ghost: light-dark(#d9d7d0, #4a4c52); /* layers below, 2D diagrams */
+  --lz-baseplate-top: light-dark(#a9abaf, #8c8f94); /* light bluish grey */
+  --lz-baseplate-side: light-dark(#8e9094, #73767b);
+  --lz-baseplate-stud: light-dark(#b9bbbf, #9a9da2);
+
+  /* ================================================================ COLOUR — data */
+  /* Projection: change layer (paper §4.1 code: green = construction, red = destruction, yellow = modification).
+     Min CIEDE2000 between the three under protan/deutan/tritan (Machado 2009 and Brettel 1997): 24.5. */
+  --lz-proj-built: #14b391;
+  --lz-proj-demolished: #b42330;
+  --lz-proj-modified: #fbe04b;
+  /* Projection: building functions (min CIEDE2000 under all CVD simulations: 15.1; with vegetation 14.4). */
+  --lz-proj-housing: #ffc37a;
+  --lz-proj-offices: #4e4bb0;
+  --lz-proj-shops: #ec4f91;
+  --lz-proj-public: #38bbd6;
+  --lz-proj-industry: #6e675d;
+  --lz-proj-vegetation: #528c39;
+  /* Projection: transport lines = ink core + white casing (shape-coded, min CIEDE2000 24.2). */
+  --lz-proj-transport: #1b1c20;
+  --lz-proj-transport-casing: #ffffff;
+  --lz-proj-base: #ffffff; /* "no data": plain white light on the bricks */
+  --lz-proj-ground: #f2f1ec; /* table and streets in projected layers */
+  --lz-proj-swatch-border: var(--lz-color-border-strong); /* legend swatches need a 3:1 edge */
+
+  /* Height grid: sequential, colour-blind safe, monotonic lightness (prints in greyscale).
+     Steps 1–10; 0 = no brick. Label colour switches at step 7 (all labels >= 4.97:1). */
+  --lz-height-0: var(--lz-color-surface);
+  --lz-height-1: #f3f9c4;
+  --lz-height-2: #d1edb8;
+  --lz-height-3: #a0dab8;
+  --lz-height-4: #6dc5be;
+  --lz-height-5: #3db2c4;
+  --lz-height-6: #2195c1;
+  --lz-height-7: #216fb0;
+  --lz-height-8: #244c9f;
+  --lz-height-9: #1f2f86;
+  --lz-height-10: #081d58;
+  --lz-height-label-dark: #1b1c20; /* on steps 1–6 */
+  --lz-height-label-light: #ffffff; /* on steps 7–10 */
+  --lz-height-label-zero: var(--lz-color-text-muted);
+
+  /* Viewport overlays (2D and 3D). */
+  --lz-viz-area-stroke: var(--lz-color-accent);
+  --lz-viz-area-fill: light-dark(rgb(55 66 196 / 0.1), rgb(163 171 255 / 0.12));
+  --lz-viz-area-handle: light-dark(#ffffff, #121316);
+  --lz-viz-sampled-stroke: light-dark(#1b1c20, #eeede9); /* dashed: area actually sampled (SPEC A4) */
+  --lz-viz-plate-grid: light-dark(rgb(55 66 196 / 0.55), rgb(163 171 255 / 0.6));
+  --lz-viz-disappear: light-dark(#b3261e, #ff8a7e); /* hatch on buildings lower than one brick */
+  --lz-viz-included-whole: light-dark(#a86800, #e0a93e); /* dashed outline, touches the area */
+  --lz-viz-tallest: light-dark(#1b1c20, #eeede9);
+  --lz-viz-guide: light-dark(rgb(27 28 32 / 0.28), rgb(238 237 233 / 0.28)); /* brick level lines */
+  --lz-viz-uncovered: var(--lz-color-danger-icon);
+  --lz-viz-footprint: light-dark(#c9c6be, #4b4e55); /* 2D mode building footprints */
+  --lz-viz-footprint-edge: light-dark(#85837b, #7c7f88);
+
+  /* 3D scene backgrounds (read by the renderer). */
+  --lz-scene-bg-top: light-dark(#eceae5, #24262c);
+  --lz-scene-bg-bottom: light-dark(#d5d2cb, #141518);
+  --lz-scene-ground: light-dark(#e3e1db, #1b1c20);
+
+  /* ================================================================ TYPOGRAPHY */
+  --lz-font-display: 'Bricolage Grotesque', 'IBM Plex Sans', ui-sans-serif, system-ui, sans-serif;
+  --lz-font-sans: 'IBM Plex Sans', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial,
+    sans-serif;
+  --lz-font-mono: 'IBM Plex Mono', ui-monospace, 'SFMono-Regular', Menlo, Consolas, 'Liberation Mono', monospace;
+
+  --lz-weight-regular: 400;
+  --lz-weight-medium: 500;
+  --lz-weight-semibold: 600;
+  --lz-weight-bold: 700;
+  --lz-weight-display: 720; /* Bricolage Grotesque variable */
+
+  /* Size / line-height pairs. 1rem = 16px. Fluid sizes clamp between 360px and 1440px viewports. */
+  --lz-text-2xs: 0.6875rem; /* 11px: print only, never on screen */
+  --lz-text-xs: 0.75rem; /* 12px: stud rulers, part numbers, legends */
+  --lz-text-sm: 0.875rem; /* 14px: helper text, table cells, secondary buttons */
+  --lz-text-md: 1rem; /* 16px: body, inputs, buttons */
+  --lz-text-lg: 1.125rem; /* 18px: lead paragraphs, card titles */
+  --lz-text-xl: 1.375rem; /* 22px: h3, step header in Build */
+  --lz-text-2xl: clamp(1.5rem, 1.3rem + 0.8vw, 1.875rem); /* h2, step titles (h1 in the create panel) */
+  --lz-text-3xl: clamp(1.875rem, 1.45rem + 1.9vw, 2.75rem); /* h2 of home sections */
+  --lz-text-display: clamp(2.125rem, 1.6rem + 2.2vw, 3.375rem); /* home hero headline, 34 -> 54 px */
+  --lz-text-qty: 1.5rem; /* shelf quantities (mono) */
+  --lz-text-plate: 2rem; /* plate names on the build board and passes */
+
+  --lz-leading-tight: 1.08;
+  --lz-leading-snug: 1.25;
+  --lz-leading-normal: 1.5;
+  --lz-leading-relaxed: 1.65;
+  --lz-tracking-display: -0.022em;
+  --lz-tracking-heading: -0.012em;
+  --lz-tracking-eyebrow: 0.08em;
+  --lz-measure: 66ch; /* max line length for prose */
+
+  /* ================================================================ SPACE (4 px grid; 8 px = one stud pitch) */
+  --lz-stud: 0.5rem; /* 8px */
+  --lz-space-0: 0;
+  --lz-space-1: 0.25rem; /* 4 */
+  --lz-space-2: 0.5rem; /* 8 */
+  --lz-space-3: 0.75rem; /* 12 */
+  --lz-space-4: 1rem; /* 16 */
+  --lz-space-5: 1.5rem; /* 24 */
+  --lz-space-6: 2rem; /* 32 */
+  --lz-space-7: 3rem; /* 48 */
+  --lz-space-8: 4rem; /* 64 */
+  --lz-space-9: 6rem; /* 96 */
+  --lz-space-10: 8rem; /* 128 */
+  --lz-section-gap: clamp(3rem, 2rem + 4vw, 6rem); /* between home sections */
+
+  /* Layout */
+  --lz-page-max: 80rem; /* 1280 */
+  --lz-content-max: 72rem; /* 1152 */
+  --lz-gutter: clamp(1rem, 0.6rem + 1.8vw, 2rem);
+  --lz-header-h: 4rem;
+  --lz-stepper-h: 3.5rem;
+  --lz-actionbar-h: 4.5rem;
+  --lz-tabbar-h: 3.5rem; /* bottom tab bar of the build guide on phones (links, without the border) */
+  --lz-panel-w: 26.5rem; /* create step panel, desktop */
+  --lz-guide-side-w: 19rem; /* build board / callout column */
+  /* Breakpoints (for reference; custom properties can't be used in media queries):
+     sm 480px · md 768px (tablet, create page stacks) · lg 1024px (create split view) · xl 1280px · 2xl 1440px */
+
+  /* ================================================================ SIZE */
+  --lz-control-h-sm: 2rem; /* 32 */
+  --lz-control-h-md: 2.5rem; /* 40 */
+  --lz-control-h-lg: 3rem; /* 48 */
+  --lz-target-min: 24px; /* WCAG 2.5.8 */
+  --lz-target-touch: 44px; /* Build controls on touch, plate mode */
+  --lz-icon-sm: 1rem;
+  --lz-icon-md: 1.25rem;
+  --lz-icon-lg: 1.5rem;
+  --lz-icon-stroke: 1.75; /* at a 24 px viewBox */
+
+  /* Brick glyphs: one stud pitch in px. Same value everywhere (shelf, callout, passes); never below compact. */
+  --lz-glyph-unit: 12px;
+  --lz-glyph-unit-compact: 10px; /* minimum legible stud size, narrow screens */
+  --lz-glyph-unit-large: 16px; /* Table mode */
+  --lz-glyph-unit-print: 2.6mm;
+
+  /* ================================================================ RADIUS (crisp, architectural) */
+  --lz-radius-xs: 2px;
+  --lz-radius-sm: 4px; /* badges, inputs, stud-tiles */
+  --lz-radius-md: 6px; /* buttons, cards inside panels */
+  --lz-radius-lg: 10px; /* cards, dialogs, viewport */
+  --lz-radius-xl: 16px; /* hero media, home cards */
+  --lz-radius-pill: 999px; /* switches, chips */
+
+  /* ================================================================ ELEVATION */
+  --lz-shadow-color: light-dark(rgb(27 28 32 / 0.1), rgb(0 0 0 / 0.5));
+  --lz-shadow-color-strong: light-dark(rgb(27 28 32 / 0.18), rgb(0 0 0 / 0.7));
+  --lz-shadow-0: none;
+  --lz-shadow-1: 0 1px 2px var(--lz-shadow-color); /* cards at rest */
+  --lz-shadow-2: 0 1px 2px var(--lz-shadow-color), 0 4px 12px var(--lz-shadow-color); /* hover, sticky bars */
+  --lz-shadow-3: 0 2px 6px var(--lz-shadow-color), 0 12px 28px var(--lz-shadow-color); /* menus, toasts, floating toolbars */
+  --lz-shadow-4: 0 8px 20px var(--lz-shadow-color), 0 28px 64px var(--lz-shadow-color-strong); /* dialogs */
+  /* Dark theme adds a hairline highlight instead of relying on shadows. */
+  --lz-edge-highlight: light-dark(0 0 0 0 transparent, inset 0 1px 0 rgb(255 255 255 / 0.05));
+
+  /* ================================================================ FOCUS */
+  --lz-focus-width: 2px;
+  --lz-focus-offset: 2px;
+  --lz-focus-ring: 0 0 0 var(--lz-focus-offset) var(--lz-color-bg),
+    0 0 0 calc(var(--lz-focus-offset) + var(--lz-focus-width)) var(--lz-color-focus);
+
+  /* ================================================================ MOTION */
+  --lz-duration-instant: 80ms; /* press feedback */
+  --lz-duration-fast: 140ms; /* hover, toggles */
+  --lz-duration-base: 220ms; /* panels, disclosure, tab indicator */
+  --lz-duration-slow: 360ms; /* dialogs, toasts, step change */
+  --lz-duration-slower: 560ms; /* camera moves in the viewport */
+  --lz-duration-reveal: 800ms; /* brick reveal after generation (max) */
+  --lz-duration-caption: 300ms; /* home caption crossfade */
+  --lz-duration-fade: 120ms; /* the only motion left with reduced motion */
+  --lz-ease-standard: cubic-bezier(0.2, 0, 0, 1);
+  --lz-ease-enter: cubic-bezier(0, 0, 0.2, 1);
+  --lz-ease-exit: cubic-bezier(0.4, 0, 1, 1);
+  --lz-ease-brick: cubic-bezier(0.22, 1, 0.36, 1); /* drop, settle (ease-out quint) */
+  --lz-ease-camera: cubic-bezier(0.65, 0, 0.35, 1); /* ease-in-out */
+
+  /* ================================================================ Z-INDEX */
+  --lz-z-raised: 10;
+  --lz-z-sticky: 100;
+  --lz-z-header: 200;
+  --lz-z-dropdown: 300;
+  --lz-z-toast: 400;
+  --lz-z-dialog: 500;
+  --lz-z-tooltip: 600;
+  --lz-z-tablemode: 700;
+}
+
+/* Reduced motion: movement off, short fades only (WCAG 2.3.3, SPEC H8). */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --lz-duration-instant: 0ms;
+    --lz-duration-fast: 0ms;
+    --lz-duration-base: var(--lz-duration-fade);
+    --lz-duration-slow: var(--lz-duration-fade);
+    --lz-duration-slower: 0ms;
+    --lz-duration-reveal: 0ms;
+    --lz-duration-caption: var(--lz-duration-fade);
+  }
+}
+
+/* Windows high contrast / forced colours: let system colours win, keep boundaries visible. */
+@media (forced-colors: active) {
+  :root {
+    --lz-color-border: CanvasText;
+    --lz-color-border-strong: CanvasText;
+    --lz-color-focus: Highlight;
+    --lz-brick-edge: CanvasText;
+    --lz-shadow-1: none;
+    --lz-shadow-2: none;
+    --lz-shadow-3: none;
+    --lz-shadow-4: none;
+  }
+}
+
+/* Print: always light, no shadows (print.css builds on this). */
+@media print {
+  :root {
+    color-scheme: light;
+    --lz-shadow-1: none;
+    --lz-shadow-2: none;
+    --lz-shadow-3: none;
+    --lz-shadow-4: none;
+  }
+}

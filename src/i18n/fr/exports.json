@@ -1,0 +1,183 @@
+{
+  "common": {
+    "preparing": "Préparation…",
+    "downloaded": "{file} téléchargé",
+    "error": "Nous n'avons pas pu créer ce fichier.",
+    "disabledStale": "Régénérez d'abord : vos réglages ont changé.",
+    "withWarning": "{count, plural, one {# tenon n'est pas couvert} other {# tenons ne sont pas couverts}} dans ce fichier.",
+    "options": "Options",
+    "approxSize": "Environ {size}",
+    "fileName": "Nom du fichier : {file}",
+    "cancelled": "Annulé.",
+    "parts": "{count, plural, one {# référence} other {# références}}",
+    "underOneKb": "Moins de 1 ko",
+    "kb": "Environ {value} ko",
+    "mb": "Environ {value} Mo"
+  },
+  "csv": {
+    "title": "Matrice des hauteurs (CSV)",
+    "purpose": "La hauteur de chaque tenon, en briques. Même format que le widget UD-Viz.",
+    "oneFile": "Un seul fichier",
+    "perPlate": "Un fichier par plaque (.zip)",
+    "formatNote": "Une ligne par rangée de tenons, nord en premier ; valeurs séparées par des points-virgules.",
+    "perPlateZip": "legoPlates par plaque (.zip)"
+  },
+  "projection": {
+    "title": "Calque de projection",
+    "purpose": "Une vue de dessus de la maquette pour aligner votre projecteur et dessiner des calques de données.",
+    "jpg": "JPG, historique (1920 px)",
+    "png": "PNG à {dpi} dpi",
+    "dpiLabel": "Résolution",
+    "pngNote": "La taille réelle de la maquette est enregistrée dans le fichier.",
+    "grid": "Grille des plaques",
+    "labels": "Noms des plaques",
+    "eyebrow": "Pour le projecteur",
+    "pngShort": "PNG",
+    "dpiValue": "{dpi} dpi",
+    "sizePx": "{w} × {h} px"
+  },
+  "pdf": {
+    "title": "Guide de montage",
+    "purpose": "Tout pour construire à la table : plan des plaques, grilles des hauteurs, pièces et schémas des couches.",
+    "paper": "Papier",
+    "a4": "A4",
+    "letter": "US Letter",
+    "sections": {
+      "label": "Sections",
+      "cover": "Couverture et plan des plaques",
+      "plates": "Plaques",
+      "layers": "Schémas des couches",
+      "projection": "Calque de projection",
+      "passes": "Fiches de plaque",
+      "shopping": "Liste d'achat",
+      "appendix": "Annexe technique",
+      "coverName": "Couverture",
+      "coverTitle": "Couverture"
+    },
+    "pages": "Environ {count, plural, one {# page} other {# pages}}",
+    "progress": "Préparation du PDF : page {page} sur {total}",
+    "download": "Télécharger le PDF",
+    "cover": {
+      "madeWith": "Créé avec le Legonizer {version} le {date}",
+      "settings": "{preset} · {scale} m par tenon · échelle 1:{n}",
+      "accessibleVersion": "Une version accessible de ce guide est sur la page Guide de montage du site.",
+      "howToTitle": "Comment utiliser ce guide",
+      "howTo1": "Achetez les briques de la liste d'achat.",
+      "howTo2": "Triez-les dans un bac par plaque, avec le kit de chaque plaque.",
+      "howTo3": "Montez chaque plaque couche par couche.",
+      "howTo4": "Disposez les plaques sur la table, A1 au coin nord-ouest.",
+      "howTo5": "Projetez le calque de projection et alignez-le sur les briques.",
+      "plateMap": "Plan des plaques",
+      "mapHint": "(comme sur la table, nord en haut)",
+      "plateMapNote": "A1 est le coin nord-ouest. Chaque plaque fait 32 × 32 tenons (25,6 cm).",
+      "facts": {
+        "onTable": "Sur la table",
+        "onTableValue": "{w} × {d} cm, jusqu'à {h} cm de haut",
+        "onGround": "Au sol",
+        "onGroundValue": "{w} × {d} m",
+        "scale": "Échelle",
+        "scaleValue": "{s} m par tenon · 1:{n}",
+        "preset": "Préréglage",
+        "differs": "Diffère de l'historique",
+        "bricks": "Briques",
+        "tallest": "Le plus haut",
+        "tallestValue": "{bricks, plural, one {# brique} other {# briques}} ({cm} cm)"
+      }
+    },
+    "pageFooter": "{project} · {section}",
+    "heightGridTitle": "Hauteur de chaque tenon, en briques",
+    "kitTitle": "Kit de la plaque {plate}",
+    "layerTitle": "Couche {layer} sur {total}",
+    "projectionPageNote": "Taille réelle : {w} × {d} cm. Pas imprimé à taille réelle.",
+    "heightLegend": "Briques par tenon",
+    "platePosition": "Colonne {col} sur {cols} depuis l'ouest, ligne {row} sur {rows} depuis le nord.",
+    "kitPerPlate": "Kit par plaque",
+    "kitPerPlateNote": "(triez les briques dans un bac par plaque)",
+    "tickTray": "Cochez chaque bac quand il est complet.",
+    "scaleBar": "une plaque = 25,6 cm sur la table",
+    "baseplateScale": "au 1/8",
+    "baseplateName": "plaque de base 32×32",
+    "spare": "+{n} de réserve",
+    "total": "Total",
+    "continued": "suite",
+    "pageNumber": "page {page} sur {pages}",
+    "heightGridNote": "· lignes 1–32 nord → sud, colonnes 1–32 ouest → est",
+    "layersRange": "Couches {from}–{to} sur {total}",
+    "newBricks": "{count, plural, =0 {aucune nouvelle brique} one {# nouvelle brique} other {# nouvelles briques}}",
+    "legendNew": "Nouvelles à cette étape",
+    "legendBelow": "Couches du dessous",
+    "legendNote": "Nord en haut · règles : colonnes ouest → est, lignes nord → sud",
+    "emptyPlate": "Rien à monter sur cette plaque. Posez simplement la plaque de base.",
+    "white": "Toutes les briques sont blanches (couleur BrickLink 1, couleur Rebrickable 15).",
+    "lowerBound": "Il faut au moins {lowerBound} briques. Ce plan en utilise {count}, soit {percent} % de plus, car les briques ne peuvent pas chevaucher les bords des plaques et elles recouvrent les joints du dessous pour que la maquette tienne.",
+    "appendix": {
+      "title": "Comment cette maquette a été faite",
+      "settings": "Réglages",
+      "inputs": "Données et versions",
+      "files": "Fichiers",
+      "filesBody": "{csv} : hauteur de chaque tenon, en briques (lignes du nord au sud, colonnes d'ouest en est, séparées par des points-virgules). Le fichier de projet (.legonizer.json) s'ouvre sur le site du Legonizer et redonne des fichiers identiques.",
+      "credits": "Recherche : C. Le Bihan Gautier, J. Delanoy, G. Gesquière, JFIG 2024, hal-04924304.",
+      "legacyValue": "historique",
+      "changedValue": "modifié",
+      "noInputs": "non enregistré (ouvert depuis un fichier de projet ou une fiche de plaque)"
+    },
+    "shoppingTitle": "Liste d'achat",
+    "plateSummary": "{layers, plural, one {# couche} other {# couches}} · {bricks} briques",
+    "cancel": "Annuler",
+    "preparingShort": "Préparation du PDF…",
+    "tileSize": "{size} lisse",
+    "tilesColumn": "Lisses"
+  },
+  "bricklink": {
+    "title": "Liste de souhaits BrickLink",
+    "purpose": "Commandez les briques auprès des vendeurs BrickLink.",
+    "copy": "Copier le XML",
+    "copied": "Copié. Collez-le maintenant sur BrickLink.",
+    "download": "Télécharger le .xml",
+    "howTo": {
+      "step1": "Copiez la liste.",
+      "step2": "Ouvrez la page d'import de liste de souhaits de BrickLink et choisissez « Upload BrickLink XML format ».",
+      "step3": "Collez la liste et continuez."
+    },
+    "link": "Ouvrir la page d'import de BrickLink",
+    "ldrNote": "Vous pouvez aussi importer le fichier LDraw (.ldr) sur BrickLink."
+  },
+  "rebrickable": {
+    "title": "Liste de pièces Rebrickable",
+    "purpose": "Ajoutez les briques à une liste de pièces sur Rebrickable.",
+    "download": "Télécharger le .csv",
+    "howTo": {
+      "step1": "Téléchargez le fichier.",
+      "step2": "Sur Rebrickable, ouvrez une de vos listes de pièces.",
+      "step3": "Importez-y le fichier."
+    }
+  },
+  "ldraw": {
+    "title": "Modèle LDraw",
+    "purpose": "Ouvrez la maquette dans BrickLink Studio ou LeoCAD.",
+    "single": "Modèle unique (.ldr)",
+    "mpd": "Un sous-modèle par plaque (.mpd)"
+  },
+  "project": {
+    "title": "Fichier de projet",
+    "purpose": "Rouvrez-le ici plus tard pour obtenir des fichiers identiques.",
+    "save": "Enregistrer le fichier de projet"
+  },
+  "print": {
+    "title": "Liste d'achat sur papier",
+    "purpose": "Les pages d'achat du PDF.",
+    "action": "Imprimer la liste d'achat"
+  },
+  "pass": {
+    "title": "Fiche de plaque",
+    "layers": "{count, plural, one {# couche} other {# couches}} · {bricks} briques",
+    "scan": "Scannez pour monter cette plaque sur un téléphone",
+    "position": "Position sur la table",
+    "tooLarge": "Cette plaque est trop détaillée pour un QR code. Ouvrez-la sur l'ordinateur principal.",
+    "footer": "Legonizer {version} · {date}. Rien n'est envoyé : la plaque voyage dans le lien.",
+    "cut": "découpez le long des pointillés"
+  },
+  "all": {
+    "preparing": "Préparation du .zip…"
+  }
+}

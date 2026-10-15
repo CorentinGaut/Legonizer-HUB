@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Create your model · Legonizer</title>
+    <meta
+      name="description"
+      content="Turn a 3D city model into a model of white bricks: choose the area and the scale, get the parts list, instructions and shopping lists. Everything runs in your browser."
+    />
+    <meta name="color-scheme" content="light dark" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <script>
+      try {
+        var t = localStorage.getItem('lz-theme');
+        if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t;
+      } catch (e) {}
+    </script>
+  </head>
+  <body>
+    <header id="lz-header"></header>
+    <div class="lz-create" id="lz-create">
+      <main id="main" class="lz-create__main">
+        <section class="lz-panel">
+          <h1>Create your model</h1>
+          <p>Loading…</p>
+        </section>
+      </main>
+    </div>
+    <footer id="lz-footer"></footer>
+    <noscript
+      ><p style="padding: 1rem">The Legonizer needs JavaScript: everything runs in your browser.</p></noscript
+    >
+    <script type="module" src="./src/pages/create.ts"></script>
+  </body>
+</html>

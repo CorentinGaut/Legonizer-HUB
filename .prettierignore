@@ -1,0 +1,13 @@
+node_modules
+dist
+coverage
+fixtures
+public/data
+test/fixtures/**/*.json
+test/fixtures/**/*.csv
+package-lock.json
+*.md
+src/data
+# design tokens and components, kept in their original hand formatting
+src/styles/tokens.css
+src/styles/components.css

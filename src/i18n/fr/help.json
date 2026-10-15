@@ -1,0 +1,32 @@
+{
+  "prepareData": {
+    "title": "Préparer vos données",
+    "intro": "Le Legonizer lit les formats 3D Tiles, glTF/GLB, OBJ et CityJSON. Voici comment obtenir l'un d'eux à partir des données dont vous disposez.",
+    "citygml": {
+      "title": "Depuis CityGML",
+      "body": "Convertissez vos fichiers CityGML en CityJSON avec citygml-tools, un outil libre et maintenu qui lit CityGML 1.0, 2.0 et 3.0 (il demande Java 17 ou plus récent, ou Docker). Cette commande écrit city.json à côté de city.gml ; déposez city.json à l'étape Importer :",
+      "crop": "Une ville entière est trop lourde pour un navigateur : découpez d'abord votre quartier, en donnant ses coins dans les coordonnées de votre fichier, puis convertissez city__subset.gml :",
+      "note": "py3dtilers, que cette page conseillait auparavant, a été abandonné en janvier 2025, et py3dtiles, vers lequel renvoient ses auteurs, ne lit pas CityGML."
+    },
+    "osm": {
+      "title": "Depuis les bâtiments OpenStreetMap",
+      "body": "Exportez les bâtiments de votre zone sous forme de modèle 3D (glTF ou OBJ), par exemple avec une extension Blender qui importe les données OpenStreetMap. Vérifiez le résumé des dimensions après l'import."
+    },
+    "blender": {
+      "title": "Depuis Blender",
+      "body": "Exportez en glTF 2.0 (.glb). Appliquez d'abord les transformations des objets. Si la maquette paraît trop petite ou trop grande après l'import, changez l'unité à l'étape Importer."
+    },
+    "qgis": {
+      "title": "Depuis QGIS",
+      "body": "Exportez votre scène 3D en OBJ (menu Export de la vue cartographique 3D). Gardez la maquette dans un système de coordonnées projeté en mètres."
+    },
+    "size": {
+      "title": "Restez léger",
+      "body": "Les fichiers jusqu'à environ 2 millions de triangles (300 Mo) fonctionnent sur un ordinateur portable courant. Découpez votre quartier avant l'export, ou simplifiez la maquette."
+    },
+    "units": {
+      "title": "Vérifiez les unités et l'orientation",
+      "body": "Après l'import, le résumé indique la taille de la maquette en mètres. Une ville de 0,4 m de large signifie que l'unité est fausse : choisissez la bonne dans le résumé. Si les bâtiments sont couchés, changez l'axe vertical."
+    }
+  }
+}

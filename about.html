@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title data-i18n="about.meta.title"></title>
+    <meta name="description" data-i18n-attr="content:about.intro" />
+    <meta name="color-scheme" content="light dark" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <script>
+      try {
+        var t = localStorage.getItem('lz-theme');
+        if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t;
+      } catch (e) {}
+    </script>
+  </head>
+  <body class="lz-about">
+    <header id="lz-header"></header>
+
+    <main id="main" class="lz-container about">
+      <div class="about__head lz-stack">
+        <h1 class="lz-h1" data-i18n="about.title"></h1>
+        <p class="lz-lead" data-i18n="about.intro"></p>
+      </div>
+
+      <div class="about__layout">
+        <nav class="about__toc" aria-labelledby="about-toc-title">
+          <h2 id="about-toc-title" class="lz-eyebrow" data-i18n="about.toc.label"></h2>
+          <ol>
+            <li><a href="#privacy" data-i18n="about.privacy.title"></a></li>
+            <li><a href="#method" data-i18n="about.method.title"></a></li>
+            <li><a href="#prepare-data" data-i18n="help.prepareData.title"></a></li>
+            <li><a href="#files" data-i18n="about.files.title"></a></li>
+            <li><a href="#research" data-i18n="about.paper.title"></a></li>
+            <li><a href="#licences" data-i18n="about.licences.title"></a></li>
+            <li><a href="#trademark" data-i18n="about.trademark.title"></a></li>
+          </ol>
+        </nav>
+
+        <div class="about__body">
+          <section class="about__section" id="privacy" aria-labelledby="privacy-title">
+            <h2 id="privacy-title" class="lz-h2" data-i18n="about.privacy.title"></h2>
+            <p class="lz-prose" data-i18n="about.privacy.body"></p>
+          </section>
+
+          <section class="about__section" id="method" aria-labelledby="method-title">
+            <h2 id="method-title" class="lz-h2" data-i18n="about.method.title"></h2>
+            <p class="lz-prose" data-i18n="about.method.heights"></p>
+            <p class="lz-prose" data-i18n="about.method.legacy"></p>
+            <p class="lz-prose" data-i18n="about.method.bricks"></p>
+          </section>
+
+          <!-- Prepare your data (SPEC I13) -->
+          <section class="about__section" id="prepare-data" aria-labelledby="prepare-title">
+            <h2 id="prepare-title" class="lz-h2" data-i18n="help.prepareData.title"></h2>
+            <p class="lz-prose" data-i18n="help.prepareData.intro"></p>
+            <div class="about__cards">
+              <div class="lz-card about__card">
+                <h3 class="lz-h4" data-i18n="help.prepareData.citygml.title"></h3>
+                <p class="lz-small" data-i18n="help.prepareData.citygml.body"></p>
+                <!-- commands are code, not UI text: the same in every language -->
+                <pre class="about__code"><code>citygml-tools to-cityjson city.gml</code></pre>
+                <p class="lz-small" data-i18n="help.prepareData.citygml.crop"></p>
+                <pre
+                  class="about__code"
+                ><code>citygml-tools subset --bbox minX,minY,maxX,maxY city.gml</code></pre>
+                <p class="lz-small lz-muted" data-i18n="help.prepareData.citygml.note"></p>
+                <p class="lz-small about__links">
+                  <a
+                    class="lz-link"
+                    href="https://github.com/citygml4j/citygml-tools"
+                    data-i18n="about.links.citygmlTools"
+                  ></a>
+                  <a
+                    class="lz-link"
+                    href="https://hub.docker.com/r/citygml4j/citygml-tools"
+                    data-i18n="about.links.citygmlToolsDocker"
+                  ></a>
+                </p>
+              </div>
+              <div class="lz-card about__card">
+                <h3 class="lz-h4" data-i18n="help.prepareData.osm.title"></h3>
+                <p class="lz-small" data-i18n="help.prepareData.osm.body"></p>
+              </div>
+              <div class="lz-card about__card">
+                <h3 class="lz-h4" data-i18n="help.prepareData.blender.title"></h3>
+                <p class="lz-small" data-i18n="help.prepareData.blender.body"></p>
+              </div>
+              <div class="lz-card about__card">
+                <h3 class="lz-h4" data-i18n="help.prepareData.qgis.title"></h3>
+                <p class="lz-small" data-i18n="help.prepareData.qgis.body"></p>
+              </div>
+              <div class="lz-card about__card">
+                <h3 class="lz-h4" data-i18n="help.prepareData.size.title"></h3>
+                <p class="lz-small" data-i18n="help.prepareData.size.body"></p>
+              </div>
+              <div class="lz-card about__card">
+                <h3 class="lz-h4" data-i18n="help.prepareData.units.title"></h3>
+                <p class="lz-small" data-i18n="help.prepareData.units.body"></p>
+              </div>
+            </div>
+          </section>
+
+          <section class="about__section" id="files" aria-labelledby="files-title">
+            <h2 id="files-title" class="lz-h2" data-i18n="about.files.title"></h2>
+            <ul class="lz-prose about__list">
+              <li data-i18n="about.files.csv"></li>
+              <li data-i18n="about.files.ldraw"></li>
+              <li data-i18n="about.files.project"></li>
+            </ul>
+          </section>
+
+          <!-- Research and credits [H7] -->
+          <section class="about__section" id="research" aria-labelledby="research-title">
+            <h2 id="research-title" class="lz-h2" data-i18n="about.paper.title"></h2>
+            <p class="lz-prose" data-i18n="home.credits.research"></p>
+            <blockquote
+              class="about__citation lz-prose"
+              lang="fr"
+              data-i18n="about.paper.citation"
+            ></blockquote>
+            <p class="about__links">
+              <a class="lz-link" href="https://hal.science/hal-04924304" data-i18n="about.paper.link"></a>
+              <a class="lz-link" href="https://github.com/VCityTeam/UD-Viz" data-i18n="about.links.udviz"></a>
+            </p>
+            <p class="lz-prose lz-small" data-i18n="home.credits.udviz"></p>
+          </section>
+
+          <!-- Licences [N10] -->
+          <section class="about__section" id="licences" aria-labelledby="licences-title">
+            <h2 id="licences-title" class="lz-h2" data-i18n="about.licences.title"></h2>
+            <ul class="lz-prose about__list">
+              <li data-i18n="about.licences.legonizer"></li>
+              <li data-i18n="about.licences.udviz"></li>
+              <li data-i18n="about.licences.paper"></li>
+              <li data-i18n="about.licences.data"></li>
+              <li>
+                <span data-i18n="about.site.licence"></span>
+                <a
+                  class="lz-link"
+                  href="https://www.gnu.org/licenses/gpl-3.0.html"
+                  data-i18n="about.links.licence"
+                ></a>
+              </li>
+              <li>
+                <span data-i18n="about.credits.developedBy"></span>
+                <a class="lz-link" href="https://hemoreg.me">Jey Puget Gil</a>.
+              </li>
+            </ul>
+            <p class="lz-prose lz-small lz-muted" data-i18n="home.credits.illustrative"></p>
+            <p class="about__links">
+              <a
+                class="lz-link"
+                href="https://www.npmjs.com/package/legonizer"
+                data-i18n="about.links.legonizer"
+              ></a>
+            </p>
+            <h3 class="lz-h4 about__subhead" data-i18n="about.software.title"></h3>
+            <ul class="lz-prose lz-small about__list">
+              <li data-i18n="about.software.three"></li>
+              <li data-i18n="about.software.bvh"></li>
+              <li data-i18n="about.software.fflate"></li>
+              <li data-i18n="about.software.messageformat"></li>
+              <li data-i18n="about.software.pdf"></li>
+              <li data-i18n="about.software.qrcode"></li>
+              <li data-i18n="about.software.fonts"></li>
+            </ul>
+          </section>
+
+          <!-- Trademark [N9] -->
+          <section class="about__section" id="trademark" aria-labelledby="trademark-title">
+            <h2 id="trademark-title" class="lz-h2" data-i18n="about.trademark.title"></h2>
+            <p class="lz-prose" data-i18n="about.trademark.body"></p>
+          </section>
+        </div>
+      </div>
+    </main>
+
+    <footer id="lz-footer"></footer>
+    <script type="module" src="./src/pages/about.ts"></script>
+  </body>
+</html>

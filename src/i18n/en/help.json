@@ -1,0 +1,32 @@
+{
+  "prepareData": {
+    "title": "Prepare your data",
+    "intro": "The Legonizer reads 3D Tiles, glTF/GLB, OBJ and CityJSON. Here is how to get one of them from the data you have.",
+    "citygml": {
+      "title": "From CityGML",
+      "body": "Convert your CityGML files to CityJSON with citygml-tools, a free, maintained tool that reads CityGML 1.0, 2.0 and 3.0 (it needs Java 17 or later, or Docker). This command writes city.json next to city.gml; drop city.json on the Import step:",
+      "crop": "A whole city is too big for a browser: cut out your district first, giving its corners in the coordinates of your file, then convert city__subset.gml:",
+      "note": "py3dtilers, which this page suggested before, was discontinued in January 2025, and py3dtiles, which its authors point to, does not read CityGML."
+    },
+    "osm": {
+      "title": "From OpenStreetMap buildings",
+      "body": "Export the buildings of your area as a 3D model (glTF or OBJ), for example with a Blender add-on that imports OpenStreetMap data. Check the size summary after import."
+    },
+    "blender": {
+      "title": "From Blender",
+      "body": "Export as glTF 2.0 (.glb). Apply the object transforms first. If the model looks too small or too big after import, change the unit on the Import step."
+    },
+    "qgis": {
+      "title": "From QGIS",
+      "body": "Export your 3D scene to OBJ (3D map view, Export menu, Export 3D Scene). Keep the model in a projected coordinate system in metres."
+    },
+    "size": {
+      "title": "Keep it light",
+      "body": "Files up to about 2 million triangles (300 MB) work on a typical laptop. Crop to your district before exporting, or simplify the model."
+    },
+    "units": {
+      "title": "Check units and orientation",
+      "body": "After import, the summary shows the model's size in metres. A city 0.4 m wide means the unit is wrong: pick the right one in the summary. If buildings lie on their side, change the up axis."
+    }
+  }
+}

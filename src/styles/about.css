@@ -1,0 +1,105 @@
+/* About page (SPEC §5 /about: credits, citation, data preparation I13, licences N10, trademark N9). */
+@layer lz.pages {
+  #lz-header {
+    min-height: var(--lz-header-h);
+  }
+  .about {
+    padding-block: var(--lz-space-7) 0;
+  }
+  .about__head {
+    max-width: 48rem;
+    margin-bottom: var(--lz-space-7);
+  }
+  .about__layout {
+    display: grid;
+    grid-template-columns: 14rem minmax(0, 1fr);
+    gap: var(--lz-space-7);
+    align-items: start;
+  }
+  .about__toc {
+    position: sticky;
+    top: calc(var(--lz-header-h) + var(--lz-space-5));
+  }
+  .about__toc ol {
+    list-style: none;
+    padding: 0;
+    margin: var(--lz-space-3) 0 0;
+    display: grid;
+    gap: var(--lz-space-1);
+    border-left: 2px solid var(--lz-color-border);
+  }
+  .about__toc a {
+    display: block;
+    padding: var(--lz-space-1) var(--lz-space-3);
+    color: var(--lz-color-text-muted);
+    text-decoration: none;
+    font-size: var(--lz-text-sm);
+  }
+  .about__toc a:hover {
+    color: var(--lz-color-text);
+    text-decoration: underline;
+  }
+  .about__body {
+    display: grid;
+    gap: var(--lz-space-8);
+    min-width: 0;
+  }
+  .about__section {
+    display: grid;
+    gap: var(--lz-space-3);
+    scroll-margin-top: calc(var(--lz-header-h) + var(--lz-space-4));
+  }
+  .about__cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr));
+    gap: var(--lz-space-4);
+    margin-top: var(--lz-space-2);
+  }
+  .about__card {
+    display: grid;
+    gap: var(--lz-space-2);
+    align-content: start;
+  }
+  .about__list {
+    display: grid;
+    gap: var(--lz-space-2);
+    padding-left: 1.2rem;
+    margin: 0;
+  }
+  .about__code {
+    margin: 0;
+    padding: var(--lz-space-2) var(--lz-space-3);
+    border-radius: var(--lz-radius-sm);
+    background: var(--lz-color-surface-sunken);
+    font-size: var(--lz-text-sm);
+    /* wraps instead of scrolling: a scrolling block would need to be focusable */
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+  }
+  .about__links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--lz-space-2) var(--lz-space-5);
+  }
+  .about__links .lz-link {
+    text-decoration: underline;
+  }
+  .about__citation {
+    margin: 0;
+    padding: var(--lz-space-3) var(--lz-space-4);
+    border-left: 3px solid var(--lz-color-accent);
+    background: var(--lz-color-surface-sunken);
+    border-radius: 0 var(--lz-radius-md) var(--lz-radius-md) 0;
+  }
+  .about__subhead {
+    margin-top: var(--lz-space-4);
+  }
+  @media (max-width: 1023px) {
+    .about__layout {
+      grid-template-columns: 1fr;
+    }
+    .about__toc {
+      position: static;
+    }
+  }
+}

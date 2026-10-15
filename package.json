@@ -1,0 +1,59 @@
+{
+  "name": "legonizer-website",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Legonizer website: turn a 3D city model into a buildable model of white bricks (height matrix, parts list, instructions, exports).",
+  "type": "module",
+  "license": "GPL-3.0-or-later",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit -p tsconfig.json && vite build",
+    "preview": "vite preview",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:parity": "vitest run test/parity",
+    "lint": "eslint . && prettier --check .",
+    "format": "prettier --write .",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "fixtures:lyon": "node scripts/fetch-lyon-fixtures.mjs",
+    "fixtures:home": "node scripts/build-home-heightmap.ts",
+    "perf": "node scripts/perf.ts",
+    "fixtures:demo": "node scripts/build-demo-datasets.ts",
+    "e2e": "playwright test",
+    "stills:home": "node scripts/render-home-stills.ts"
+  },
+  "dependencies": {
+    "@fontsource-variable/bricolage-grotesque": "^5.3.0",
+    "@fontsource/ibm-plex-mono": "^5.3.0",
+    "@fontsource/ibm-plex-sans": "^5.3.0",
+    "@pdf-lib/fontkit": "^1.1.1",
+    "fflate": "0.8.3",
+    "intl-messageformat": "^12.1.3",
+    "pdf-lib": "^1.17.1",
+    "qrcode": "^1.5.4",
+    "three": "0.186.0",
+    "three-mesh-bvh": "0.9.15"
+  },
+  "devDependencies": {
+    "@eslint/js": "10.0.1",
+    "@playwright/test": "^1.63.0",
+    "@types/node": "26.6.4",
+    "@types/qrcode": "^1.5.6",
+    "@types/three": "0.186.0",
+    "axe-core": "^4.14.0",
+    "eslint": "10.12.0",
+    "eslint-config-prettier": "10.1.8",
+    "fast-check": "4.10.2",
+    "globals": "17.13.0",
+    "legonizer": "1.1.0",
+    "prettier": "3.9.9",
+    "three-r154": "npm:three@0.154.0",
+    "typescript": "5.9.3",
+    "typescript-eslint": "8.71.1",
+    "vite": "8.3.3",
+    "vitest": "5.0.3"
+  }
+}
