@@ -558,7 +558,11 @@ export class Actions {
         area: proj.area,
         areaOrigin: 'user',
         params: proj.params,
-        inventory: { enabled: proj.inventory.enabled, maxLength: proj.inventory.maxLength },
+        inventory: {
+          enabled: proj.inventory.enabled,
+          maxLength: proj.inventory.maxLength,
+          tileCap: proj.inventory.tileCap ?? 'none',
+        },
         result: {
           area: proj.area,
           params: proj.params,

@@ -5,7 +5,8 @@
  * handoff (BrickLink XML copy/download, Rebrickable CSV, paper list), spares and baseplate colour.
  */
 import { t } from '../shared/i18n.ts';
-import { BASEPLATE, BRICKS } from '../core/packing/catalog.ts';
+import { ALL_PARTS, BASEPLATE, BRICKS, TILES, partById, type TileCapMode } from '../core/packing/catalog.ts';
+import { partName, partSize, partSpoken, setTileCap, tileCapControl } from './parts.ts';
 import type { PlacedBrick } from '../core/types.ts';
 import { $, attr, copyText, html, ic, raw, setHtml, toast, type Raw } from '../create/dom.ts';
 import { n } from '../create/format.ts';
@@ -106,14 +107,19 @@ export class BricksTab implements Tab {
     void this.renderModel();
   }
 
-  private counts(): { counts: Record<string, number>; total: number; plates: number } | null {
+  private counts(): { counts: Record<string, number>; total: number; tiles: number; plates: number } | null {
     const d = this.data();
     if (!d) return null;
     if (this.scope) {
       const pl = d.packing.plates.find((p) => p.plate === this.scope);
-      if (pl) return { counts: pl.counts, total: pl.bricks, plates: 1 };
+      if (pl) return { counts: pl.counts, total: pl.bricks, tiles: pl.tiles ?? 0, plates: 1 };
     }
-    return { counts: d.packing.counts, total: d.packing.total, plates: d.packing.baseplates.quantity };
+    return {
+      counts: d.packing.counts,
+      total: d.packing.total,
+      tiles: d.packing.tiles ?? 0,
+      plates: d.packing.baseplates.quantity,
+    };
   }
 
   private renderShelf() {
@@ -181,7 +187,33 @@ export class BricksTab implements Tab {
     };
     const one = BRICKS.filter((b) => b.width === 1).map((b) => slot(b.id));
     const two = BRICKS.filter((b) => b.width === 2).map((b) => slot(b.id));
-    const kinds = BRICKS.filter((b) => (c.counts[b.id] ?? 0) > 0).length;
+    const tileSlot = (id: string) => {
+      const part = partById(id)!;
+      const q = c.counts[id] ?? 0;
+      const off = part.length > p.inventory.maxLength && id !== '3070b';
+      const buy = spares && q ? Math.ceil(q * (1 + spares / 100)) : q;
+      const qty = off
+        ? t('create.guide.bricks.slot.notUsed')
+        : q === 0
+          ? t(scoped ? 'create.guide.bricks.slot.noneOnPlate' : 'create.guide.bricks.slot.noneNeeded')
+          : t('create.guide.bricks.slot.quantity', { count: n(q) });
+      return html`<li
+        class="lz-slot lz-slot--tile${off || q === 0 ? ' is-off' : ''}${this.highlight === id ? ' is-highlighted' : ''}"
+        data-part="${id}"
+      >
+        <div class="lz-slot__glyph">${raw(glyph(id))}</div>
+        <span class="lz-slot__qty${upd ? ' is-updating' : ''}" aria-hidden="true">${qty}</span>
+        <span class="lz-slot__size" aria-hidden="true">${partSize(part)}</span>
+        <span class="lz-slot__part" aria-hidden="true">${id}</span>
+        ${spares && q && !off ? html`<span class="lz-slot__buy lz-small">${t('create.guide.bricks.slot.toBuy', { buy: n(buy), need: n(q), spare: n(buy - q) })}</span>` : ''}
+        <span class="lz-visually-hidden"
+          >${t('create.guide.bricks.slot.spoken', { size: partSpoken(part), id, count: q })}</span
+        >
+      </li>`;
+    };
+    const tiles = p.inventory.tileCap !== 'none' ? TILES.map((b) => tileSlot(b.id)) : [];
+    const kinds = ALL_PARTS.filter((b) => (c.counts[b.id] ?? 0) > 0).length;
+    const tilesNote = c.tiles ? ` ${t('create.guide.bricks.tilesTotal', { tiles: n(c.tiles) })}` : '';
     const quick = setsOf(p.inventory.enabled);
     const lb = d.packing.lowerBound;
     const pct = lb ? Math.round((100 * (d.packing.total - lb)) / lb) : 0;
@@ -201,10 +233,20 @@ export class BricksTab implements Tab {
       ${scoped ? html`<p class="lz-eyebrow">${t('create.guide.bricks.kitTitle', { plate: d.label(this.scope!) })}</p>` : ''}
       <div class="lz-shelf__row"><h2 class="lz-eyebrow" id="row1">${t('create.guide.bricks.rows.oneWide')}</h2><ul class="lz-shelf__slots" aria-labelledby="row1">${one}</ul></div>
       <div class="lz-shelf__row"><h2 class="lz-eyebrow" id="row2">${t('create.guide.bricks.rows.twoWide')}</h2><ul class="lz-shelf__slots" aria-labelledby="row2">${two}</ul></div>
+      ${
+        tiles.length
+          ? html`<div class="lz-shelf__row">
+              <h2 class="lz-eyebrow" id="row-tiles">${t('create.guide.bricks.rows.tiles')}</h2>
+              <ul class="lz-shelf__slots" aria-labelledby="row-tiles">
+                ${tiles}
+              </ul>
+            </div>`
+          : ''
+      }
       <div class="lz-shelf__row"><h2 class="lz-eyebrow" id="row3">${t('create.guide.bricks.rows.baseplates')}</h2><ul class="lz-shelf__slots" aria-labelledby="row3">
         <li class="lz-slot lz-slot--baseplate"><div class="lz-slot__glyph">${raw(glyph(BASEPLATE.id))}</div><span class="lz-slot__qty">${t('create.guide.bricks.slot.quantity', { count: c.plates })}</span><span class="lz-slot__size">${t('common.plate.baseplate')}</span><span class="lz-slot__part">${BASEPLATE.id} · ${t('create.guide.bricks.rows.baseplatesScale')}</span></li>
       </ul></div>
-      <p class="lz-shelf__total"><strong${attr('aria-live', 'polite')}>${upd ? t('create.guide.bricks.updating') : scoped ? t('create.guide.bricks.plateKit', { bricks: n(c.total), plate: d.label(this.scope!) }) : t('create.guide.bricks.total', { bricks: n(c.total), kinds, plates: n(c.plates) })}</strong>
+      <p class="lz-shelf__total"><strong${attr('aria-live', 'polite')}>${upd ? t('create.guide.bricks.updating') : (scoped ? t('create.guide.bricks.plateKit', { bricks: n(c.total), plate: d.label(this.scope!) }) : t('create.guide.bricks.total', { bricks: n(c.total), kinds, plates: n(c.plates) })) + tilesNote}</strong>
         <button type="button" class="lz-link lz-link--button" data-b="table" aria-expanded="${String(this.showTable)}">${this.showTable ? t('create.guide.bricks.showShelf') : t('create.guide.bricks.showTable')}</button>
         ${scoped ? html`<button type="button" class="lz-link lz-link--button" data-b="share">${ic('qr', 'sm')}${t('create.guide.build.share.action')}</button>` : ''}</p>
       ${table}
@@ -218,6 +260,7 @@ export class BricksTab implements Tab {
           </div>
           <div class="lz-param lz-param--narrow"><label class="lz-label" for="lz-longest">${t('create.guide.bricks.settings.longest')}</label><div class="lz-input lz-select"><select id="lz-longest">${[8, 6, 4, 3, 2, 1].map((v) => html`<option value="${v}" ${attr('selected', v === p.inventory.maxLength)}>${t('create.guide.bricks.settings.longestValue', { n: v })}</option>`)}</select></div></div>
           <p class="lz-help">${ic('lock', 'sm')} ${t('create.guide.bricks.settings.oneByOneLocked')}</p>
+          ${tileCapControl(p.inventory.tileCap, { id: 'lz-guide-tilecap' })}
         </div>
       </details>
       <details class="lz-disclosure">
@@ -235,11 +278,12 @@ export class BricksTab implements Tab {
     const p = this.ctx.store.p;
     const plates = d.packing.plates.length <= 16 ? d.packing.plates : [];
     const spares = p.spares;
-    const rows = BRICKS.map((b) => {
+    const parts = p.inventory.tileCap !== 'none' ? ALL_PARTS : BRICKS;
+    const rows = parts.map((b) => {
       const q = d.packing.counts[b.id] ?? 0;
       const buy = spares ? Math.ceil(q * (1 + spares / 100)) : q;
       return html`<tr>
-        <th scope="row">${t('common.part.name', { w: b.width, d: b.length })}</th>
+        <th scope="row">${partName(b)}</th>
         <td class="lz-mono">${b.id}</td>
         ${plates.map((pl) => html`<td class="num">${pl.counts[b.id] ?? 0}</td>`)}
         <td class="num"><strong>${n(q)}</strong></td>
@@ -438,9 +482,9 @@ export class BricksTab implements Tab {
       legend.className = 'lz-vp-bottom';
       box.append(legend);
     }
-    const part = hl ? BRICKS.find((b) => b.id === hl) : null;
+    const part = hl ? partById(hl) : null;
     legend.innerHTML = part
-      ? `<div class="lz-legend"><span class="lz-legend__item"><span class="lz-swatch" style="--sw: var(--lz-brick-new-top)"></span>${t('create.guide.bricks.where.legend', { size: `${part.width}×${part.length}` })}</span></div>`
+      ? `<div class="lz-legend"><span class="lz-legend__item"><span class="lz-swatch" style="--sw: var(--lz-brick-new-top)"></span>${t('create.guide.bricks.where.legend', { size: partSize(part) })}</span></div>`
       : '';
   }
 
@@ -448,7 +492,7 @@ export class BricksTab implements Tab {
 
   private setInventory(enabled: string[], maxLength = this.ctx.store.p.inventory.maxLength) {
     const ids = ALL_PART_IDS.filter((id) => id === '3005' || enabled.includes(id));
-    this.ctx.store.set({ inventory: { enabled: ids, maxLength } });
+    this.ctx.store.set({ inventory: { ...this.ctx.store.p.inventory, enabled: ids, maxLength } });
     this.ctx.actions.scheduleRepack();
   }
 
@@ -508,6 +552,11 @@ export class BricksTab implements Tab {
 
   private onClick = async (e: Event) => {
     const el = e.target as Element;
+    const cap = el.closest<HTMLElement>('[data-tilecap]')?.dataset.tilecap as TileCapMode | undefined;
+    if (cap) {
+      setTileCap(this.ctx, cap);
+      return;
+    }
     const set = el.closest<HTMLElement>('[data-set]')?.dataset.set;
     if (set) {
       this.setInventory(

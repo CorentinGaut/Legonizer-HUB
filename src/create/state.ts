@@ -5,6 +5,7 @@
 import type { HeightmapResult } from '../core/heightmap/index.ts';
 import type { PackingResult } from '../core/packing/pack.ts';
 import type { EstimateResult, MeshSummary } from '../core/worker/protocol.ts';
+import type { TileCapMode } from '../core/packing/catalog.ts';
 import { LEGACY_PRESET, defaultParams, type Area, type HeightMap, type Params } from '../core/types.ts';
 
 export type StepId = 'import' | 'area' | 'settings' | 'generate' | 'guide';
@@ -61,7 +62,8 @@ export interface ProjectState {
   /** Why the area is where it is (info line in step 2). */
   areaOrigin: 'default' | 'whole' | 'demo' | 'user' | null;
   params: Params;
-  inventory: { enabled: string[]; maxLength: number };
+  /** Part settings; `tileCap` = smooth tiles on top of the model (SPEC §7.5.1). */
+  inventory: { enabled: string[]; maxLength: number; tileCap: TileCapMode };
   spares: 0 | 5 | 10;
   baseplateColour: 'white' | 'grey';
   result: ResultState | null;
@@ -113,7 +115,7 @@ export function emptyProject(): ProjectState {
     area: null,
     areaOrigin: null,
     params: defaultParams(2, 2),
-    inventory: { enabled: [...ALL_PART_IDS], maxLength: 8 },
+    inventory: { enabled: [...ALL_PART_IDS], maxLength: 8, tileCap: 'none' },
     spares: 0,
     baseplateColour: 'white',
     result: null,

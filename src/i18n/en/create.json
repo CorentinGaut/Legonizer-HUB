@@ -588,7 +588,18 @@
       "capNone": "None",
       "legacyNone": "Legacy: none"
     },
-    "generate": "Generate model"
+    "generate": "Generate model",
+    "tileCap": {
+      "label": "Smooth tiles on top",
+      "none": "No tiles",
+      "roofs": "On roofs",
+      "all": "Whole model",
+      "help": {
+        "none": "Bricks only: studs stay visible on every roof.",
+        "roofs": "One layer of flat tiles (⅓ brick high, no studs) on top of every building, for a smooth projection surface. Heights are unchanged.",
+        "all": "Flat tiles on every building and on the bare baseplate, so the whole model has a smooth surface. Heights are unchanged."
+      }
+    }
   },
   "generate": {
     "ready": {
@@ -672,7 +683,11 @@
       },
       "keyPlates": "plates · {w} × {d} cm",
       "keyBricks": "bricks + {plates} baseplates",
-      "keyTallest": "bricks tallest ({cm} cm)"
+      "keyTallest": "bricks tallest ({cm} cm)",
+      "keyTiles": {
+        "roofs": "smooth tiles on the roofs",
+        "all": "smooth tiles on the whole model"
+      }
     },
     "empty": {
       "title": "No bricks to build",
@@ -731,7 +746,8 @@
         "oneWide": "1 stud wide",
         "twoWide": "2 studs wide",
         "baseplates": "Baseplates",
-        "baseplatesScale": "Drawn at ¼ scale"
+        "baseplatesScale": "Drawn at ¼ scale",
+        "tiles": "Smooth tiles"
       },
       "slot": {
         "quantity": "×{count}",
@@ -741,7 +757,8 @@
         "spoken": "{size}, part {id}, {count, plural, one {# brick} other {# bricks}}",
         "noneOnPlate": "None on this plate",
         "locked": "1 × 1 bricks fill the gaps, so they are always used.",
-        "useThisLabel": "Use {size} bricks"
+        "useThisLabel": "Use {size} bricks",
+        "noneNeeded": "None needed"
       },
       "total": "{bricks} bricks in {kinds} sizes + {plates} baseplates",
       "showTable": "Show as table",
@@ -806,7 +823,8 @@
       "plateKit": "{bricks} bricks + 1 baseplate for plate {plate}",
       "kitTitle": "Kit for plate {plate}",
       "updating": "Updating…",
-      "viewport": "3D view of the whole model"
+      "viewport": "3D view of the whole model",
+      "tilesTotal": "+ {tiles} tiles"
     },
     "build": {
       "plateMap": {

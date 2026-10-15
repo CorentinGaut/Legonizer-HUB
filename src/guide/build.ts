@@ -6,7 +6,8 @@
  * `BuildView` is shared with Plate mode (plate passes, SPEC O10).
  */
 import { t } from '../shared/i18n.ts';
-import { BRICKS } from '../core/packing/catalog.ts';
+import { KIT_ORDER, partById } from '../core/packing/catalog.ts';
+import { partSize, partSpoken } from './parts.ts';
 import { plateHeights } from '../core/export/guide.ts';
 import { columnLetters } from '../core/packing/plates.ts';
 import type { PlacedBrick } from '../core/types.ts';
@@ -341,7 +342,7 @@ export class BuildView {
     const bricks = this.stepBricks();
     const counts: Record<string, number> = {};
     for (const b of bricks) counts[b.partId] = (counts[b.partId] ?? 0) + 1;
-    const items = [...BRICKS].reverse().filter((b) => counts[b.id]);
+    const items = KIT_ORDER.filter((b) => counts[b.id]);
     // header
     $('#lz-step-title', this.el)!.textContent = total
       ? t('create.guide.build.step.header', { plate: this.label(this.plate), layer: this.layer, total })
@@ -367,11 +368,9 @@ export class BuildView {
                         >
                           <span class="lz-callout__glyph">${raw(glyph(b.id))}</span
                           ><span class="lz-callout__qty"
-                            >${t('create.guide.build.callout.item', { count: counts[b.id]!, size: `${b.width}×${b.length}` })}</span
+                            >${t('create.guide.build.callout.item', { count: counts[b.id]!, size: partSize(b) })}</span
                           ><span class="lz-callout__part">${b.id}</span
-                          ><span class="lz-visually-hidden"
-                            >, ${t('common.part.spoken', { w: b.width, d: b.length })}</span
-                          >
+                          ><span class="lz-visually-hidden">, ${partSpoken(b)}</span>
                         </button>
                       </li>`,
                   )}
@@ -534,7 +533,7 @@ export class BuildView {
                   ${rows.map(
                     (r) =>
                       html`<tr>
-                        <td>${r.size}</td>
+                        <td>${r.tile ? partSize(partById(r.partId)!) : r.size}</td>
                         <td class="num">${r.col}</td>
                         <td class="num">${r.row}</td>
                         <td>
@@ -669,10 +668,8 @@ export class BuildView {
     const bricks = this.stepBricks();
     const counts: Record<string, number> = {};
     for (const b of bricks) counts[b.partId] = (counts[b.partId] ?? 0) + 1;
-    const parts = [...BRICKS]
-      .reverse()
-      .filter((b) => counts[b.id])
-      .map((b) => `${counts[b.id]} ${t('common.part.spoken', { w: b.width, d: b.length })}`)
+    const parts = KIT_ORDER.filter((b) => counts[b.id])
+      .map((b) => `${counts[b.id]} ${partSpoken(b)}`)
       .join(', ');
     const text = p.layers
       ? t('create.guide.build.step.announce', {
@@ -1138,7 +1135,7 @@ export class BuildView {
     const bricks = this.stepBricks();
     const counts: Record<string, number> = {};
     for (const b of bricks) counts[b.partId] = (counts[b.partId] ?? 0) + 1;
-    const items = [...BRICKS].reverse().filter((b) => counts[b.id]);
+    const items = KIT_ORDER.filter((b) => counts[b.id]);
     const cells: Raw[] = [html`<span></span>`];
     for (let c = 0; c < d.platesX; c++)
       cells.push(html`<span class="lz-platemap__colhead">${columnLetters(c)}</span>`);
@@ -1180,7 +1177,7 @@ export class BuildView {
         </div>
         <div class="tm__view" id="lz-tm-view"></div>
         <ul class="tm__callout" aria-label="${t('create.guide.build.callout.title')}">
-          ${items.map((b) => html`<li>${raw(glyph(b.id))}${t('create.guide.build.callout.item', { count: counts[b.id]!, size: `${b.width}×${b.length}` })}</li>`)}
+          ${items.map((b) => html`<li>${raw(glyph(b.id))}${t('create.guide.build.callout.item', { count: counts[b.id]!, size: partSize(b) })}</li>`)}
         </ul>
         <div class="tm__controls">
           <button type="button" class="lz-btn lz-btn--on-room lz-btn--lg" data-tm="prev">

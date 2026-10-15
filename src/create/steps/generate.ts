@@ -5,6 +5,7 @@
  */
 import { t } from '../../shared/i18n.ts';
 import { plateHeights } from '../../core/export/guide.ts';
+import { plateBrickHeight, tallestCm } from '../../core/packing/pack.ts';
 import { $, attr, html, ic, raw, setHtml, type Raw } from '../dom.ts';
 import { n, seconds } from '../format.ts';
 import { isStale, presetOf } from '../state.ts';
@@ -178,6 +179,7 @@ export class GenerateStep implements StepView {
       tr.generateError,
       p.result?.generatedAt,
       p.result?.packing.total,
+      p.result?.packing.tiles,
       isStale(p),
       staleChanges(p).length,
       this.gridPlate,
@@ -337,7 +339,8 @@ export class GenerateStep implements StepView {
     const tr = this.ctx.store.t;
     const r = p.result!;
     const q = r.params;
-    const max = r.packing.plates.reduce((a, pl) => Math.max(a, pl.layers), 0);
+    const max = r.packing.plates.reduce((a, pl) => Math.max(a, plateBrickHeight(pl)), 0);
+    const tiles = r.packing.tiles ?? 0;
     const preset = presetOf(q, p.summary?.groundAvailable ?? false);
     // histogram (G3)
     const counts: number[] = [];
@@ -436,10 +439,20 @@ export class GenerateStep implements StepView {
             >${t('create.generate.done.keyBricks', { plates: r.packing.baseplates.quantity })}</span
           >
         </div>
+        ${
+          tiles
+            ? html`<div class="lz-keyfig">
+                <span class="lz-keyfig__value" id="lz-total-tiles">${n(tiles)}</span
+                ><span class="lz-keyfig__label"
+                  >${t(`create.generate.done.keyTiles.${p.inventory.tileCap === 'all' ? 'all' : 'roofs'}`)}</span
+                >
+              </div>`
+            : ''
+        }
         <div class="lz-keyfig">
           <span class="lz-keyfig__value">${max}</span
           ><span class="lz-keyfig__label"
-            >${t('create.generate.done.keyTallest', { cm: n((max * 9.6) / 10, 1) })}</span
+            >${t('create.generate.done.keyTallest', { cm: n(tallestCm(r.packing), 1) })}</span
           >
         </div>
       </div>
@@ -535,7 +548,7 @@ export class GenerateStep implements StepView {
                 (x) =>
                   html`<tr>
                     <th scope="row">${x.plate}</th>
-                    <td class="num">${x.layers}</td>
+                    <td class="num">${plateBrickHeight(x)}</td>
                     <td class="num">${n(x.bricks)}</td>
                   </tr>`,
               )}

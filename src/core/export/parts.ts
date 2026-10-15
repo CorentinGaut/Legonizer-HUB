@@ -1,4 +1,4 @@
-import { BASEPLATE, BRICKS } from '../packing/catalog.ts';
+import { ALL_PARTS, BASEPLATE } from '../packing/catalog.ts';
 import type { PackingResult } from '../packing/pack.ts';
 
 export interface PartLine {
@@ -7,13 +7,13 @@ export interface PartLine {
   quantity: number;
 }
 
-/** Parts list in catalog order (1×1 … 2×8), then baseplates; zero quantities omitted. */
+/** Parts list in catalog order (bricks 1×1 … 2×8, then cap tiles), then baseplates; zero quantities omitted. */
 export function partLines(
   packing: Pick<PackingResult, 'counts' | 'baseplates'>,
   includeBaseplates = true,
 ): PartLine[] {
   const lines: PartLine[] = [];
-  for (const b of BRICKS) {
+  for (const b of ALL_PARTS) {
     const q = packing.counts[b.id] ?? 0;
     if (q > 0) lines.push({ partId: b.id, name: b.name, quantity: q });
   }

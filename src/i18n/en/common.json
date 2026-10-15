@@ -79,7 +79,10 @@
     "number": "part {id}",
     "numberToConfirm": "part number to confirm",
     "quantity": "×{count}",
-    "quantityWithSize": "{count} × {size}"
+    "quantityWithSize": "{count} × {size}",
+    "tileCompact": "{w}×{d} tile",
+    "tileName": "{w} × {d} tile",
+    "tileSpoken": "{w} by {d} tile"
   },
   "time": {
     "justNow": "just now",

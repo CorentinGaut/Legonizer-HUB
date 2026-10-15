@@ -1,10 +1,10 @@
 /**
  * 2D layer diagram (SPEC O5; the PDF draws the same): top view, north up, layers
- * below shaded, new bricks outlined with their studs, stud rulers (columns 1–32 west → east, rows
+ * below shaded, new bricks outlined with their studs (cap tiles: an inset line, no stud), stud rulers (columns 1–32 west → east, rows
  * 1–32 north → south). The text twin of the 3D step view (N3) and the Build view in 2D mode (SPEC N2).
  */
 import type { PlacedBrick } from '../core/types.ts';
-import { BRICKS } from '../core/packing/catalog.ts';
+import { partById } from '../core/packing/catalog.ts';
 import { esc } from '../create/dom.ts';
 
 export function layerDiagram(
@@ -39,10 +39,14 @@ export function layerDiagram(
     const x = b.x * u,
       y = (32 - b.y - b.d) * u;
     const hl = opts.highlight ? (b.partId === opts.highlight ? ' is-hl' : ' is-dim') : '';
-    s += `<g class="lz-layer__brick${hl}"><rect x="${x + 1}" y="${y + 1}" width="${b.w * u - 2}" height="${b.d * u - 2}" rx="1.2"/>`;
+    const tile = partById(b.partId)?.kind === 'tile';
+    s += `<g class="lz-layer__brick${tile ? ' lz-layer__brick--tile' : ''}${hl}"><rect x="${x + 1}" y="${y + 1}" width="${b.w * u - 2}" height="${b.d * u - 2}" rx="1.2"/>`;
     let d = '';
-    for (let i = 0; i < b.w; i++)
-      for (let j = 0; j < b.d; j++) d += circ(x + (i + 0.5) * u, y + (j + 0.5) * u, u * 0.3);
+    const i0 = u * 0.25;
+    if (tile) d = `M${x + i0} ${y + i0}h${b.w * u - 2 * i0}v${b.d * u - 2 * i0}h${-(b.w * u - 2 * i0)}z`;
+    else
+      for (let i = 0; i < b.w; i++)
+        for (let j = 0; j < b.d; j++) d += circ(x + (i + 0.5) * u, y + (j + 0.5) * u, u * 0.3);
     s += `<path d="${d}"/></g>`;
   }
   s += '</g><g class="lz-layer__ruler" text-anchor="middle">';
@@ -57,14 +61,15 @@ export function layerDiagram(
 /** Rows of the "new bricks" table: size, north-west stud (column, row from the north), orientation. */
 export function brickRows(
   bricks: PlacedBrick[],
-): { partId: string; size: string; col: number; row: number; lying: 'we' | 'ns' | 'sq' }[] {
+): { partId: string; size: string; tile: boolean; col: number; row: number; lying: 'we' | 'ns' | 'sq' }[] {
   return [...bricks]
     .sort((a, b) => b.y + b.d - (a.y + a.d) || a.x - b.x)
     .map((b) => {
-      const part = BRICKS.find((p) => p.id === b.partId);
+      const part = partById(b.partId);
       return {
         partId: b.partId,
         size: part ? `${part.width}×${part.length}` : b.partId,
+        tile: part?.kind === 'tile',
         col: b.x + 1,
         row: 32 - (b.y + b.d) + 1,
         lying: b.w === b.d ? 'sq' : b.w > b.d ? 'we' : 'ns',

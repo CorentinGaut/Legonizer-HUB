@@ -5,7 +5,8 @@
  * and deterministic) and shown in the Build view, with the plate's kit. Progress stays on the phone.
  */
 import { t } from '../shared/i18n.ts';
-import { BRICKS } from '../core/packing/catalog.ts';
+import { KIT_ORDER } from '../core/packing/catalog.ts';
+import { partSize } from './parts.ts';
 import { decodePlatePass, type PlatePass } from '../core/export/platePass.ts';
 import { APP_VERSION, PACKING_ALGORITHM_VERSION } from '../core/version.ts';
 import type { PackingResult } from '../core/packing/pack.ts';
@@ -129,7 +130,7 @@ export class PlateModeView {
     });
     this.view.mount(box, { plate: 'A1', ...(r.layer ? { layer: r.layer } : {}) });
     const pl = packing.plates[0]!;
-    const kit = [...BRICKS].reverse().filter((b) => pl.counts[b.id]);
+    const kit = KIT_ORDER.filter((b) => pl.counts[b.id]);
     setHtml(
       $('#lz-pm-kit', this.host)!,
       html`<details class="lz-disclosure">
@@ -138,7 +139,7 @@ export class PlateModeView {
           ${t('exports.pass.layers', { count: pl.layers, bricks: n(pl.bricks) })}
         </summary>
         <ul class="lz-pass__kit lz-disclosure__content" aria-label="${t('create.guide.build.plateMode.kit')}">
-          ${kit.map((b) => html`<li>${raw(glyph(b.id))}<b>×${pl.counts[b.id]}</b>${b.width}×${b.length}</li>`)}
+          ${kit.map((b) => html`<li>${raw(glyph(b.id))}<b>×${pl.counts[b.id]}</b>${partSize(b)}</li>`)}
         </ul>
       </details>`,
     );

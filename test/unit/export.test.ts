@@ -170,7 +170,7 @@ describe('build guide, plate passes, project file, calque', () => {
       const back = decodePlatePass(payload);
       expect(back.plate).toBe(p.plate);
       expect(Array.from(back.heights)).toEqual(Array.from(heights));
-      expect(back.inventory).toEqual({ enabled: ['3005', '3003', '3001'], maxLength: 4 });
+      expect(back.inventory).toEqual({ enabled: ['3005', '3003', '3001'], maxLength: 4, tileCap: 'none' });
       expect(back.appVersion).toBe(APP_VERSION);
       // the decoded pass regenerates exactly this plate's packing (plate-local)
       const again = packHeightMap({ cols: 32, rows: 32, data: back.heights }, back.inventory);

@@ -4,7 +4,8 @@
  * server. Layout before compression (format 1):
  *
  *   u8 format (=1) · u8 packing algorithm version · str app version · str plate name · str title
- *   u16 LE enabled-part mask (bit i = BRICKS[i], 1×1 always set) · u8 max length
+ *   u16 LE enabled-part mask (bit i = BRICKS[i], 1×1 always set; bits 14–15 = tile cap: 0 none,
+ *   1 roofs, 2 all, so passes made before the cap decode as 'none') · u8 max length
  *   run-length heights: (varint value, varint run) pairs over the 32×32 cells, row j = 0 (south)
  *   to 31, column i = 0 (west) to 31
  *
@@ -16,7 +17,13 @@
  */
 import { deflateSync, inflateSync } from 'fflate';
 import { STUDS_PER_PLATE } from '../types.ts';
-import { BRICKS, normalizeInventory, type InventoryOptions } from '../packing/catalog.ts';
+import {
+  BRICKS,
+  TILE_CAP_MODES,
+  normalizeInventory,
+  type InventoryOptions,
+  type NormalizedInventory,
+} from '../packing/catalog.ts';
 import { APP_VERSION, PACKING_ALGORITHM_VERSION } from '../version.ts';
 
 export const PLATE_PASS_FORMAT = 1;
@@ -26,7 +33,7 @@ export interface PlatePass {
   plate: string;
   /** 32 × 32 heights, data[j*32 + i] (j south→north, i west→east). */
   heights: Int32Array;
-  inventory: { enabled: string[]; maxLength: number };
+  inventory: NormalizedInventory;
   appVersion: string;
   packingVersion: number;
   title: string;
@@ -115,6 +122,7 @@ export function encodePlatePass(p: {
   BRICKS.forEach((b, i) => {
     if (inv.enabled.includes(b.id)) mask |= 1 << i;
   });
+  mask |= TILE_CAP_MODES.indexOf(inv.tileCap) << 14;
   w.u8(mask & 0xff);
   w.u8(mask >> 8);
   w.u8(inv.maxLength);
@@ -150,10 +158,11 @@ export function decodePlatePass(payload: string): PlatePass {
     i += run;
   }
   const enabled = BRICKS.filter((_, k) => mask & (1 << k)).map((b) => b.id);
+  const tileCap = TILE_CAP_MODES[(mask >> 14) & 3] ?? 'none';
   return {
     plate,
     heights,
-    inventory: normalizeInventory({ enabled, maxLength }),
+    inventory: normalizeInventory({ enabled, maxLength, tileCap }),
     appVersion,
     packingVersion,
     title,

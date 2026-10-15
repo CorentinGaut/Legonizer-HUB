@@ -4,7 +4,7 @@
  * · All downloads. Every tab reads the same packing result, so the numbers agree everywhere.
  */
 import { t } from '../shared/i18n.ts';
-import type { PackingResult } from '../core/packing/pack.ts';
+import { plateBrickHeight, tallestCm, type PackingResult } from '../core/packing/pack.ts';
 import type { HeightMap } from '../core/types.ts';
 import { $, attr, html, ic, setHtml, type Raw } from '../create/dom.ts';
 import { n } from '../create/format.ts';
@@ -118,7 +118,7 @@ export class GuideView {
     const strip = $('#lz-summary', this.host);
     if (!strip) return;
     if (d) {
-      const tallest = d.packing.plates.reduce((a, x) => Math.max(a, x.layers), 0);
+      const tallest = d.packing.plates.reduce((a, x) => Math.max(a, plateBrickHeight(x)), 0);
       const preset = presetName(presetOf(p.result!.params, p.summary?.groundAvailable ?? false));
       setHtml(
         strip,
@@ -130,10 +130,10 @@ export class GuideView {
           ><span class="sep" aria-hidden="true">·</span
           ><span
             >${n(d.packing.total)}
-            ${t('create.generate.done.keyBricks', { plates: d.packing.baseplates.quantity })}</span
+            ${t('create.generate.done.keyBricks', { plates: d.packing.baseplates.quantity })}${d.packing.tiles ? ` ${t('create.guide.bricks.tilesTotal', { tiles: n(d.packing.tiles) })}` : ''}</span
           ><span class="sep" aria-hidden="true">·</span
           ><span class="opt"
-            >${t('create.generate.done.tallest', { bricks: tallest, cm: n((tallest * 9.6) / 10, 1) })}</span
+            >${t('create.generate.done.tallest', { bricks: tallest, cm: n(tallestCm(d.packing), 1) })}</span
           ><span class="sep" aria-hidden="true">·</span><span class="opt">${preset}</span>`,
       );
     }

@@ -588,7 +588,18 @@
       "capNone": "Aucun",
       "legacyNone": "Historique : aucun"
     },
-    "generate": "Générer la maquette"
+    "generate": "Générer la maquette",
+    "tileCap": {
+      "label": "Plates lisses en finition",
+      "none": "Aucune",
+      "roofs": "Sur les toits",
+      "all": "Toute la maquette",
+      "help": {
+        "none": "Briques seules : les tenons restent visibles sur chaque toit.",
+        "roofs": "Une couche de plates lisses (⅓ de brique, sans tenons) sur chaque bâtiment, pour une surface de projection lisse. Les hauteurs ne changent pas.",
+        "all": "Des plates lisses sur chaque bâtiment et sur la plaque de base nue, pour une maquette entièrement lisse. Les hauteurs ne changent pas."
+      }
+    }
   },
   "generate": {
     "ready": {
@@ -672,7 +683,11 @@
       },
       "keyPlates": "plaques · {w} × {d} cm",
       "keyBricks": "briques + {plates} plaques de base",
-      "keyTallest": "briques au plus haut ({cm} cm)"
+      "keyTallest": "briques au plus haut ({cm} cm)",
+      "keyTiles": {
+        "roofs": "plates lisses sur les toits",
+        "all": "plates lisses sur toute la maquette"
+      }
     },
     "empty": {
       "title": "Aucune brique à poser",
@@ -731,7 +746,8 @@
         "oneWide": "Largeur 1 tenon",
         "twoWide": "Largeur 2 tenons",
         "baseplates": "Plaques de base",
-        "baseplatesScale": "Dessinée au ¼"
+        "baseplatesScale": "Dessinée au ¼",
+        "tiles": "Plates lisses"
       },
       "slot": {
         "quantity": "×{count}",
@@ -741,7 +757,8 @@
         "spoken": "{size}, pièce {id}, {count, plural, one {# brique} other {# briques}}",
         "noneOnPlate": "Aucune sur cette plaque",
         "locked": "Les briques 1 × 1 comblent les trous : elles sont toujours utilisées.",
-        "useThisLabel": "Utiliser les briques {size}"
+        "useThisLabel": "Utiliser les briques {size}",
+        "noneNeeded": "Aucune nécessaire"
       },
       "total": "{bricks} briques en {kinds} tailles + {plates} plaques de base",
       "showTable": "Afficher en tableau",
@@ -806,7 +823,8 @@
       "plateKit": "{bricks} briques + 1 plaque de base pour la plaque {plate}",
       "kitTitle": "Kit de la plaque {plate}",
       "updating": "Mise à jour…",
-      "viewport": "Vue 3D de la maquette entière"
+      "viewport": "Vue 3D de la maquette entière",
+      "tilesTotal": "+ {tiles} plates lisses"
     },
     "build": {
       "plateMap": {

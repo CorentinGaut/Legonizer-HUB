@@ -133,6 +133,32 @@ export function brickIsoGlyph(W: number, L: number, u = GLYPH_UNIT): Glyph {
   return { viewBox: [f(minX), f(minY), f(maxX - minX), f(maxY - minY)], prims };
 }
 
+/** Isometric cap tile glyph (smooth top, ⅓ brick high), W studs wide, L studs long. */
+export function tileIsoGlyph(W: number, L: number, u = GLYPH_UNIT): Glyph {
+  const h = H / 3;
+  const minX = -W * C * u - PAD;
+  const maxX = L * C * u + PAD;
+  const minY = P(0, 0, h, u)[1] - PAD;
+  const maxY = P(L, W, 0, u)[1] + PAD;
+  return {
+    viewBox: [f(minX), f(minY), f(maxX - minX), f(maxY - minY)],
+    prims: box(W, L, h, u, { top: 'top', left: 'left', right: 'right' }),
+  };
+}
+
+/** Plan (top view) tile glyph: smooth top, drawn with an inner inset line instead of studs. North up. */
+export function tileTopGlyph(W: number, L: number, u = GLYPH_UNIT): Glyph {
+  const pad = 1;
+  const i = Math.min(u * 0.18, 3);
+  return {
+    viewBox: [-pad, -pad, L * u + 2 * pad, W * u + 2 * pad],
+    prims: [
+      { d: `M0.25,0.25H${f(L * u - 0.25)}V${f(W * u - 0.25)}H0.25Z`, fill: 'top', stroke: 1.5 },
+      { d: `M${f(i)},${f(i)}H${f(L * u - i)}V${f(W * u - i)}H${f(i)}Z`, fill: 'none', stroke: 0.75 },
+    ],
+  };
+}
+
 /** Plan (top view) glyph: L studs along x, W along y, studs as circles. North up. */
 export function brickTopGlyph(W: number, L: number, u = GLYPH_UNIT): Glyph {
   const pad = 1;

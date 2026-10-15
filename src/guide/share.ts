@@ -5,7 +5,8 @@
  * demand; above version 15 at ECC M (the scannability threshold of SPEC O10) the pass shows the no-QR variant.
  */
 import { t } from '../shared/i18n.ts';
-import { BRICKS } from '../core/packing/catalog.ts';
+import { KIT_ORDER } from '../core/packing/catalog.ts';
+import { partSize } from './parts.ts';
 import { plateHeights } from '../core/export/guide.ts';
 import { encodePlatePass, passFitsQr, platePassUrl } from '../core/export/platePass.ts';
 import { APP_VERSION } from '../core/version.ts';
@@ -64,7 +65,7 @@ export async function openShareDialog(ctx: Ctx, d: GuideData, plate: string): Pr
   for (let r = 0; r < d.platesY; r++)
     for (let c = 0; c < d.platesX; c++)
       cells.push(`<i class="${c === p.col && r === d.platesY - 1 - p.southRow ? 'on' : ''}"></i>`);
-  const kit = [...BRICKS].reverse().filter((b) => p.counts[b.id]);
+  const kit = KIT_ORDER.filter((b) => p.counts[b.id]);
   const date = new Intl.DateTimeFormat(document.documentElement.lang || 'en', {
     day: 'numeric',
     month: 'short',
@@ -99,7 +100,7 @@ export async function openShareDialog(ctx: Ctx, d: GuideData, plate: string): Pr
           >
         </div>
         <ul class="lz-pass__kit" aria-label="${t('create.guide.build.plateMode.kit')}">
-          ${kit.map((b) => html`<li>${raw(glyph(b.id))}<b>×${p.counts[b.id]}</b>${b.width}×${b.length}</li>`)}
+          ${kit.map((b) => html`<li>${raw(glyph(b.id))}<b>×${p.counts[b.id]}</b>${partSize(b)}</li>`)}
         </ul>
         <div class="lz-pass__foot">
           <span>${t('exports.pass.footer', { version: APP_VERSION, date })}</span>

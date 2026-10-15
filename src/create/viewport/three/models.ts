@@ -33,8 +33,11 @@ import { RoundedBoxGeometry } from 'three/examples/jsm/geometries/RoundedBoxGeom
 import type { MeshPreview } from '../../../core/worker/protocol.ts';
 import type { PlacedBrick } from '../../../core/types.ts';
 import { parsePlateName, plateName } from '../../../core/packing/plates.ts';
+import { TILES } from '../../../core/packing/catalog.ts';
 
 export const BRICK_H = 1.2; // stud pitches
+export const TILE_H = BRICK_H / 3; // cap tile (plate height, no stud)
+const TILE_IDS = new Set(TILES.map((t) => t.id));
 const GAP = 0.025; // 0.2 mm
 const PLATE_T = 0.225; // 1.8 mm
 const STUD_R = 0.3;
@@ -262,7 +265,7 @@ const MATS: Record<Exclude<BrickState, 'hidden'>, () => Material> = {
     }),
 };
 
-/** Brick model in stud units: x east, y north, z up (1 brick = 1.2). */
+/** Brick model in stud units: x east, y north, z up (1 brick = 1.2; a cap tile of layer k = 0.4 on layer k − 1). */
 export function buildBrickModel(bricks: PlacedBrick[], o: BrickModelOptions): { group: Group; bounds: Box3 } {
   const group = new Group();
   const plateSet = o.plates ? new Set(o.plates) : null;
@@ -271,11 +274,12 @@ export function buildBrickModel(bricks: PlacedBrick[], o: BrickModelOptions): { 
     oy = origin ? -origin.southRow * 32 : 0;
   const style = o.style ?? (() => 'solid' as const);
   // group instances by footprint × state
-  const buckets = new Map<string, { w: number; d: number; state: BrickState; mats: Matrix4[] }>();
+  const buckets = new Map<string, { w: number; d: number; h: number; state: BrickState; mats: Matrix4[] }>();
   const cols = o.platesX * 32;
   const rows = o.platesY * 32;
   const top = new Int16Array(cols * rows); // highest visible layer per cell
   const topState = new Uint8Array(cols * rows);
+  const topTile = new Uint8Array(cols * rows); // the top part of the cell is a smooth tile (no stud)
   const stateCode: Record<BrickState, number> = { solid: 1, ghost: 2, new: 3, hidden: 0, dim: 4 };
   const outline: number[] = [];
   const m = new Matrix4();
@@ -287,18 +291,21 @@ export function buildBrickModel(bricks: PlacedBrick[], o: BrickModelOptions): { 
     const { col, southRow } = parsePlateName(b.plate, o.platesY);
     const x0 = col * 32 + b.x,
       y0 = southRow * 32 + b.y;
+    const tile = TILE_IDS.has(b.partId);
+    const h = tile ? TILE_H : BRICK_H;
     const z0 = (b.layer - 1) * BRICK_H;
-    maxZ = Math.max(maxZ, z0 + BRICK_H);
-    const key = `${b.w}x${b.d}:${st}`;
+    maxZ = Math.max(maxZ, z0 + h);
+    const key = `${b.w}x${b.d}${tile ? 't' : ''}:${st}`;
     let bk = buckets.get(key);
-    if (!bk) buckets.set(key, (bk = { w: b.w, d: b.d, state: st, mats: [] }));
-    bk.mats.push(m.clone().makeTranslation(x0 + b.w / 2 + ox, y0 + b.d / 2 + oy, z0 + BRICK_H / 2));
+    if (!bk) buckets.set(key, (bk = { w: b.w, d: b.d, h, state: st, mats: [] }));
+    bk.mats.push(m.clone().makeTranslation(x0 + b.w / 2 + ox, y0 + b.d / 2 + oy, z0 + h / 2));
     for (let i = 0; i < b.w; i++)
       for (let j = 0; j < b.d; j++) {
         const c = (y0 + j) * cols + (x0 + i);
         if (b.layer >= top[c]!) {
           top[c] = b.layer;
           topState[c] = stateCode[st];
+          topTile[c] = tile ? 1 : 0;
         }
       }
     if (st === 'new' && o.outlines !== false) {
@@ -307,7 +314,7 @@ export function buildBrickModel(bricks: PlacedBrick[], o: BrickModelOptions): { 
         ya = y0 + oy + GAP / 2,
         yb = y0 + b.d + oy - GAP / 2,
         za = z0,
-        zb = z0 + BRICK_H - GAP;
+        zb = z0 + h - GAP;
       // 12 box edges
       const e = [
         [xa, ya, za, xb, ya, za],
@@ -334,7 +341,7 @@ export function buildBrickModel(bricks: PlacedBrick[], o: BrickModelOptions): { 
   };
   for (const bk of buckets.values()) {
     if (bk.state === 'hidden') continue;
-    const geo = new RoundedBoxGeometry(bk.w - GAP, bk.d - GAP, BRICK_H - GAP, 2, 0.05);
+    const geo = new RoundedBoxGeometry(bk.w - GAP, bk.d - GAP, bk.h - GAP, 2, 0.05);
     const im = new InstancedMesh(geo, mat(bk.state), bk.mats.length);
     bk.mats.forEach((mm, k) => im.setMatrixAt(k, mm));
     im.instanceMatrix.needsUpdate = true;
@@ -349,13 +356,13 @@ export function buildBrickModel(bricks: PlacedBrick[], o: BrickModelOptions): { 
     const byState = new Map<number, Matrix4[]>();
     let count = 0;
     for (let c = 0; c < top.length; c++) {
-      if (!top[c]) continue;
+      if (!top[c] || topTile[c]) continue;
       count++;
     }
     if (count <= 120_000) {
       for (let c = 0; c < top.length; c++) {
         const L = top[c]!;
-        if (!L) continue;
+        if (!L || topTile[c]) continue;
         const x = (c % cols) + 0.5 + ox,
           y = Math.floor(c / cols) + 0.5 + oy;
         const s = topState[c]!;

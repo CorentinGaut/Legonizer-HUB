@@ -2,12 +2,14 @@
  * Brick glyphs on the page (SPEC O3: drawn to scale): one sprite of `<symbol>`s built once from the core
  * glyph geometry (the same drawing as the PDF), referenced with `<use>`.
  */
-import { BRICKS, BASEPLATE } from '../core/packing/catalog.ts';
+import { BRICKS, BASEPLATE, TILES } from '../core/packing/catalog.ts';
 import {
   baseplateGlyph,
   brickIsoGlyph,
   brickTopGlyph,
   glyphSvgContent,
+  tileIsoGlyph,
+  tileTopGlyph,
   type Glyph,
 } from '../core/export/glyphs.ts';
 
@@ -26,6 +28,10 @@ export function ensureGlyphSprite(): void {
   for (const b of BRICKS) {
     add(`lz-g-${b.id}`, brickIsoGlyph(b.width, b.length));
     add(`lz-g-${b.id}-top`, brickTopGlyph(b.width, b.length));
+  }
+  for (const b of TILES) {
+    add(`lz-g-${b.id}`, tileIsoGlyph(b.width, b.length));
+    add(`lz-g-${b.id}-top`, tileTopGlyph(b.width, b.length));
   }
   add(`lz-g-${BASEPLATE.id}`, baseplateGlyph(32, 12, 1));
   const holder = document.createElement('div');

@@ -4,7 +4,7 @@
  * ("this step: 4× 2×4, 2× 1×2").
  */
 import type { HeightMap, PlacedBrick } from '../types.ts';
-import { BRICKS } from '../packing/catalog.ts';
+import { ALL_PARTS } from '../packing/catalog.ts';
 import type { PackingResult } from '../packing/pack.ts';
 
 export interface GuideStep {
@@ -37,7 +37,7 @@ export function buildGuide(packing: Pick<PackingResult, 'bricks' | 'plates'>): P
     const steps: GuideStep[] = [];
     for (let k = 1; k <= p.layers; k++) {
       const layerBricks = bricks.filter((b) => b.layer === k);
-      const callout = BRICKS.map((part) => ({
+      const callout = ALL_PARTS.map((part) => ({
         partId: part.id,
         name: part.name,
         quantity: layerBricks.filter((b) => b.partId === part.id).length,

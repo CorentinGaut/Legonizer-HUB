@@ -20,6 +20,8 @@ import {
 } from '../state.ts';
 import type { Ctx, PrimaryAction, StepView } from '../stepView.ts';
 import { setFieldError, staleBanner, stepperInput, syncValue } from './common.ts';
+import type { TileCapMode } from '../../core/packing/catalog.ts';
+import { setTileCap, tileCapControl } from '../../guide/parts.ts';
 
 const LOG_MIN = Math.log(0.25),
   LOG_MAX = Math.log(50);
@@ -67,6 +69,7 @@ export class SettingsStep implements StepView {
   update(changed: Set<string>): void {
     if (
       changed.has('params') ||
+      changed.has('inventory') ||
       changed.has('result') ||
       changed.has('t.generating') ||
       changed.has('demoSettings') ||
@@ -109,6 +112,7 @@ export class SettingsStep implements StepView {
       p.area,
       ground,
       this.invalid.size,
+      p.inventory.tileCap,
     ]);
     if (sig === this.sig) return;
     const focusId = (document.activeElement as HTMLElement | null)?.id;
@@ -309,6 +313,9 @@ export class SettingsStep implements StepView {
             </div>
             <p class="lz-help">${t('create.settings.plates.help')}</p>
           </div>
+        </section>
+        <section class="lz-panel__section" aria-label="${t('create.settings.tileCap.label')}">
+          ${tileCapControl(p.inventory.tileCap, { id: 'lz-tilecap', disabled: busy })}
         </section>
         <section class="lz-panel__section" aria-labelledby="est-title" id="lz-estimates"></section>
         ${this.advancedHtml(q, ground, busy)}`,
@@ -824,6 +831,11 @@ export class SettingsStep implements StepView {
         this.ctx.go('generate', { focus: true });
         void this.ctx.actions.generate();
       } else this.ctx.actions.undoChanges();
+      return;
+    }
+    const cap = el.closest<HTMLElement>('[data-tilecap]')?.dataset.tilecap as TileCapMode | undefined;
+    if (cap) {
+      setTileCap(this.ctx, cap);
       return;
     }
     const a = el.closest<HTMLElement>('[data-a]');

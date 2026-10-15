@@ -32,14 +32,22 @@ export {
   type SampledRect,
 } from './heightmap/index.ts';
 export {
+  ALL_PARTS,
   BASEPLATE,
   BRICKS,
+  TILE_CAP_MODES,
   COLOR_WHITE,
+  TILES,
+  tileCapsColumn,
   enabledShapes,
+  isTile,
   normalizeInventory,
   partById,
+  tileShapes,
   type BrickPart,
+  type TileCapMode,
   type InventoryOptions,
+  type NormalizedInventory,
 } from './packing/catalog.ts';
 export {
   packHeightMap,

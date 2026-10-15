@@ -27,7 +27,7 @@ import {
 } from 'pdf-lib';
 import { IntlMessageFormat } from 'intl-messageformat';
 import qrcodeCore from 'qrcode/lib/core/qrcode.js';
-import { BASEPLATE, BRICKS } from '../packing/catalog.ts';
+import { ALL_PARTS, BASEPLATE, BRICKS, TILES, partById, type TileCapMode } from '../packing/catalog.ts';
 import type { PackingResult, PlateSummary } from '../packing/pack.ts';
 import { parsePlateName, columnLetters } from '../packing/plates.ts';
 import { STUDS_PER_PLATE, type Area, type HeightMap, type Params, type PlacedBrick } from '../types.ts';
@@ -38,11 +38,19 @@ import { encodeJpeg } from './jpeg.ts';
 import { physicalCalqueLayout, rasterizeCalque } from './calque.ts';
 import { plateHeights } from './guide.ts';
 import { encodePlatePass, platePassUrl, qrVersionFor } from './platePass.ts';
-import { GLYPH_EDGE, GLYPH_PRINT_FILL, baseplateGlyph, brickIsoGlyph, type Glyph } from './glyphs.ts';
+import {
+  GLYPH_EDGE,
+  GLYPH_PRINT_FILL,
+  baseplateGlyph,
+  brickIsoGlyph,
+  tileIsoGlyph,
+  type Glyph,
+} from './glyphs.ts';
 import { embedPdfFonts, winAnsiSafe, type FontLoader } from './pdfFonts.ts';
 import {
   ALL_SECTIONS,
-  KIT_ROWS_FIRST_PAGE,
+  kitRowsFirstPage,
+  tileSlotRows,
   KIT_ROWS_PER_PAGE,
   LAYERS_PER_PAGE,
   PAPER_MM,
@@ -57,7 +65,7 @@ export interface PdfGuideInput {
   packing: PackingResult;
   params: Params;
   area: Area;
-  inventory: { enabled: string[]; maxLength: number };
+  inventory: { enabled: string[]; maxLength: number; tileCap?: TileCapMode };
   paper: PaperSize;
   sections?: Partial<PdfSections>;
   /** Raw ICU messages by dotted key (see PDF_MESSAGE_KEYS) and their locale. */
@@ -375,15 +383,22 @@ function drawQr(c: Ctx, page: PDFPage, url: string, xMm: number, yMm: number, si
   return q.version;
 }
 
-function partSize(id: string): string {
-  const p = BRICKS.find((b) => b.id === id);
-  return p ? `${p.width}×${p.length}` : id;
+function partSize(c: Ctx, id: string): string {
+  const p = partById(id);
+  if (!p) return id;
+  const size = `${p.width}×${p.length}`;
+  return p.kind === 'tile' ? c.m('exports.pdf.tileSize', { size }) : size;
 }
 
-/** Callout items of a step or kit: largest part first ("4 × 2×8"). */
+/** Isometric glyph of a brick or a cap tile. */
+function partGlyph(id: string): Glyph {
+  const p = partById(id)!;
+  return p.kind === 'tile' ? tileIsoGlyph(p.width, p.length) : brickIsoGlyph(p.width, p.length);
+}
+
+/** Callout items of a step or kit: largest brick first ("4 × 2×8"), then cap tiles. */
 function calloutItems(counts: Record<string, number>): { id: string; q: number }[] {
-  return [...BRICKS]
-    .reverse()
+  return [...[...BRICKS].reverse(), ...[...TILES].reverse()]
     .filter((b) => (counts[b.id] ?? 0) > 0)
     .map((b) => ({ id: b.id, q: counts[b.id]! }));
 }
@@ -403,7 +418,7 @@ function callout(
   const gap = 3;
   for (const it of items) {
     const qs = String(it.q);
-    const rest = ` × ${partSize(it.id)}`;
+    const rest = ` × ${partSize(c, it.id)}`;
     const qw = measure(c, c.monoBold, qs, size) / MM;
     const w = qw + measure(c, c.mono, rest, size) / MM;
     if (cx + w > x + width && cx > x) {
@@ -538,7 +553,11 @@ export async function renderPdfGuide(input: PdfGuideInput): Promise<Uint8Array> 
   const platesX = params.platesX,
     platesY = params.platesY;
   const plateList = packing.plates.map((p) => ({ name: p.plate, col: p.col, row: platesY - 1 - p.southRow }));
-  const maxH = packing.plates.reduce((a, p) => Math.max(a, p.layers), 0);
+  let maxH = 0; // tallest column in bricks (a cap tile is not a layer of height)
+  for (const v of hm.data) if (v > maxH) maxH = v;
+  const tileKinds = TILES.filter((b) => (packing.counts[b.id] ?? 0) > 0);
+  const tileRows = tileSlotRows(packing.counts);
+  const kitRowsFirst = kitRowsFirstPage(tileRows);
   const bricksByPlateLayer = new Map<string, PlacedBrick[]>();
   for (const b of packing.bricks) {
     const k = `${b.plate}:${b.layer}`;
@@ -552,7 +571,7 @@ export async function renderPdfGuide(input: PdfGuideInput): Promise<Uint8Array> 
     BOTTOM = hMm - 14;
   const CW = X1 - X0;
   const bodyTop = TOP + 9;
-  const kinds = BRICKS.filter((b) => (packing.counts[b.id] ?? 0) > 0).length;
+  const kinds = ALL_PARTS.filter((b) => (packing.counts[b.id] ?? 0) > 0).length;
   const sizeW = (platesX * STUDS_PER_PLATE * 8) / 10,
     sizeD = (platesY * STUDS_PER_PLATE * 8) / 10;
   const tallestCm = (maxH * 9.6) / 10;
@@ -598,14 +617,14 @@ export async function renderPdfGuide(input: PdfGuideInput): Promise<Uint8Array> 
     });
   if (sections.shopping) {
     const n = plateList.length;
-    const extra = Math.max(0, Math.ceil((n - KIT_ROWS_FIRST_PAGE) / KIT_ROWS_PER_PAGE));
+    const extra = Math.max(0, Math.ceil((n - kitRowsFirst) / KIT_ROWS_PER_PAGE));
     plan.push({
       head: m('exports.pdf.sections.shopping'),
       foot: m('exports.pdf.sections.shopping'),
       draw: (p) => drawShopping(p),
     });
     for (let k = 0; k < extra; k++) {
-      const from = KIT_ROWS_FIRST_PAGE + k * KIT_ROWS_PER_PAGE;
+      const from = kitRowsFirst + k * KIT_ROWS_PER_PAGE;
       plan.push({
         head: m('exports.pdf.kitPerPlate'),
         foot: m('exports.pdf.sections.shopping'),
@@ -864,10 +883,10 @@ export async function renderPdfGuide(input: PdfGuideInput): Promise<Uint8Array> 
       y += slotH + 4;
     };
     const glyphItem = (w: number, l: number, id: string) => ({
-      glyph: brickIsoGlyph(w, l),
+      glyph: partGlyph(id),
       unit: 2.1,
       qty: packing.counts[id] ?? 0,
-      size: `${w}×${l}`,
+      size: partSize(c, id),
       part: id,
       ...(spares && (packing.counts[id] ?? 0) > 0
         ? {
@@ -890,6 +909,11 @@ export async function renderPdfGuide(input: PdfGuideInput): Promise<Uint8Array> 
         note: `${BASEPLATE.id} · ${m('exports.pdf.baseplateScale')}`,
       },
     ]);
+    for (let r = 0; r < tileRows; r++)
+      row(
+        m('create.guide.bricks.rows.tiles'),
+        tileKinds.slice(r * 6, r * 6 + 6).map((b) => glyphItem(b.width, b.length, b.id)),
+      );
     title(c, page, m('exports.pdf.kitPerPlate'), X0, y + 3, 10.5);
     text(
       c,
@@ -903,7 +927,7 @@ export async function renderPdfGuide(input: PdfGuideInput): Promise<Uint8Array> 
       },
     );
     y += 5;
-    y = kitTable(page, y, 0, Math.min(plateList.length, KIT_ROWS_FIRST_PAGE), false);
+    y = kitTable(page, y, 0, Math.min(plateList.length, kitRowsFirst), false);
     para(
       c,
       page,
@@ -930,8 +954,10 @@ export async function renderPdfGuide(input: PdfGuideInput): Promise<Uint8Array> 
       y += 7;
     }
     const parts = BRICKS.slice().reverse();
+    const withTiles = (packing.tiles ?? 0) > 0;
     const firstW = 16;
-    const colW = (CW - firstW - 16) / (parts.length + 1);
+    const colW = (CW - firstW - 16) / (parts.length + (withTiles ? 2 : 1));
+    const tilesX = X0 + firstW + (parts.length + 2) * colW;
     const rowH = 4.6;
     // header
     text(c, page, m('create.guide.bricks.table.part'), X0 + 1, y + 3.4, 7, { font: c.bold, color: MUTED });
@@ -947,6 +973,12 @@ export async function renderPdfGuide(input: PdfGuideInput): Promise<Uint8Array> 
       color: MUTED,
       align: 'right',
     });
+    if (withTiles)
+      text(c, page, m('exports.pdf.tilesColumn'), tilesX, y + 3.4, 7, {
+        font: c.bold,
+        color: MUTED,
+        align: 'right',
+      });
     text(c, page, m('exports.pdf.total'), X1 - 1, y + 3.4, 7, { font: c.bold, color: MUTED, align: 'right' });
     y += rowH;
     hline(c, page, X0, X1, y, INK, 0.85);
@@ -972,7 +1004,16 @@ export async function renderPdfGuide(input: PdfGuideInput): Promise<Uint8Array> 
         font: c.mono,
         align: 'right',
       });
-      text(c, page, num(p.bricks), X1 - 1, y + 3.4, 7.5, { font: c.monoBold, align: 'right' });
+      if (withTiles)
+        text(c, page, p.tiles ? num(p.tiles) : '·', tilesX, y + 3.4, 7.5, {
+          font: c.mono,
+          color: p.tiles ? INK : MUTED,
+          align: 'right',
+        });
+      text(c, page, num(p.bricks + (p.tiles ?? 0)), X1 - 1, y + 3.4, 7.5, {
+        font: c.monoBold,
+        align: 'right',
+      });
       y += rowH;
       hline(c, page, X0, X1, y, RULE, 0.5);
     }
@@ -997,7 +1038,12 @@ export async function renderPdfGuide(input: PdfGuideInput): Promise<Uint8Array> 
         font: c.monoBold,
         align: 'right',
       });
-      text(c, page, num(packing.total), X1 - 1, y + 3.4, 7.5, { font: c.monoBold, align: 'right' });
+      if (withTiles)
+        text(c, page, num(packing.tiles), tilesX, y + 3.4, 7.5, { font: c.monoBold, align: 'right' });
+      text(c, page, num(packing.total + (packing.tiles ?? 0)), X1 - 1, y + 3.4, 7.5, {
+        font: c.monoBold,
+        align: 'right',
+      });
       y += rowH;
     }
     return y;
@@ -1198,6 +1244,14 @@ export async function renderPdfGuide(input: PdfGuideInput): Promise<Uint8Array> 
           stroke: NEW_EDGE,
           width: 0.7,
         });
+        if (partById(b.partId)?.kind === 'tile') {
+          // smooth tile: inset line instead of studs
+          rect(c, page, bx + u * 0.22, by + u * 0.22, b.w * u - u * 0.44, b.d * u - u * 0.44, {
+            stroke: NEW_EDGE,
+            width: 0.35,
+          });
+          continue;
+        }
         for (let di = 0; di < b.w; di++)
           for (let dj = 0; dj < b.d; dj++)
             page.drawCircle({
@@ -1312,11 +1366,10 @@ export async function renderPdfGuide(input: PdfGuideInput): Promise<Uint8Array> 
       let ky = y + 54;
       let kx = x;
       for (const it of calloutItems(plate.counts)) {
-        const part = BRICKS.find((b) => b.id === it.id)!;
-        const g = brickIsoGlyph(part.width, part.length);
+        const g = partGlyph(it.id);
         const gw = (g.viewBox[2] * 1.6) / 12,
           gh = (g.viewBox[3] * 1.6) / 12;
-        const label = `×${it.q} ${part.width}×${part.length}`;
+        const label = `×${it.q} ${partSize(c, it.id)}`;
         const lw = measure(c, c.mono, label, 7) / MM;
         if (kx + Math.max(gw, lw) > x + w) {
           kx = x;
@@ -1388,6 +1441,7 @@ export async function renderPdfGuide(input: PdfGuideInput): Promise<Uint8Array> 
       ['cap', `${params.cap ?? 'none'}${tag('cap', params.cap ?? undefined)}`],
       ['selection', `${params.selection}${tag('selection', params.selection)}`],
       ['parts', `${input.inventory.enabled.join(', ')}; max length ${input.inventory.maxLength}`],
+      ['tileCap', input.inventory.tileCap ?? 'none'],
     ];
     const half = (CW - 6) / 2;
     const box = (x: number, top: number, w: number, head: string, rows: [string, string][]) => {
