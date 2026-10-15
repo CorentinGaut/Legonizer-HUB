@@ -36,7 +36,7 @@ export const DEVELOPER = { name: 'Jey Puget Gil', url: 'https://hemoreg.me' } as
 export const UDVIZ_URL = 'https://github.com/VCityTeam/UD-Viz';
 /** Source code of this site; another repository can be set with VITE_SOURCE_URL at build time. */
 export const SOURCE_URL: string =
-  (import.meta.env?.VITE_SOURCE_URL as string | undefined) || 'https://github.com/VCityTeam/Legonizer';
+  (import.meta.env?.VITE_SOURCE_URL as string | undefined) || 'https://github.com/JPugetGil/Legonizer-demo';
 
 export const PAGE_HREF = {
   home: './',

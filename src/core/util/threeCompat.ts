@@ -9,6 +9,9 @@
  * checks them against the real three r147 and r154 on random and adversarial inputs.
  *
  * Matrices are column-major Float64Array(16), like three's `Matrix4.elements`.
+ *
+ * Ported from three.js r147 / r154, Copyright © 2010-2023 three.js authors, MIT licence
+ * (THIRD_PARTY_NOTICES.md).
  */
 
 export type Mat4 = Float64Array;
