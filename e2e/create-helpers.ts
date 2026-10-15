@@ -75,6 +75,11 @@ export async function runAxe(page: Page): Promise<AxeViolation[]> {
             failing.push(sel);
             continue;
           }
+          // a choice in a group (stacked radios): bring the whole group clear of the sticky bars, or
+          // its next option half under the tab bar counts as a neighbour a few pixels away
+          el.closest('fieldset, [role=radiogroup], .lz-radio-row, .lz-export__options')?.scrollIntoView({
+            block: 'nearest',
+          });
           const again = await axe.run(el, { runOnly: { type: 'rule', values: ['target-size'] } });
           (again.violations.length ? failing : refocused).push(sel);
           el.blur();
